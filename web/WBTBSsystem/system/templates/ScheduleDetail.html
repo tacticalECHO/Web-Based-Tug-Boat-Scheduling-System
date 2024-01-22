@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>GRP Team202310</title>
+  </head>
+  <body>
+    <div class="title">
+        <h1>GRP Team202310</h1>
+    </div>
+    <div class="info">
+        <h2>
+            Team name: E.A.S.Y
+        </h2>
+        <h3>
+            Project: Web-Based-Tug-Boat-Scheduling-System
+        </h3>
+        <h4>
+            supervisor: Dr. Zheng Lu (zheng.lu@nottingham.edu.cn)
+        </h4>
+        {% if scheduleList %}
+        <h4>
+            Schedule:
+        </h4>
+        <ul>
+            {% for scheduleEntry in scheduleList %}
+            <li><schdule class="name">
+                <h5>ScheduleEntryId: {{ scheduleEntry.ScheduleEntryId }}</h5>
+                {% for tugboat in scheduleEntry.listOfTugBoats.all %}
+                    <h5>TugBoatId: {{ tugboat.TugBoatId }}</h5>
+                {% endfor %}
+                <h5>StartTime: {{ scheduleEntry.TaskId.startTime }}</h5>
+                <h5>EndTime: {{ scheduleEntry.TaskId.endTime }}</h5>
+                <h5>State: {{ scheduleEntry.State }}</h5>
+            </schdule></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+  </body>
+</html>

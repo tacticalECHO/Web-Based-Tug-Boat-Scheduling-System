@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>GRP Team202310</title>
+  </head>
+  <body>
+    <div class="title">
+        <h1>GRP Team202310</h1>
+    </div>
+    <div class="info">
+        <h2>
+            Team name: E.A.S.Y
+        </h2>
+        <h3>
+            Project: Web-Based-Tug-Boat-Scheduling-System
+        </h3>
+        <h4>
+            supervisor: Dr. Zheng Lu (zheng.lu@nottingham.edu.cn)
+        </h4>
+        {% if tugboatList %}
+        <h4>
+            Tug Boat:
+        </h4>
+        <ul>
+            {% for tugboat in tugboatList %}
+            <li><tugboat class="name">
+                <h5>CurrentStatus: {{ tugboat.CurrentStatus }}</h5>
+                <h5>TugBoatId: {{ tugboat.TugBoatId }}</h5>
+                <h5>CaptainId: {{ tugboat.CaptainId.name }}</h5>
+            </tugboat></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+  </body>
+</html>
