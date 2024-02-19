@@ -13,6 +13,20 @@ def Get_Information():
     ScheduleEntryList=ScheduleEntry.objects.all()
     return TaskList, TugBoatList, ScheduleEntryList
 
+def AutoSchedule_Complete():
+    TaskList, TugBoatList, ScheduleEntryList = Get_Information()
+    for schedule in ScheduleEntryList:
+        if schedule.State == 'Scheduled':
+            if schedule.TaskId.startTime < datetime.datetime.now().replace(tzinfo=pytz.timezone('Asia/Shanghai')):
+                schedule.State = 'Completed'
+                schedule.save()
+                for tugboat in schedule.listOfTugBoats.all():
+                    tugboat.CurrentStatus = 'Free'
+                    tugboat.save()
+                schedule.listOfTugBoats.clear()
+                schedule.save()
+    return
+
 def AutoSchedule():
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     print(ScheduleEntryList)
@@ -54,18 +68,7 @@ def AutoSchedule():
                         task.State = 'Scheduled'
                         task.save()
                         break
-        
-    for schedule in ScheduleEntryList:
-        if schedule.State == 'Scheduled':
-            if schedule.TaskId.endTime < datetime.datetime.now().replace(tzinfo=pytz.timezone('Asia/Shanghai')):
-                schedule.State = 'Completed'
-                schedule.save()
-                
-                for tugboat in schedule.listOfTugBoats.all():
-                    tugboat.CurrentStatus = 'Free'
-                    tugboat.save()
-                schedule.listOfTugBoats.clear()
-                schedule.save()
+    AutoSchedule_Complete()
     return
 
 if __name__ == '__main__':
