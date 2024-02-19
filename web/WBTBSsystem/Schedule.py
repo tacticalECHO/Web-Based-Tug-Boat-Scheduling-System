@@ -60,6 +60,7 @@ def AutoSchedule():
             if schedule.TaskId.endTime < datetime.datetime.now().replace(tzinfo=pytz.timezone('Asia/Shanghai')):
                 schedule.State = 'Completed'
                 schedule.save()
+                
                 for tugboat in schedule.listOfTugBoats.all():
                     tugboat.CurrentStatus = 'Free'
                     tugboat.save()
