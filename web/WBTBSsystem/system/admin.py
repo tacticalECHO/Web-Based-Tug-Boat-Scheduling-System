@@ -13,3 +13,4 @@ admin.site.register(ScheduleEntry)
 admin.site.register(User)
 
 
+

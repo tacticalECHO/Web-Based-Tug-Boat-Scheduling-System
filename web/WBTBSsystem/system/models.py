@@ -15,7 +15,9 @@ class TugBoat(models.Model):
     CurrentStatus = models.CharField(max_length=20,choices=(('Free','Free'),('Busy','Busy'),('Maintenance','Maintenance')),default='Free')
     TugBoatId = models.IntegerField(default=0)
     CaptainId = models.ForeignKey(Captain, on_delete=models.CASCADE)
-
+    StartWorkingTime = models.TimeField(default='T00:00:00Z')
+    EndWorkingTime = models.TimeField(default='T08:00:00Z')
+    
 class ContainerBoat(models.Model):
     ContainerBoatID = models.IntegerField(default=0)
     Tonnage = models.IntegerField(default=0)
