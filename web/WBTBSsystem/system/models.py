@@ -33,7 +33,7 @@ class Task(models.Model):
     ContainerBoatID = models.ForeignKey(ContainerBoat, on_delete=models.CASCADE)
     Action= models.CharField(max_length=10,choices=(('Arrival','Arrival'),('Departure','Departure')),default='Arrival')
     BerthId = models.IntegerField(default=0)
-    State = models.CharField(max_length=10,choices=(('Scheduled','Scheduled'),('Unschedule','Unschedule')),default='Unschedule')
+    State = models.CharField(max_length=100,choices=(('Scheduled','Scheduled'),('Unscheduled','Unscheduled')),default='Unscheduled')
 
 class ScheduleEntry(models.Model):
     ScheduleEntryId= models.AutoField(primary_key=True)

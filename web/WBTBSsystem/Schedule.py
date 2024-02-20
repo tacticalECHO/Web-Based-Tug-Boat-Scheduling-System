@@ -1,5 +1,6 @@
 import sqlite3
 import datetime
+import time
 import pytz
 import os
 import django
@@ -27,19 +28,11 @@ def AutoSchedule_Complete(): # Check if the task is completed
                 schedule.save()
     return
 
-def AutoSchedule_taskTOschedule():
-    TaskList, TugBoatList, ScheduleEntryList = Get_Information()
-    for task in TaskList:
-        if task.State == 'Scheduled':
-            continue
-        if task.startTime > datetime.datetime.now().replace(tzinfo=pytz.timezone('Asia/Shanghai')):
-            schedule = ScheduleEntry()
-            schedule.TaskId = task
-            schedule.save()
-    return
 
 def ifTugBoatAvailable(tugboat, task):
-    if task.startTime < tugboat.StartWorkingTime or task.endTime > tugboat.EndWorkingTime:
+    StartTime = task.startTime.time()
+    EndTime = task.endTime.time()
+    if StartTime< tugboat.StartWorkingTime or EndTime > tugboat.EndWorkingTime:
         return False
     for schedule in ScheduleEntry.objects.all():
         if schedule.State == 'Scheduled':
@@ -47,22 +40,25 @@ def ifTugBoatAvailable(tugboat, task):
                 if boat.TugBoatId == tugboat.TugBoatId:
                     if schedule.TaskId.startTime < task.endTime and schedule.TaskId.endTime > task.startTime:
                         return False
+    return True
 def AutoSchedule():
-    AutoSchedule_taskTOschedule()
-    TugBoatList = TugBoat.objects.all()
-    ScheduleEntryList = ScheduleEntry.objects.all()
-    for schedule in ScheduleEntryList:
-        if schedule.State == 'Scheduled':
-            continue
-        for tugboat in TugBoatList:
-            for i in range(schedule.TaskId.ReqauriedTugBoat):
-                if ifTugBoatAvailable(tugboat, schedule.TaskId):
-                    schedule.listOfTugBoats.add(tugboat)
-                    tugboat.CurrentStatus = 'Busy'
-                    tugboat.save()
-                    schedule.State = 'Scheduled'
-                    schedule.save()
+    TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     AutoSchedule_Complete()
+    for task in TaskList:
+        if task.State == 'Unscheduled':
+            schedule = ScheduleEntry(TaskId=task, State='Scheduled')
+            schedule.save()
+            for i in range(task.ReqauriedTugBoat):
+                for tugboat in TugBoatList:
+                    if ifTugBoatAvailable(tugboat, task):
+                        schedule.listOfTugBoats.add(tugboat)
+                        tugboat.CurrentStatus = 'Busy'
+                        break
+            task.State = 'Scheduled'
+            tugboat.save()
+            schedule.save()
+            task.save()
+
     return
 
 
@@ -73,3 +69,8 @@ if __name__ == '__main__':
     print('ScheduleEntry:')
     for schedule in ScheduleEntry.objects.all():
         print(schedule.TaskId.TaskId, schedule.State)
+        for boat in schedule.listOfTugBoats.all():
+            print(boat.TugBoatId)
+    print('TugBoat:')
+    for boat in TugBoat.objects.all():
+        print(boat.TugBoatId, boat.CurrentStatus)
