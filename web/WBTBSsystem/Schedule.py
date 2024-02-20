@@ -49,13 +49,20 @@ def AutoSchedule():
             schedule = ScheduleEntry(TaskId=task, State='Scheduled')
             schedule.save()
             for i in range(task.ReqauriedTugBoat):
+                n=0
                 for tugboat in TugBoatList:
                     if ifTugBoatAvailable(tugboat, task):
                         schedule.listOfTugBoats.add(tugboat)
                         tugboat.CurrentStatus = 'Busy'
+                        n+=1
                         break
             task.State = 'Scheduled'
             tugboat.save()
+            if n < task.ReqauriedTugBoat:
+                task.State = 'Unscheduled'
+                schedule.delete()
+                task.save()
+                return
             schedule.save()
             task.save()
 
