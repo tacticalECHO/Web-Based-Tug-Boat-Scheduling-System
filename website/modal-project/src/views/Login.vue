@@ -19,21 +19,39 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-    name: 'Login',
-    props: [],
-    data() {
-        return {
-            username: 'name',
-            password: 'password',
+  name: 'Login',
+  data() {
+    return {
+      username: '',
+      password: '',
+      showError: false,
+    };
+  },
+  methods: {
+    async login() {
+      try {
+        const response = await axios.post('http://localhost:8000/api/login/', {
+          username: this.username,
+          password: this.password,
+        });
+        // The backend response contains { success: true } on successful login
+        if (response.data.success) {
+            this.showError = false;
+            this.$store.commit('setUser', { username: this.username });
+            this.$router.push({ name: 'Settings' });
+        } else {
+          this.showError = true; // Show error if login failed
         }
+      } catch (error) {
+        console.error('Login error:', error);
+        this.showError = true; 
+      }
     },
-    methods: {
-        login() {
-            this.$router.push({name: 'SchedulerDashboard'});
-        }
-    }
-}
+  },
+};
 </script>
 
 <style scoped>

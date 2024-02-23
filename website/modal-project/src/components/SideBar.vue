@@ -3,23 +3,23 @@
         <h2>Ningbo Harbour</h2>
             <ul>
                 <li @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item">
-                  <font-awesome-icon :icon="['fat', 'folder']" class="sidebar-icon"/>
+                  <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     A-Dashboard
                 </li>
                 <li @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item">
-                  <font-awesome-icon :icon="['fat', 'folder']" class="sidebar-icon"/>
+                  <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     S-Dashboard
                 </li>
                 <li @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item">
-                  <font-awesome-icon :icon="['fat', 'folder']" class="sidebar-icon"/>
+                  <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     C-Dashboard
                 </li>
                 <li @click="redirect('WorkSchedule')" class="sidebar-item">
-                    <img src="#.png" alt="" class="sidebar-icon">
+                    <font-awesome-icon :icon="['fas', 'calendar-days']" class="sidebar-icon"/>
                     Work Schedules
                 </li>
                 <li @click="redirect('TaskManager')" class="sidebar-item">
-                    <img src="#.png" alt="" class="sidebar-icon">
+                    <font-awesome-icon :icon="['fas', 'bell']" class="sidebar-icon"/>
                     Task Manager
                 </li>
             </ul>
@@ -27,11 +27,11 @@
             <div class="sidebar-bottom-section">
                 <ul>
                     <li @click="redirect('Settings')" class="sidebar-item">
-                        <img src="#.png" alt="" class="sidebar-icon">
+                        <font-awesome-icon :icon="['fas', 'gear']" class="sidebar-icon"/>
                         Settings
                     </li>
-                    <li @click="redirect('Profile')" class="sidebar-item">
-                        <img src="#.png" alt="" class="sidebar-icon">
+                    <li class="sidebar-item">
+                        <font-awesome-icon :icon="['fas', 'user']" class="sidebar-icon"/>
                         {{profile_name}}
                     </li>
                 </ul>
@@ -41,11 +41,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
     name: 'SideBar',
-    data() {
-        return {
-          profile_name: 'Name',
+    computed: {
+        ...mapState(['username']),
+        profile_name() {
+            return this.username || 'Guest';
         }
     },
     methods: {
@@ -98,7 +101,9 @@ export default {
 }
 
 .sidebar-bottom-section {
-    margin-top: 170%;
+    position: absolute;
+    bottom: 0; 
+    width: 100%; 
 }
 
 .sidebar-icon {

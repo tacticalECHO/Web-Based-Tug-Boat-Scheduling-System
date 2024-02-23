@@ -6,12 +6,12 @@
             <div class = "form">
                 <b><label for="username">Username  </label></b>
                 &nbsp; 
-                <input type="text" id="username" v-model="username" :placeholder="{ Name }" readonly>
+                <input type="text" id="username" v-model="username" :placeholder="username" readonly>
             </div>
             <div class = "form">
                 <b><label for="password">Password  </label></b>
                 &nbsp; 
-                <input type="password" id="password" v-model="password" :placeholder="{ Password }" readonly>
+                <input type="password" id="password" v-model="password" :placeholder="passwordPlaceholder" readonly>
                 <button class="grey-border-button" @click="change_password()">Change</button>
             </div>
             <button class="blue-button" @click="redirect('Login')">Logout</button>
@@ -21,21 +21,26 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import SideBar from '@/components/SideBar.vue';
 
 export default {
     name: 'Settings',
     components: {SideBar},
-    props: ['Name', 'Password'],
-    data() {
-        return {
-        //   profile_name: 'Name',
-        }
+    computed: {
+        ...mapState([
+            'username',
+            'passwordPlaceholder' 
+        ]),
+
     },
     methods: {
         change_password(){
             this.$router.push({name: 'ChangePassword'});
         },
+        logout(){
+            this.$router.push({name: 'Login'});
+        }
     }
 }
 </script>

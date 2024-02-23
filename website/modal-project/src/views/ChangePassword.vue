@@ -7,7 +7,7 @@
             <div class = "form">
                 <b><label for="username">Username  </label></b>
                 &nbsp;  
-                <input type="text" id="username" v-model="username" :placeholder="{ Name }" readonly>
+                <input type="text" id="username" v-model="username" :placeholder="username" readonly>
             </div>
             <br>
             <div class = "form">
@@ -25,15 +25,38 @@
 
 <script>
 import SideBar from '@/components/SideBar.vue';
+import { mapState } from 'vuex';
+import axios from 'axios';
 
 export default {
     name: 'ChangePassword',
     components: {SideBar},
-    props: ['Name'],
+    computed: {
+        ...mapState([
+            'username',
+            'passwordPlaceholder' 
+        ]),
+
+    },
     methods: {
-        save(){
-            //save pasword
-            this.$router.back();
+        cancel(){
+            this.$router.push({name: 'Exit-ChangePassword'});
+        },
+        async save() {
+            try {
+                const response = await axios.post('http://localhost:8000/api/change-password/', {
+                username: this.username,
+                password: this.password,
+                });
+                if (response.data.success) {
+                    this.$router.push({ name: 'Login' });
+                } else {
+                    alert('Password change failed.');
+                }
+            } catch (error) {
+                console.error('Change password error:', error);
+                alert('Password change error.');
+            }
         }
     }
 }
