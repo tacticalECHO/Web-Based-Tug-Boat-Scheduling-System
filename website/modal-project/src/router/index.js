@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import store from '../store'
 // components-----------------------------------------------------------------
 import ExitNotice from '@/components/ExitNotice.vue'
 import RescheduleNotice from '@/components/RescheduleNotice.vue'
@@ -142,5 +142,16 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = store.state.username !== '';
+
+  if (!isLoggedIn && to.name !== 'Login') {
+    next({ name: 'Login' });
+  } else {
+    next();
+  }
+});
+
 
 export default router;

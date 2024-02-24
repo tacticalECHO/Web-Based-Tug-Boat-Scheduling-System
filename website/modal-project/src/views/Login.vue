@@ -41,6 +41,7 @@ export default {
         if (response.data.success) {
             this.showError = false;
             this.$store.commit('setUser', { username: this.username });
+            this.$store.commit('setUserRole', { isCaptain: response.data.is_captain });
             this.$router.push({ name: 'Settings' });
         } else {
           this.showError = true; // Show error if login failed

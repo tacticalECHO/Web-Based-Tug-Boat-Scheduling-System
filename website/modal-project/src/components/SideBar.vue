@@ -2,11 +2,11 @@
     <div id="Sidebar">
         <h2>Ningbo Harbour</h2>
             <ul>
-                <li @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item">
+                <li v-if="!isCaptain" @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item">
                   <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     A-Dashboard
                 </li>
-                <li @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item">
+                <li v-if="!isCaptain" @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item">
                   <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     S-Dashboard
                 </li>
@@ -14,11 +14,11 @@
                   <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     C-Dashboard
                 </li>
-                <li @click="redirect('WorkSchedule')" class="sidebar-item">
+                <li v-if="!isCaptain" @click="redirect('WorkSchedule')" class="sidebar-item">
                     <font-awesome-icon :icon="['fas', 'calendar-days']" class="sidebar-icon"/>
                     Work Schedules
                 </li>
-                <li @click="redirect('TaskManager')" class="sidebar-item">
+                <li v-if="!isCaptain" @click="redirect('TaskManager')" class="sidebar-item">
                     <font-awesome-icon :icon="['fas', 'bell']" class="sidebar-icon"/>
                     Task Manager
                 </li>
@@ -46,7 +46,7 @@ import { mapState } from 'vuex';
 export default {
     name: 'SideBar',
     computed: {
-        ...mapState(['username']),
+        ...mapState(['username', 'isCaptain']),
         profile_name() {
             return this.username || 'Guest';
         }

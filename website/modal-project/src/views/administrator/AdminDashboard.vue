@@ -22,12 +22,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
-                        <td id="captain-name"> {{captainName}} </td>
-                        <td id="captain-id"> {{captainId}} </td>
-                        <td id="tugboat"> {{tugboat}} </td>
-                        <td id="captain-status"> <span  class="status-container">{{captainStatus}}</span> </td>
+                    <tr v-for="captain in $store.state.captains" :key="captain.CaptainId">
+                        <td><input type="checkbox" :id="'checkbox' + captain.CaptainId" :name="'checkbox' + captain.name"></td>
+                        <td id="captain-name"> {{captain.name}} </td>
+                        <td id="captain-id"> {{captain.CaptainId}} </td>
+                        <td id="tugboat"> {{captain.tugboat.TugBoatId}} </td>
+                        <td id="captain-status"> <span  class="status-container">{{captain.tugboat.CurrentStatus}}</span> </td>
                     </tr>
                 </tbody>
             </table>
@@ -59,16 +59,8 @@ import SideBar from '@/components/SideBar.vue';
 export default {
     name: 'AdminDashboard',
     components: {SideBar},
-    data() {
-        return {
-            captainName: "Olivia Lim",
-            captainId: "56765673",
-            tugboat: "ADB0078",
-            captainStatus: "Working",
-
-            schedulerName: "Tom Bai",
-            schedulerId: "330000234"
-        }
+    mounted() {
+        this.$store.dispatch('fetchCaptains');
     },
 }
 </script>
