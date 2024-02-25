@@ -3,12 +3,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Captain(models.Model): # Captain model
+    user= models.OneToOneField(User, on_delete=models.CASCADE, related_name='captain', null=True)
     Account = models.CharField(max_length=200, unique=True)
     name = models.CharField(max_length=200)
     CaptainId = models.CharField(max_length=200, unique=True) 
 
 
-class TugBoat(models.Model): #@ TugBoat model
+class TugBoat(models.Model): #TugBoat model
     CurrentStatus = models.CharField(max_length=20,choices=(('Free','Free'),('Busy','Busy'),('Maintenance','Maintenance')),default='Free')
     TugBoatId = models.CharField(max_length=200, unique=True) 
     CaptainId = models.OneToOneField(Captain, on_delete=models.CASCADE, related_name='tugboat', null=True)
@@ -39,6 +40,7 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
     State = models.CharField(max_length=10,choices=(('Scheduled','Scheduled'),('Completed','Completed')),default='Scheduled')
 
 class Scheduler(models.Model): # Scheduler model
+    user= models.OneToOneField(User, on_delete=models.CASCADE, related_name='scheduler', null=True)
     Account = models.CharField(max_length=200, unique=True)
     name = models.CharField(max_length=200)
     SchedulerId = models.CharField(max_length=200, unique=True)
