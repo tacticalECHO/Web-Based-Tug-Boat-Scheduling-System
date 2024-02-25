@@ -1,7 +1,8 @@
 <template>
-    <SideBar />
-    <div class="pages">
-        <div id="NewTask">
+    <div id="NewTask">
+        <SideBar />
+        <div class="pages">
+            <router-view />
             <h2>New Task</h2>
             <table>
                 <tr>
@@ -26,12 +27,10 @@
                 </tr>
             </table>
         </div>
-        <router-view />
-    </div>
-    
-    <div class="cancel-save-buttons">
-        <button class="grey-border-button" id="cancel" @click="redirect('Exit-NewTask')">Cancel</button>
-        <button class="blue-button" id="save" @click="save()">Save</button>
+        <div class="cancel-save-buttons">
+            <button class="grey-border-button" id="cancel" @click="redirect('Exit-NewTask')">Cancel</button>
+            <button class="blue-button" id="save" @click="save()">Save</button>
+        </div>
     </div>
 </template>
 

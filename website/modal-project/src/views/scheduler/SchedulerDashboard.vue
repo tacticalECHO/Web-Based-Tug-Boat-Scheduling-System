@@ -1,23 +1,24 @@
 <template>
-    <SideBar />
-    <div class="pages">
-        <div id="Dashboard">
+    <div id="Dashboard">
+        <SideBar />
+        <div class="pages">
+            <router-view />
             <div class="header-style">
                 <h2>My Dashboard</h2>
                 <MessageButton />
             </div>
             <br>
             <div class="job">
-                <button id="import-task-data">Import Task Data</button>
+                <input type="file" id="import-task-data"/>
+                <label for="import-task-data"><button @click="importTaskData()">Import Task Data</button></label>
                 <br><br><br>
-                <button id="import-tugboat-data">Import Tug Boat Data</button>
+                <input type="file" id="import-tugboat-data"/>
+                <label for="import-tugboat-data"><button @click="importTugboatData()">Import Tug Boat Data</button></label>
                 <br><br><br>
                 <button id="schedule" @click="schedule()">Schedule</button>
             </div>
         </div>
-        <router-view />
     </div>
-    
 </template>
 
 <script>
@@ -30,6 +31,12 @@ export default {
     methods: {
         schedule() {
             this.$router.push({name: 'AutoReschedule'})
+        },
+        importTaskData(){
+            document.getElementById('import-task-data').click();
+        },
+        importTugboatData(){
+            document.getElementById('import-tugboat-data').click();
         }
     }
 }
@@ -40,6 +47,9 @@ export default {
     font-size: 16px;
 }
 
+input {
+    display: none;
+}
 .job button {
     text-align: left;
     box-shadow: 0 2px 3px lightgrey;

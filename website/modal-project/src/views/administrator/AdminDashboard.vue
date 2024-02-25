@@ -1,11 +1,11 @@
 <template>
-    <SideBar />
-    <div class="pages">
-        <div id="AdminDashboard">
+    <div id="AdminDashboard">
+        <SideBar />
+        <div class="pages">
             <div class="header-style">
                 <h2>Your Dashboard</h2>
                 <span>
-                    <button class="grey-border-button" id="delete" @click="redirect('')">Delete<span></span></button>
+                    <button class="grey-border-button" id="delete" @click="redirect('')">Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
                     &nbsp;
                     <button class="blue-button" id="new-staff" @click="redirect('NewStaff')">New Staff  <span>+</span></button>
                 </span>

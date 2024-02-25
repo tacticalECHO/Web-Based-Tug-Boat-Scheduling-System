@@ -1,11 +1,11 @@
 <template>
-    <SideBar />
-    <div class="pages">
-        <div id="ConflictScheduleList">
+    <div id="ConflictScheduleList">
+        <SideBar />
+        <div class="pages">
             <h2>Conflict Schedule List</h2>
             <div class="button-style" >
-                <button class="grey-border-button" id="filter">Filter Schedules</button>
-                <button class="grey-border-button" id="Publish">Publish</button>
+                <button class="grey-border-button" id="filter">Filter Schedules <font-awesome-icon :icon="['fas', 'filter']" /></button>
+                <button class="grey-border-button" id="Publish">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
             </div>
             <table>
                 <thead>

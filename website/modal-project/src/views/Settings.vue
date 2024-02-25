@@ -1,7 +1,8 @@
 <template>
-    <SideBar />
-    <div class="pages">
-        <div id="Settings">
+    <div id="Settings">
+        <SideBar />
+        <div class="pages">
+            <router-view/>
             <h2>Settings</h2>
             <div class = "form">
                 <b><label for="username">Username  </label></b>
@@ -17,7 +18,6 @@
             <button class="blue-button" @click="redirect('Login')">Logout</button>
         </div>
     </div>
-    <router-view/>
 </template>
 
 <script>

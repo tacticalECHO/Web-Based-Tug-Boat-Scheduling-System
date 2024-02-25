@@ -1,6 +1,6 @@
 <template>
     <span class="message-container">
-        <button id="message" @click="message()"></button>
+        <button id="message" @click="message()"><font-awesome-icon :icon="['fas', 'bell']" /></button>
     </span>
 </template>
 

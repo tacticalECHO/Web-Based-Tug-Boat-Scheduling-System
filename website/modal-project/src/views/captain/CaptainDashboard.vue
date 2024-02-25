@@ -1,15 +1,17 @@
 <template>
-    <SideBar />
-    <div class="pages">
-        <div id="CaptainDashboard" class="header-style">
+    <div id="CaptainDashboard">
+        <SideBar />
+        <div class="pages">
             <div class="header-style">
-                <h2>Today Work</h2>
-                <button id="download">D</button>
+                <div class="header-style">
+                    <h2>Today Work</h2>
+                    <button id="download"><font-awesome-icon :icon="['fas', 'download']" /></button>
+                </div>
+                <MessageButton />
             </div>
-            <MessageButton />
         </div>
+        <WorkTable />
     </div>
-    <WorkTable />
 </template>
 
 <script>
@@ -30,11 +32,12 @@ export default {
     margin-left: 10px;
     margin-top: 15px;
     border-radius: 50%;
-    height: 30px;
-    width: 30px;
+    height: 35px;
+    width: 35px;
+    padding: 5px;
 }
 
 #download:hover {
-    background: lightgrey;
+    border: 1px solid lightgrey;
 }
 </style>

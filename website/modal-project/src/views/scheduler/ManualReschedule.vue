@@ -1,7 +1,8 @@
 <template>
-    <SideBar />
-    <div class="pages">
-        <div id="ManualReschedule">
+    <div id="ManualReschedule">
+        <SideBar />
+        <div class="pages">
+            <router-view />
             <h2>{{id}}</h2>
             <table>
                 <tr>
@@ -27,12 +28,11 @@
                 </tr>
             </table>
         </div>
+        <div class="cancel-save-buttons">
+            <button class="grey-border-button" id="cancel" @click="redirect('Exit-ManualReschedule')">Cancel</button>
+            <button class="blue-button" id="save" @click="save()">Save</button>
+        </div>
     </div>
-    <div class="cancel-save-buttons">
-        <button class="grey-border-button" id="cancel" @click="redirect('Exit-ManualReschedule')">Cancel</button>
-        <button class="blue-button" id="save" @click="save()">Save</button>
-    </div>
-    <router-view />
 </template>
 
 <script>

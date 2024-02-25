@@ -5,15 +5,17 @@
             <div class = "invalid-login">
                 <p>Invalid username or password, please log in again</p>
             </div>
-            <div class = "form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" v-model="username" placeholder="Input your ID">
-            </div>
-            <div class = "form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" v-model="password" placeholder="Input your password">
-            </div>
-            <button class="blue-button" @click="login()">Login</button>
+            <!-- <form> -->
+                <div class = "form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" v-model="username" placeholder="Input your ID">
+                </div>
+                <div class = "form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" v-model="password" placeholder="Input your password">
+                </div>
+                <button class="blue-button" @click="login()">Login</button>
+            <!-- </form> -->
         </div>
     </div>
 </template>
