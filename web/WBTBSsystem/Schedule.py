@@ -29,7 +29,7 @@ def AutoSchedule_Complete(): # Check if the task is completed
     return
 
 
-def ifTugBoatAvailable(tugboat, task):
+def ifTugBoatAvailable(tugboat, task): # Check if the tugboat is available at the task time
     StartTime = task.startTime.time()
     EndTime = task.endTime.time()
     if StartTime< tugboat.StartWorkingTime or EndTime > tugboat.EndWorkingTime:
@@ -41,7 +41,7 @@ def ifTugBoatAvailable(tugboat, task):
                     if schedule.TaskId.startTime < task.endTime and schedule.TaskId.endTime > task.startTime:
                         return False
     return True
-def AutoSchedule():
+def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first serve)
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     AutoSchedule_Complete()
     for task in TaskList:
