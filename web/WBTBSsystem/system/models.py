@@ -3,9 +3,26 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Captain(models.Model): # Captain model
-    Account = models.CharField(max_length=200, unique=True)
+    Account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='captain', null=True, blank=True)
     name = models.CharField(max_length=200)
-    CaptainId = models.CharField(max_length=200, unique=True) 
+    CaptainId = models.CharField(max_length=200, unique=True)
+    def save(self, *args, **kwargs):
+        if not self.Account:  
+            user = User.objects.filter(username=self.CaptainId).first()
+            if user:
+                self.Account = user 
+        super(Captain, self).save(*args, **kwargs)
+
+class Scheduler(models.Model): # Scheduler model
+    Account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='scheduler', null=True, blank=True)
+    name = models.CharField(max_length=200)
+    SchedulerId = models.CharField(max_length=200, unique=True)
+    def save(self, *args, **kwargs):
+        if not self.Account:  
+            user = User.objects.filter(username=self.SchedulerId).first()
+            if user:
+                self.Account = user 
+        super(Scheduler, self).save(*args, **kwargs)
 
 
 class TugBoat(models.Model): #@ TugBoat model
@@ -38,8 +55,5 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
     TaskId = models.ForeignKey(Task, on_delete=models.CASCADE)
     State = models.CharField(max_length=10,choices=(('Scheduled','Scheduled'),('Completed','Completed')),default='Scheduled')
 
-class Scheduler(models.Model): # Scheduler model
-    Account = models.CharField(max_length=200, unique=True)
-    name = models.CharField(max_length=200)
-    SchedulerId = models.CharField(max_length=200, unique=True)
+
 
