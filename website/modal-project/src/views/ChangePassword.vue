@@ -1,8 +1,8 @@
 <template>
-    <router-view />
-    <SideBar />
-    <div class="pages">
-        <div id="Settings">
+    <div id="Settings">
+        <SideBar />
+        <div class="pages">
+            <router-view />
             <h3>Settings</h3>
             <div class = "form">
                 <b><label for="username">Username  </label></b>
@@ -16,10 +16,10 @@
                 <input type="password" id="password" v-model="password" placeholder="Enter new password">
             </div>
         </div>
-    </div>
-    <div class="cancel-save-buttons">
-        <button class="grey-border-button" id="cancel" @click="redirect('Exit-ChangePassword')">Cancel</button>
-        <button class="blue-button" id="save" @click="save()">Save</button>
+        <div class="cancel-save-buttons">
+            <button class="grey-border-button" id="cancel" @click="redirect('Exit-ChangePassword')">Cancel</button>
+            <button class="blue-button" id="save" @click="save()">Save</button>
+        </div>
     </div>
 </template>
 

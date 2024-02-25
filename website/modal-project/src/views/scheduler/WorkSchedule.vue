@@ -1,15 +1,15 @@
 <template>
-    <SideBar />
-    <div class="pages">
-        <div id="WorkSchedule">
+    <div id="WorkSchedule">
+        <SideBar />
+        <div class="pages">
             <h2>Work Schedules</h2>
             <div class="header-style" >
-                <button class="grey-border-button" id="filter">Filter Schedules</button>
-                <button class="grey-border-button" id="Publish">Publish</button>
+                <button class="grey-border-button" id="filter">Filter Schedules <font-awesome-icon :icon="['fas', 'filter']" /></button>
+                <button class="grey-border-button" id="Publish">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
             </div>
         </div>
+        <WorkTable />
     </div>
-    <WorkTable />
 </template>
 
 <script>
