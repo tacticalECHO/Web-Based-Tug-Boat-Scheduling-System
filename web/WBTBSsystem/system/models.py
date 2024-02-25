@@ -3,8 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Captain(models.Model): # Captain model
-    user= models.OneToOneField(User, on_delete=models.CASCADE, related_name='captain', null=True)
-    Account = models.CharField(max_length=200, unique=True)
+    Account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='captain', null=True, blank=True)
     name = models.CharField(max_length=200)
     CaptainId = models.CharField(max_length=200, unique=True)
     def save(self, *args, **kwargs):
