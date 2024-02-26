@@ -7,6 +7,8 @@ const store = createStore({
           username: '',
           passwordPlaceholder: '******',
           isCaptain: false,
+          isAdmin: false,
+          isScheduler: false,
           captains: []
         };
         
@@ -15,8 +17,10 @@ const store = createStore({
         setUser(state, { username}) {
             state.username = username;
         },
-        setUserRole(state, { isCaptain }) {
+        setUserRole(state, { isCaptain, isAdmin, isScheduler}) {
             state.isCaptain = isCaptain;
+            state.isAdmin = isAdmin;
+            state.isScheduler = isScheduler;
         },
         setCaptains(state, captains) {
             state.captains = captains;

@@ -26,8 +26,15 @@ class LoginView(View):
                 is_captain = True
             except Captain.DoesNotExist:
                 is_captain = False
+            try:
+                user.scheduler 
+                is_scheduler = True
+            except Scheduler.DoesNotExist:
+                is_scheduler = False
             return JsonResponse({'success': True,
-                                'is_captain': is_captain,})
+                                'is_staff': user.is_staff,
+                                'is_captain': is_captain,
+                                'is_scheduler': is_scheduler})
         else:
             return JsonResponse({'success': False}, status=401)
 
