@@ -3,33 +3,25 @@ import os
 import django
 import math
 import time
+
+import pytz
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
-from system.models import ContainerBoat, Task
+from system.models import ContainerBoat, Task, Berth
 import pandas as pd
 import numpy as np
-path="test.xlsx"
-hash_berth = {
-    1: [],
-    2: [],
-    3: [],
-    4: [],
-    5: [],
-    6: [],
-    7: [],
-    8: [],
-    9: [],
-    10: []
-}
+path="web\WBTBSsystem\\test.xlsx"
+
 def WhichberthAvailable(arrivalTime, departureTime):
-    # Check if the berth is available
-    for key, value in hash_berth.items():
-        if len(value) == 0:
-            return key
-        else:
-            for i in range(len(value)):
-                if arrivalTime > value[i][1] or departureTime < value[i][0]:
-                    return key
+    # Determine which berth is available
+    berthList=Berth.objects.all()
+    for i in range(len(berthList)):
+        if berthList[i].ContainerBoat==None:
+            return berthList[i].BerthId
+        if datetime.datetime.now().replace(tzinfo=pytz.timezone('Asia/Shanghai'))>berthList[i].ContainerBoat.departureTime:
+            berthList[i].ContainerBoat=None
+            berthList[i].save()
+            return berthList[i].BerthId
     return -1
 def requieredTugBoat(Tonnage):
     return math.ceil(Tonnage/1000)
@@ -59,35 +51,22 @@ def dataIntoDatabase(data):
     for i in range(len(data)):
         if ifrepeat(data)==False:
             ContainerBoat.objects.create(ContainerBoatID=data.iloc[i,0],Tonnage=data.iloc[i,1],Country=data.iloc[i,2],arrivalTime=data.iloc[i,3],departureTime=data.iloc[i,4])
-def WhetherArrOrDep(data):
-    ArrivalList=[]
-    DepartureList=[]
-    # Determine if the task is an arrival or departure task
-    for i in range(len(data)):
-        if str_to_date(data.iloc[i,3])==datetime.date.today() or str_to_date(data.iloc[i,3])==datetime.date.today()+datetime.timedelta(days=1):
-            ArrivalList.append(i)
-        if str_to_date(data.iloc[i,4])==datetime.date.today() or str_to_date(data.iloc[i,4])==datetime.date.today()+datetime.timedelta(days=1):
-            DepartureList.append(i)
-    return ArrivalList,DepartureList
-
-def createTask(data):
-    # Create tasksw
-    ArrivalList,DepartureList=WhetherArrOrDep(data)
-    print(ArrivalList)
-    for i in ArrivalList:
-        berth=WhichberthAvailable(data.iloc[i,3],data.iloc[i,4])
-        if(berth!=-1):
-            Task.objects.create(ReqauriedTugBoat=requieredTugBoat(data.iloc[i,1]),startTime=data.iloc[i,3]-datetime.timedelta(hours=1),endTime=data.iloc[i,3]+datetime.timedelta(hours=1),ContainerBoatID=ContainerBoat.objects.get(ContainerBoatID=data.iloc[i,0]),Action='Arrival',BerthId=berth,State='Unscheduled')
-            hash_berth[berth].append([data.iloc[i,3],data.iloc[i,4]])
-    for i in DepartureList:
-        for key, value in hash_berth.items():
-            for j in range(len(value)):
-                if data.iloc[i,3]==value[j][0] and data.iloc[i,4] ==value[j][1]:
-                    Task.objects.create(ReqauriedTugBoat=requieredTugBoat(data.iloc[i,1]),startTime=data.iloc[i,3]-datetime.timedelta(hours=1),endTime=data.iloc[i,3]+datetime.timedelta(hours=1),ContainerBoatID=ContainerBoat.objects.get(ContainerBoatID=data.iloc[i,0]),Action='Departure',BerthId=key,State='Unscheduled')
-                    break
+def createTask():
+    # Create task
+    ContainerBoatlist=ContainerBoat.objects.all()
+    ContainerBoatlist=ContainerBoatlist.order_by('arrivalTime')
+    for CB in ContainerBoatlist:
+        BerthId=WhichberthAvailable(CB.arrivalTime,CB.departureTime)
+        if BerthId!=-1:
+            Task.objects.create(ReqauriedTugBoat=requieredTugBoat(CB.Tonnage),startTime=CB.arrivalTime-datetime.timedelta(minutes=30),endTime=CB.arrivalTime+datetime.timedelta(minutes=30),ContainerBoatID=CB,Action='Arrival',BerthId=BerthId,State='Unscheduled')
+            Task.objects.create(ReqauriedTugBoat=requieredTugBoat(CB.Tonnage),startTime=CB.departureTime-datetime.timedelta(minutes=30),endTime=CB.departureTime+datetime.timedelta(minutes=30),ContainerBoatID=CB,Action='Departure',BerthId=BerthId,State='Unscheduled')
+            berth=Berth.objects.get(BerthId=BerthId)
+            berth.ContainerBoat=CB
+            berth.save()
+    return
 if __name__ == "__main__":
     
     data=importData()
     dataIntoDatabase(data)
-    createTask(data)
+    createTask()
     print(data)

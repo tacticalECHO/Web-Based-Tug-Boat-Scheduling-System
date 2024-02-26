@@ -45,3 +45,7 @@ class Scheduler(models.Model): # Scheduler model
     name = models.CharField(max_length=200)
     SchedulerId = models.CharField(max_length=200, unique=True)
 
+class Berth(models.Model): # Berth model
+    BerthId= models.IntegerField(primary_key=True)
+    ContainerBoat= models.OneToOneField(ContainerBoat, on_delete=models.CASCADE,null=True,related_name='berth',blank=True)
+    
