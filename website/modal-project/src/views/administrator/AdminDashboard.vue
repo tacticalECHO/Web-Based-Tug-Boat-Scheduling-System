@@ -5,7 +5,7 @@
             <div class="header-style">
                 <h2>Your Dashboard</h2>
                 <span>
-                    <button class="grey-border-button" id="delete" @click="redirect('')">Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                    <button class="grey-border-button" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
                     &nbsp;
                     <button class="blue-button" id="new-staff" @click="redirect('NewStaff')">New Staff  <span>+</span></button>
                 </span>
@@ -23,7 +23,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="captain in $store.state.captains" :key="captain.CaptainId">
-                        <td><input type="checkbox" :id="'checkbox' + captain.CaptainId" :name="'checkbox' + captain.name"></td>
+                        <td><input type="checkbox" :id="'checkbox' + captain.CaptainId" :name="'checkbox' + captain.name" v-model="selectedCaptains" :value="captain.CaptainId"></td>
                         <td id="captain-name"> {{captain.name}} </td>
                         <td id="captain-id"> {{captain.CaptainId}} </td>
                         <td id="tugboat"> {{captain.tugboat.TugBoatId}} </td>
@@ -41,10 +41,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
-                        <td id="scheduler-name"> {{schedulerName}} </td>
-                        <td id="scheduler-id"> {{schedulerId}} </td>
+                    <tr v-for="scheduler in $store.state.schedulers" :key="scheduler.SchedulerId">
+                        <td><input type="checkbox" :id="'checkbox' + scheduler.SchedulerId" :name="'checkbox' + scheduler.name" v-model="selectedSchedulers" :value="scheduler.SchedulerId"></td>
+                        <td id="scheduler-name"> {{scheduler.name}} </td>
+                        <td id="scheduler-id"> {{scheduler.SchedulerId}} </td>
                     </tr>
                 </tbody>
             </table>
@@ -59,9 +59,45 @@ import SideBar from '@/components/SideBar.vue';
 export default {
     name: 'AdminDashboard',
     components: {SideBar},
+    data() {
+        return {
+            selectedCaptains: [],
+            selectedSchedulers: [],
+        };
+    },
     mounted() {
         this.$store.dispatch('fetchCaptains');
+        this.$store.dispatch('fetchSchedulers');
     },
+    methods: {
+        async deleteSelected() {
+            if (this.selectedCaptains.length > 0) {
+                await fetch(`http://127.0.0.1:8000/api/captains-delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ids: this.selectedCaptains })
+                });
+            }
+
+            if (this.selectedSchedulers.length > 0) {
+                await fetch(`http://127.0.0.1:8000/api/schedulers-delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ids: this.selectedSchedulers })
+                });
+            }
+
+            this.$store.dispatch('fetchCaptains');
+            this.$store.dispatch('fetchSchedulers');
+            
+            this.selectedCaptains = [];
+            this.selectedSchedulers = [];
+        }
+  },
 }
 </script>
 

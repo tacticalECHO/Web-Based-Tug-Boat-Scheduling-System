@@ -5,20 +5,26 @@
                 <button @click="close">X</button>
                 <br/>
                 <div class = "form">
-                    <b><label for="username">Username  </label></b>  
-                    <input type="text" id="username" v-model="username" placeholder="Input username/staff ID">
+                    <div class="form-group">
+                        <b><label for="username">ID</label></b>  
+                        <input type="text" id="username" v-model="username" placeholder="Input staff ID">
+                    </div>
+                    <div class="form-group">
+                        <b><label for="name">Name</label></b>
+                        <input type="text" id="name" v-model="name" placeholder="Input staff name">
+                    </div>
+                    <div class = "form-group">
+                        <b><label for="position">Position</label></b>
+                        &nbsp;   
+                        <select id="position" v-model="selectedPosition">
+                            <option disabled value="" selected>Choose the position</option>
+                            <option>Administrator</option>
+                            <option>Scheduler</option>
+                            <option>Captain</option>
+                        </select>
+                    </div>
                 </div>
                 <br>
-                <div class = "form">
-                    <b><label for="position">Position  </label></b>
-                    &nbsp;   
-                    <select id="position">
-                        <option disabled selected hidden>Choose the position</option>
-                        <option>Administrator</option>
-                        <option>Scheduler</option>
-                        <option>Captain</option>
-                    </select>
-                </div>
                 <button class="blue-button" id="confirm" @click="confirm()">Confirm</button>
                 <br/> 
             </div>
@@ -27,22 +33,67 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 export default {
     name: 'MessageDetails',
-    props: [],
+    data() {
+        return {
+        username: '',
+        name: '',
+        selectedPosition: ''
+        };
+    },
     methods: {
         close(){
             this.$router.back();
         },
-        confirm(){
-            this.$router.back();
+        async confirm() {
+            const apiUrl = 'http://127.0.0.1:8000/api/create-user/';
+            try {
+                const response = await axios.post(apiUrl, {
+                username: this.username,
+                name: this.name,
+                position: this.selectedPosition,
+                password: '12345678'
+            }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                alert('User created successfully');
+                this.close(); 
+            } catch (error) {
+                console.error('Failed to create user:', error);
+                alert('Failed to create user');
+            }
         }
     }
 }
 </script>
 
 <style scoped>
+.backdrop {
+    z-index: 1000; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5); 
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.form-group label {
+    width: 90px;
+    display: inline-block; 
+    text-align: right;
+    margin-right: 10px; 
+}
+
 .form {
     font-size: var(--font-size);
     margin-bottom: 15px;

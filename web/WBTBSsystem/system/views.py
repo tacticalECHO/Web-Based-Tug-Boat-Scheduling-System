@@ -52,13 +52,74 @@ class ChangePasswordView(View):
             return JsonResponse({'success': True})
         except User.DoesNotExist:
             return JsonResponse({'success': False}, status=401)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteCaptainsView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            ids = data.get('ids', [])
+            captains = Captain.objects.filter(CaptainId__in=ids)
+            for captain in captains:
+                if captain.Account:
+                    captain.Account.delete()
+            return JsonResponse({'message': 'Captains deleted successfully'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteSchedulersView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            ids = data.get('ids', [])
+            schedulers = Scheduler.objects.filter(SchedulerId__in=ids)
+            print(schedulers)
+            for scheduler in schedulers:
+                if scheduler.Account:
+                    scheduler.Account.delete()            
+            return JsonResponse({'message': 'Schedulers deleted successfully'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
         
-from .serializers import CaptainSerializer
+@method_decorator(csrf_exempt, name='dispatch')
+class CreateUserView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)
+            username = data.get('username')
+            name = data.get('name')
+            position = data.get('position')
+            password = data.get('password', '12345678')
+
+            if position == 'Administrator':
+                user = User.objects.create_superuser(username=username, email='example@gmail.com', password=password, first_name=name)
+            else:
+            
+                user = User.objects.create_user(username=username, password=password, first_name=name)
+                if position == 'Captain':
+                    Captain.objects.create(Account=user, name=name, CaptainId=username)
+                elif position == 'Scheduler':
+                    Scheduler.objects.create(Account=user, name=name, SchedulerId=username)
+
+            return JsonResponse({'status': 'success', 'message': 'User created successfully'})
+        except Exception as e:
+            print("Error:", e)
+            return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+        
+
+        
+from .serializers import CaptainSerializer, SchedulerSerializer
 from rest_framework import viewsets
 
 class CaptainViewSet(viewsets.ModelViewSet):
     queryset = Captain.objects.all()
     serializer_class = CaptainSerializer
+
+class SchedulerViewSet(viewsets.ModelViewSet):
+    queryset = Scheduler.objects.all()
+    serializer_class = SchedulerSerializer
         
 
 def build_new_user(request):

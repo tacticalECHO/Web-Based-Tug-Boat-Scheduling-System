@@ -7,7 +7,7 @@ class Captain(models.Model): # Captain model
     name = models.CharField(max_length=200)
     CaptainId = models.CharField(max_length=200, unique=True)
     def save(self, *args, **kwargs):
-        if not self.Account:  
+        if not self.Account:
             user = User.objects.filter(username=self.CaptainId).first()
             if user:
                 self.Account = user 

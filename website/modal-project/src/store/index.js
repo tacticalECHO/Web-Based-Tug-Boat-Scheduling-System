@@ -9,7 +9,8 @@ const store = createStore({
           isCaptain: false,
           isAdmin: false,
           isScheduler: false,
-          captains: []
+          captains: [],
+          schedulers: []
         };
         
     },
@@ -24,6 +25,9 @@ const store = createStore({
         },
         setCaptains(state, captains) {
             state.captains = captains;
+        },
+        setSchedulers(state, schedulers) {
+            state.schedulers = schedulers;
         }
     },
 
@@ -32,6 +36,13 @@ const store = createStore({
             axios.get('http://localhost:8000/api/display_captain/')
               .then(response => {
                 commit('setCaptains', response.data);
+              })
+              .catch(error => console.error(error));
+        },
+        fetchSchedulers({ commit }) {
+            axios.get('http://localhost:8000/api/display_scheduler/')
+              .then(response => {
+                commit('setSchedulers', response.data);
               })
               .catch(error => console.error(error));
         }
