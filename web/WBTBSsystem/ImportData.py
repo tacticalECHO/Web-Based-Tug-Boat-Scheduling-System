@@ -18,7 +18,7 @@ def WhichberthAvailable(arrivalTime, departureTime):
     for i in range(len(berthList)):
         if berthList[i].ContainerBoat==None:
             return berthList[i].BerthId
-        if datetime.datetime.now().replace(tzinfo=pytz.timezone('Asia/Shanghai'))>berthList[i].ContainerBoat.departureTime:
+        if datetime.datetime.now()>berthList[i].ContainerBoat.departureTime:
             berthList[i].ContainerBoat=None
             berthList[i].save()
             return berthList[i].BerthId
@@ -39,9 +39,9 @@ def str_to_date(str):
 def ifrepeat(data):
     # Determine if the data is repeated
     ContainerBoatlist=ContainerBoat.objects.all()
-    for i in range(len(data)):
-        for j in range(len(ContainerBoatlist)):
-            if data.iloc[i,0]==ContainerBoatlist[j].ContainerBoatID:
+    for j in range(len(ContainerBoatlist)):
+        if data.iloc[0]==ContainerBoatlist[j].ContainerBoatID:
+            if data.iloc[3]==ContainerBoatlist[j].arrivalTime and data.iloc[4]==ContainerBoatlist[j].departureTime:
                 return True
 
     return False
@@ -49,7 +49,8 @@ def dataIntoDatabase(data):
     
     # Import data into the database
     for i in range(len(data)):
-        if ifrepeat(data)==False:
+        if ifrepeat(data.iloc[i,:])==False:
+            print("importing data")
             ContainerBoat.objects.create(ContainerBoatID=data.iloc[i,0],Tonnage=data.iloc[i,1],Country=data.iloc[i,2],arrivalTime=data.iloc[i,3],departureTime=data.iloc[i,4])
 def createTask():
     # Create task
@@ -63,6 +64,8 @@ def createTask():
             berth=Berth.objects.get(BerthId=BerthId)
             berth.ContainerBoat=CB
             berth.save()
+        else:
+            print('No berth available')
     return
 if __name__ == "__main__":
     
