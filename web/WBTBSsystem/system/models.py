@@ -38,6 +38,14 @@ class ContainerBoat(models.Model): # ContainerBoat model
     Country = models.CharField(max_length=200)
     arrivalTime = models.DateTimeField()
     departureTime = models.DateTimeField()
+    def __str__(self):
+        return self.ContainerBoatID
+    # def save(self, *args, **kwargs):
+    #     if not self.ContainerBoatId:  
+    #         containerBoat = ContainerBoat.objects.filter(ContainerBoatId=self.ContainerBoatId).first()
+    #         if containerBoat:
+    #             self.ContainerBoatId = containerBoat 
+    #     super(ContainerBoat, self).save(*args, **kwargs)
 
 class Task(models.Model): # Task model
     TaskId = models.AutoField(primary_key=True)
@@ -48,13 +56,15 @@ class Task(models.Model): # Task model
     Action= models.CharField(max_length=10,choices=(('Arrival','Arrival'),('Departure','Departure')),default='Arrival')
     BerthId = models.IntegerField(default=0)
     State = models.CharField(max_length=100,choices=(('Scheduled','Scheduled'),('Unscheduled','Unscheduled')),default='Unscheduled')
-    
-    class Meta:
-        ordering = ('TaskId',)
-
-    def __str__(self):
+    def __int__(self):
         return self.TaskId
-
+    def save(self, *args, **kwargs):
+        if not self.TaskId:  
+            task = Task.objects.filter(TaskId=self.TaskId).first()
+            if task:
+                self.TaskId = task 
+        super(Task, self).save(*args, **kwargs)
+    
 class ScheduleEntry(models.Model): # ScheduleEntry model
     ScheduleEntryId= models.AutoField(primary_key=True)
     listOfTugBoats = models.ManyToManyField(TugBoat)
@@ -65,4 +75,5 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
 class Berth(models.Model): # Berth model
     BerthId= models.IntegerField(primary_key=True)
     ContainerBoat= models.OneToOneField(ContainerBoat, on_delete=models.CASCADE,null=True,related_name='berth',blank=True)
-    
+    def __str__(self):
+        return self.BerthId

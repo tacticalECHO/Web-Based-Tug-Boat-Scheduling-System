@@ -11,7 +11,9 @@ const store = createStore({
           isScheduler: false,
           captains: [],
           tasks: [],
-          schedulers: []
+          schedulers: [],
+          berth: [],
+          containerBoat: [],
         };
         
     },
@@ -32,6 +34,12 @@ const store = createStore({
         },
         setSchedulers(state, schedulers) {
             state.schedulers = schedulers;
+        },
+        setBerth(state, berth) {
+            state.berth = berth;
+        },
+        setContainerBoat(state, containerBoat) {
+            state.containerBoat = containerBoat;
         }
     },
 
@@ -54,6 +62,20 @@ const store = createStore({
             axios.get('http://localhost:8000/api/display_scheduler/')
               .then(response => {
                 commit('setSchedulers', response.data);
+              })
+              .catch(error => console.error(error));
+        },
+        fetchBerths({ commit }) {
+            axios.get('http://localhost:8000/api/display_berth/')
+              .then(response => {
+                commit('setBerth', response.data);
+              })
+              .catch(error => console.error(error));
+        },
+        fetchContainerBoats({ commit }) {
+            axios.get('http://localhost:8000/api/display_container_boat/')
+              .then(response => {
+                commit('setContainerBoat', response.data);
               })
               .catch(error => console.error(error));
         }

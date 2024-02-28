@@ -14,13 +14,12 @@ button {
     cursor: pointer;
     text-align: center;
     border-radius: 5px;
-    cursor: pointer;
     font-size: var(--font-size);
     padding: 10px;
     background: none;
 }
 
-.blue-button {
+.blue-button, .save {
     background-color: var(--main-button-color);
     color: #fff;
     border: none;
@@ -55,6 +54,13 @@ button {
 .cancel-save-buttons button {
     border: none;
     width: 80px;
+}
+
+.save {
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
 }
 
 /* --pages--------------------------------------------------------- */

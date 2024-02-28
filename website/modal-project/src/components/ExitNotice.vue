@@ -8,7 +8,7 @@
                 <span class="notice-buttons">
                     <button class="blue-border-button" id="exit" @click="exit()">Exit</button>
                     &nbsp; 
-                    <button class="blue-button" id="save" @click="save()">Save</button>
+                    <button class="blue-button" id="save" @click="cancel()">Cancel</button>
                 </span>
             </div>
         </div>
@@ -40,9 +40,9 @@ export default {
         exit(){
             this.$router.back();
         },
-        save(){
+        cancel(){
             //save password here
-            this.$router.push({name: ''});
+            this.$router.back();
         }
     }
 }

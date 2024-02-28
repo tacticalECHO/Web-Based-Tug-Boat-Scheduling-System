@@ -16,14 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from system.views import LoginView, ChangePasswordView, CaptainViewSet, TaskViewSet, SchedulerViewSet, DeleteSchedulersView, DeleteCaptainsView, CreateUserView
+from system.views import LoginView, ChangePasswordView, CaptainViewSet, TaskViewSet, SchedulerViewSet, DeleteSchedulersView, DeleteCaptainsView, CreateUserView, SaveTaskView, ContainerBoatViewSet, BerthViewSet, SaveContainerBoatView
 from rest_framework.routers import DefaultRouter
-
 
 router = DefaultRouter()
 router.register(r'api/display_captain', CaptainViewSet)
 router.register(r'api/display_task', TaskViewSet)
 router.register(r'api/display_scheduler', SchedulerViewSet)
+router.register(r'api/display_berth', BerthViewSet)
+router.register(r'api/display_container_boat', ContainerBoatViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -34,5 +35,7 @@ urlpatterns = [
     path('api/captains-delete/', DeleteCaptainsView.as_view(), name='delete_captains'),
     path('api/schedulers-delete/', DeleteSchedulersView.as_view(), name='delete_schedulers'),
     path('api/create-user/', CreateUserView.as_view(), name='create_user'),
+    path('api/save-task/', SaveTaskView.as_view(), name='save_task'),
+    path('api/save-containerboat/', SaveContainerBoatView.as_view(), name='save_container_boat'),
     path('', include(router.urls)),
 ]

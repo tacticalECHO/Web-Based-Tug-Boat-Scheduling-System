@@ -48,11 +48,6 @@ export default {
             'username',
             'passwordPlaceholder' 
         ]),
-
-        comparePassword(){
-            
-        }
-
     },
     methods: {
         cancel(){
@@ -63,7 +58,6 @@ export default {
             this.reenter = document.getElementById('passwordReEntered').value;
             if(this.password === this.reenter){
                 try {
-                    
                         const response = await axios.post('http://localhost:8000/api/change-password/', {
                         username: this.username,
                         password: this.password,
