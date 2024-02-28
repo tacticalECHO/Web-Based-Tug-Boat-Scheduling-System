@@ -2,7 +2,7 @@
     <div id = "Login">
         <div class = "login-container">
             <h1>Ningbo Harbour</h1>
-            <div class = "invalid-login">
+            <div v-if = "showError" class = "invalid-login">
                 <p>Invalid username or password, please log in again</p>
             </div>
             <!-- <form> -->
