@@ -47,6 +47,7 @@ import { mapState } from 'vuex';
 export default {
     name: 'SideBar',
     computed: {
+        ...mapState(['username', 'isCaptain']),
         ...mapState(['username', 'isCaptain', 'isAdmin', 'isScheduler']),
         profile_name() {
             return this.username || 'Guest';

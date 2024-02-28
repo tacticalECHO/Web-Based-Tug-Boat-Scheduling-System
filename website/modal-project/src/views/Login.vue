@@ -1,23 +1,23 @@
 <template>
-  <div id = "Login">
-      <div class = "login-container">
-          <h1>Ningbo Harbour</h1>
-          <div v-if="showError" class = "invalid-login">
-              <p>Invalid username or password, please log in again</p>
-          </div>
-          <form @submit.prevent="login()">
-              <div class = "form-group">
-                  <label for="username">Username</label>
-                  <input type="text" id="username" v-model="username" placeholder="Input your ID">
-              </div>
-              <div class = "form-group">
-                  <label for="password">Password</label>
-                  <input type="password" id="password" v-model="password" placeholder="Input your password">
-              </div>
-              <input type="submit" class="blue-button" value="Login">
-          </form>
-      </div>
-  </div>
+    <div id = "Login">
+        <div class = "login-container">
+            <h1>Ningbo Harbour</h1>
+            <div v-if = "showError" class = "invalid-login">
+                <p>Invalid username or password, please log in again</p>
+            </div>
+            <!-- <form> -->
+                <div class = "form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" v-model="username" placeholder="Input your ID">
+                </div>
+                <div class = "form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" v-model="password" placeholder="Input your password">
+                </div>
+                <button class="blue-button" @click="login()">Login</button>
+            <!-- </form> -->
+        </div>
+    </div>
 </template>
 
 <script>
@@ -43,7 +43,8 @@ methods: {
       if (response.data.success) {
           this.showError = false;
           this.$store.commit('setUser', { username: this.username });
-          this.$store.commit('setUserRole', { isCaptain: response.data.is_captain });
+          this.$store.commit('setUserRole', { isCaptain: response.data.is_captain, isAdmin: response.data.is_staff
+                                                ,isScheduler: response.data.is_scheduler});
           this.$router.push({ name: 'Settings' });
       } else {
         this.showError = true; // Show error if login failed
