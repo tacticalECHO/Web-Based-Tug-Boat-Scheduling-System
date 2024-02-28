@@ -144,13 +144,22 @@ const router = createRouter({
 });
 
  router.beforeEach((to, from, next) => {
-   const isLoggedIn = store.state.username !== '';
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const username = localStorage.getItem('username');
+  const roles = JSON.parse(localStorage.getItem('roles'));
 
-   if (!isLoggedIn && to.name !== 'Login') {
-     next({ name: 'Login' });
-   } else {
-     next();
-   }
+  if (isLoggedIn) {
+    if (store.state.username !== username) {
+        store.commit('setUser', { username });
+        store.commit('setUserRole', roles);
+    }
+  }
+
+  if (!isLoggedIn && to.name !== 'Login') {
+    next({ name: 'Login' });
+  } else {
+    next();
+  }
  });
 
 

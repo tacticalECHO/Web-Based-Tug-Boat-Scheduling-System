@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['TaskId', 'ReqauriedTugBoat', 'startTime', 'endTime', 'ContainerBoatID', 'Action', 'BerthId', 'State']
+        fields = ['TaskId', 'RequiredTugBoat', 'startTime', 'endTime', 'ContainerBoatID', 'Action', 'BerthId', 'State']
 
 class BerthSerializer(serializers.ModelSerializer):
     class Meta:

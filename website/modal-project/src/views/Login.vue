@@ -45,6 +45,13 @@ methods: {
           this.$store.commit('setUser', { username: this.username });
           this.$store.commit('setUserRole', { isCaptain: response.data.is_captain, isAdmin: response.data.is_staff
                                                 ,isScheduler: response.data.is_scheduler});
+                                                localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('username', this.username);
+          localStorage.setItem('roles', JSON.stringify({
+              isCaptain: response.data.is_captain,
+              isAdmin: response.data.is_staff,
+              isScheduler: response.data.is_scheduler
+          }));
           this.$router.push({ name: 'Settings' });
       } else {
         this.showError = true; // Show error if login failed

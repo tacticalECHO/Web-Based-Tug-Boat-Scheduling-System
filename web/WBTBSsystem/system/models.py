@@ -49,7 +49,7 @@ class ContainerBoat(models.Model): # ContainerBoat model
 
 class Task(models.Model): # Task model
     TaskId = models.AutoField(primary_key=True)
-    ReqauriedTugBoat = models.IntegerField(default=0)
+    RequiredTugBoat = models.IntegerField(default=0)
     startTime = models.DateTimeField()
     endTime = models.DateTimeField()
     ContainerBoatID = models.ForeignKey(ContainerBoat, on_delete=models.CASCADE)

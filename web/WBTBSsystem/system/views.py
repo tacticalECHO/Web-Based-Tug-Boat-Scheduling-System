@@ -129,7 +129,7 @@ class SaveTaskView(View):
                  return JsonResponse({'error': f'Task with id={taskId} does not exist'}, status=404)
                   
             if requiredTugBoat is not None:
-                task.ReqauriedTugBoat = requiredTugBoat
+                task.RequiredTugBoat = requiredTugBoat
             if startTime is not None:
                 task.startTime = startTime
             if endTime is not None:
@@ -178,12 +178,12 @@ class SaveContainerBoatView(View):
                     containerBoat = ContainerBoat(ContainerBoatID = containerBoatId, Tonnage = tonnage, Country = country, arrivalTime = arrivalTime, departureTime = leaveTime)
                     
                 Task.objects.create(
-                    ReqauriedTugBoat=requiredTugBoat,
+                    RequiredTugBoat=requiredTugBoat,
                     startTime=arrivalTime,
                     endTime=leaveTime,
                     ContainerBoatID=containerBoat,  
                     Action=action,
-                    BerthId='',
+                    BerthId=0,
                     State='unscheduled',
                 )
 
