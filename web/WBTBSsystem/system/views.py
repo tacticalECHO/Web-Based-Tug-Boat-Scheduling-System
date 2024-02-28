@@ -81,8 +81,7 @@ class DeleteSchedulersView(View):
             return JsonResponse({'message': 'Schedulers deleted successfully'}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-        
-@method_decorator(csrf_exempt, name='dispatch')
+
 class CreateUserView(View):
     def post(self, request, *args, **kwargs):
         try:
@@ -110,7 +109,7 @@ class CreateUserView(View):
         
 
         
-from .serializers import CaptainSerializer, SchedulerSerializer
+from .serializers import CaptainSerializer, SchedulerSerializer, TaskSerializer
 from rest_framework import viewsets
 
 class CaptainViewSet(viewsets.ModelViewSet):
@@ -120,7 +119,10 @@ class CaptainViewSet(viewsets.ModelViewSet):
 class SchedulerViewSet(viewsets.ModelViewSet):
     queryset = Scheduler.objects.all()
     serializer_class = SchedulerSerializer
-        
 
-def build_new_user(request):
-    new_user = User.objects.create_user()
+    def build_new_user(request):
+        new_user = User.objects.create_user()
+
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer  

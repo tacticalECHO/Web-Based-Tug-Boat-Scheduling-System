@@ -18,47 +18,79 @@
                 <thead>
                     <tr>
                         <th><input type="checkbox" disabled></th>
-                        <th>No.1</th>
-                        <th>Container Boat</th>
-                        <th>Tonnage</th>
-                        <th>Country</th>
-                        <th>Arrival Time</th>
-                        <th>Leave Time</th>
+                        <th>Task Id</th>
+                        <th>Required Tug Boat</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Container Boat Id</th>
+                        <th>Berth Id</th>
+                        <th>Action</th>
+                        <th>State</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr v-for="task in $store.state.tasks" :key="task.TaskId">
                         <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
-                        <td id="number"> {{number}} </td>
-                        <td @click.stop> 
-                            <form>
-                                <input id="containerBoatForm" v-if="showContainerBoatForm" type="text" :value="containerBoat">
-                            </form>
-                            <span v-if="containerBoatInfo" @click="clickContainerBoat()" id="containerBoatInfo">{{containerBoat}}</span> 
+                        <td>
+                            <span :id="'taskId' + task.TaskId">{{task.TaskId}}</span> 
                         </td>
                         <td @click.stop>
-                            <form>
-                                <input id="tonnageForm" v-if="showTonnageForm" type="text"  :value="tonnage">
+                            <form v-if="showRequiredTugBoatForm === task.TaskId" @submit.prevent="edit(task.TaskId)">
+                                <input :id="'requiredTugBoat' + task.taskId" :ref="'requiredTugBoat' + task.taskId" type="text"  :value="task.ReqauriedTugBoat">
+                                <input class="submit-button" type="submit" />
                             </form>
-                            <span v-if="tonnageInfo" @click="clickTonnage()" id="tonnageInfo">{{tonnage}}</span> 
+                            <span @click="selected(task.TaskId, 'requiredTugBoat')" v-if="requiredTugBoatInfo != task.TaskId">{{task.ReqauriedTugBoat}}</span> 
                         </td>
                         <td @click.stop>
-                            <form>
-                                <input id="countryForm" v-if="showCountryForm" type="text"  :value="country">
+                            <form v-if="showStartTimeForm === task.TaskId" @submit.prevent="edit(task.TaskId)">
+                                <input :id="'startTime' + task.taskId" :ref="'startTime' + task.taskId" type="text"  :value="task.startTime">
+                                <input class="submit-button" type="submit" />
                             </form>
-                            <span v-if="countryInfo" @click="clickCountry()" id="countryInfo">{{country}}</span> 
+                            <span @click="selected(task.TaskId, 'startTime')" v-if="startTimeInfo != task.TaskId">{{task.startTime}}</span> 
                         </td>
                         <td @click.stop>
-                            <form>
-                                <input id="arrivalTimeForm" v-if="showArrivalTimeForm" type="text"  :value="arrivalTime">
+                            <form v-if="showEndTimeForm === task.TaskId">
+                                <input :id="'endTime' + task.taskId" :ref="'endTime' + task.taskId" type="text"  :value="task.endTime">
+                                <input class="submit-button" type="submit" />
                             </form>
-                            <span v-if="arrivalTimeInfo" @click="clickArrivalTime()" id="arrivalTimeInfo">{{arrivalTime}}</span> 
+                            <span @click="selected(task.TaskId, 'endTime')" v-if="endTimeInfo != task.TaskId">{{task.endTime}}</span> 
                         </td>
                         <td @click.stop>
-                            <form>
-                                <input id="leaveTimeForm" v-if="showLeaveTimeForm" type="text"  :value="leaveTime">
+                            <form v-if="showContainerBoatIdForm === task.TaskId">
+                                <input :id="'containerBoatId' + task.taskId" :ref="'containerBoatId' + task.taskId" type="text"  :value="task.ContainerBoatID">
+                                <input class="submit-button" type="submit" />
                             </form>
-                            <span v-if="leaveTimeInfo" @click="clickLeaveTime()" id="leaveTimeInfo">{{leaveTime}}</span> 
+                            <span @click="selected(task.TaskId, 'containerBoatId')" v-if="containerBoatIdInfo != task.TaskId">{{task.ContainerBoatID}}</span> 
+                        </td>
+                        <td @click.stop>
+                            <form v-if="showBerthIdForm === task.TaskId">
+                                <select :id="'berthId' + task.taskId"  :value="task.berthId">
+                                    <option>Unscheduled</option>
+                                    <option>Scheduled</option>
+                                </select>
+                                <input class="submit-button" type="submit" />
+                            </form>
+                            <span @click="selected(task.TaskId, 'berthId')" v-if="berthIdInfo != task.TaskId">{{task.BerthId}}</span> 
+                        </td>
+                        <td @click.stop>
+                            <form v-if="showActionForm === task.TaskId">
+                                <select :id="'action' + task.taskId" :value="task.Action">
+                                    <option>Arrival</option>
+                                    <option>Departure</option>
+                                </select>
+                                <input class="submit-button" type="submit" />
+                            </form>
+                            <span @click="selected(task.TaskId, 'action')" v-if="actionInfo != task.TaskId">{{task.Action}}</span> 
+                        </td>
+                        <td @click.stop>
+                            <form v-if="showStateForm === task.TaskId">
+                                <select :id="'state' + task.taskId"  :value="task.State">
+                                    <option>Unscheduled</option>
+                                    <option>Scheduled</option>
+                                </select>
+                                <input class="submit-button" type="submit" />
+                            </form>
+                            <span @click="selected(task.TaskId, 'state')" v-if="stateInfo != task.TaskId">{{task.State}}</span> 
                         </td>
                     </tr>
                 </tbody>
@@ -73,111 +105,106 @@ import SideBar from '@/components/SideBar.vue';
 export default {
     name: 'WorkSchedule',
     components: {SideBar},
+    mounted() {
+        this.$store.dispatch('fetchTasks');
+    },
     data() {
         return {
-            showContainerBoatForm: false,
-            containerBoatInfo: true,
-            showTonnageForm: false,
-            tonnageInfo: true,
-            showCountryForm: false,
-            countryInfo: true,
-            showArrivalTimeForm: false,
-            arrivalTimeInfo: true,
-            showLeaveTimeForm: false,
-            leaveTimeInfo: true,
-            number: "1",
-            containerBoat: "JHSANG888",
-            tonnage: "110928",
-            country: "Australia",
-            arrivalTime: "08.30",
-            leaveTime: "08.30",
+            showRequiredTugBoatForm: null,
+            showStartTimeForm: null,
+            showEndTimeForm: null,
+            showContainerBoatIdForm: null,
+            showActionForm: null,
+            showStateForm: null,
+            showBerthIdForm: null,
+            requiredTugBoatInfo: null,
+            startTimeInfo: null,
+            endTimeInfo: null,
+            containerBoatIdInfo: null,
+            berthIdInfo: null,
+            actionInfo: null,
+            stateInfo: null,
         }
     },
     methods: {
-        clickContainerBoat(){
-            this.showContainerBoatForm = true;
-            this.containerBoatInfo = false;
-            this.showTonnageForm = false;
-            //others
-            this.tonnageInfo = true;
-            this.showCountryForm = false;
-            this.countryInfo = true;
-            this.showArrivalTimeForm = false;
-            this.arrivalTimeInfo = true;
-            this.showLeaveTimeForm = false;
-            this.leaveTimeInfo = true;
+        resetNull() {
+            this.showRequiredTugBoatForm = null;
+            this.showStartTimeForm = null;
+            this.showEndTimeForm = null;
+            this.showContainerBoatIdForm = null;
+            this.showBerthIdForm = null;
+            this.showActionForm = null;
+            this.showStateForm = null;
+            this.requiredTugBoatInfo = null;
+            this.startTimeInfo = null;
+            this.endTimeInfo = null;
+            this.containerBoatIdInfo = null;
+            this.berthIdInfo = null;
+            this.actionInfo = null;
+            this.stateInfo = null;
+
         },
-        clickTonnage(){
-            this.showTonnageForm = true;
-            this.tonnageInfo = false;
-            //others
-            this.showContainerBoatForm = false;
-            this.containerBoatInfo = true;
-            this.showCountryForm = false;
-            this.countryInfo = true;
-            this.showArrivalTimeForm = false;
-            this.arrivalTimeInfo = true;
-            this.showLeaveTimeForm = false;
-            this.leaveTimeInfo = true;
-        },
-        clickCountry(){
-            this.showCountryForm = true;
-            this.countryInfo = false;
-            //others
-            this.showTonnageForm = false;
-            this.tonnageInfo = true;
-            this.showContainerBoatForm = false;
-            this.containerBoatInfo = true;
-            this.showArrivalTimeForm = false;
-            this.arrivalTimeInfo = true;
-            this.showLeaveTimeForm = false;
-            this.leaveTimeInfo = true;
-    },
-        clickArrivalTime(){
-            this.showArrivalTimeForm = true;
-            this.arrivalTimeInfo = false;
-            //others
-            this.showTonnageForm = false;
-            this.tonnageInfo = true;
-            this.showCountryForm = false;
-            this.countryInfo = true;
-            this.showContainerBoatForm = false;
-            this.containerBoatInfo = true;
-            this.showLeaveTimeForm = false;
-            this.leaveTimeInfo = true;
-        },
-        clickLeaveTime(){
-            this.showLeaveTimeForm = true;
-            this.leaveTimeInfo = false;
-            //others
-            this.showTonnageForm = false;
-            this.tonnageInfo = true;
-            this.showCountryForm = false;
-            this.countryInfo = true;
-            this.showArrivalTimeForm = false;
-            this.arrivalTimeInfo = true;
-            this.showContainerBoatForm = false;
-            this.containerBoatInfo = true;
+        selected(id, column) {
+            this.resetNull();
+            if(column === 'requiredTugBoat'){
+                this.showRequiredTugBoatForm = id;
+                this.requiredTugBoatInfo = id;
+                // this.$nextTick(() => {
+                //     this.$refs['requiredTugBoat'+id].focus();
+                // });
+            }else if (column === 'startTime'){
+                this.showStartTimeForm = id;
+                this.startTimeInfo = id;
+            }else if (column === 'endTime'){
+                this.showEndTimeForm = id;
+                this.endTimeInfo = id;
+            }else if (column === 'containerBoatId'){
+                this.showContainerBoatIdForm = id;
+                this.containerBoatIdInfo = id;
+            }else if (column === 'berthId'){
+                this.showBerthIdForm = id;
+                this.berthIdInfo = id;
+            }else if (column === 'action'){
+                this.showActionForm = id;
+                this.actionInfo = id;
+            }else if (column === 'state'){
+                this.showStateForm = id;
+                this.stateInfo = id;
+            }
         },
         toggle(event) {
             if (!event.target.closest('form')) {
-                this.showContainerBoatForm = false;
-                this.containerBoatInfo = true;
-                this.showTonnageForm = false;
-                this.tonnageInfo = true;
-                this.showCountryForm = false;
-                this.countryInfo = true;
-                this.showArrivalTimeForm = false;
-                this.arrivalTimeInfo = true;
-                this.showLeaveTimeForm = false;
-                this.leaveTimeInfo = true;
+                this.resetNull();
             }
         },
+        async edit(id) {
+            try { 
+                const response = await axios.post('http://localhost:8000/api/change-password/', {
+                username: this.username,
+                password: this.password,
+                });
+                if (response.data.success) {
+                    this.$router.push({ name: 'Login' });
+                } else {
+                    alert('Edit Task Failed.');
+                }
+            } catch (error) {
+                console.error('Edit task error:', error);
+                alert('Edit Task Error.');
+            }
+        }
     }
 }
 </script>
 
 <style scoped>
+form {
+    margin-right: none;
+}
+.submit-button {
+    display: none;
+}
+
 #containerBoatForm {
     width: fit-content;
 }

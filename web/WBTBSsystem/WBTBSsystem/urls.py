@@ -16,12 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from system.views import LoginView, ChangePasswordView, CaptainViewSet, SchedulerViewSet, DeleteSchedulersView, DeleteCaptainsView, CreateUserView
+from system.views import LoginView, ChangePasswordView, CaptainViewSet, TaskViewSet, SchedulerViewSet, DeleteSchedulersView, DeleteCaptainsView, CreateUserView
 from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
 router.register(r'api/display_captain', CaptainViewSet)
+router.register(r'api/display_task', TaskViewSet)
 router.register(r'api/display_scheduler', SchedulerViewSet)
 
 urlpatterns = [

@@ -48,6 +48,12 @@ class Task(models.Model): # Task model
     Action= models.CharField(max_length=10,choices=(('Arrival','Arrival'),('Departure','Departure')),default='Arrival')
     BerthId = models.IntegerField(default=0)
     State = models.CharField(max_length=100,choices=(('Scheduled','Scheduled'),('Unscheduled','Unscheduled')),default='Unscheduled')
+    
+    class Meta:
+        ordering = ('TaskId',)
+
+    def __str__(self):
+        return self.TaskId
 
 class ScheduleEntry(models.Model): # ScheduleEntry model
     ScheduleEntryId= models.AutoField(primary_key=True)

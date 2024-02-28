@@ -18,7 +18,7 @@ def AutoSchedule_Complete(): # Check if the task is completed
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     for schedule in ScheduleEntryList:
         if schedule.State == 'Scheduled':
-            if schedule.TaskId.startTime < datetime.datetime.now().replace(tzinfo=pytz.timezone('Asia/Shanghai')):
+            if schedule.TaskId.startTime < datetime.datetime.now():
                 schedule.State = 'Completed'
                 schedule.save()
                 for tugboat in schedule.listOfTugBoats.all():
@@ -45,7 +45,7 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     AutoSchedule_Complete()
     for task in TaskList:
-        if task.State == 'Unscheduled':
+        if task.State == 'Unscheduled' and task.startTime.date() == datetime.datetime.now().date():
             schedule = ScheduleEntry(TaskId=task, State='Scheduled')
             schedule.save()
             for i in range(task.ReqauriedTugBoat):

@@ -2,6 +2,7 @@
     <div id="AdminDashboard">
         <SideBar />
         <div class="pages">
+            <router-view />
             <div class="header-style">
                 <h2>Your Dashboard</h2>
                 <span>
@@ -49,7 +50,6 @@
                 </tbody>
             </table>
         </div>
-        <router-view />
     </div>
 </template>
 

@@ -4,6 +4,7 @@ from . import views
 
 router = DefaultRouter()
 router.register(r'api/display_captain', views.CaptainViewSet)
+router.register(r'api/display_task', views.TaskViewSet)
 router.register(r'api/display_scheduler', views.SchedulerViewSet)
 
 urlpatterns = [

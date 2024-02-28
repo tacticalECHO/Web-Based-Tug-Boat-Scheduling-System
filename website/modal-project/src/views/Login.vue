@@ -24,103 +24,104 @@
 import axios from 'axios';
 
 export default {
-  name: 'Login',
-  data() {
-    return {
-      username: '',
-      password: '',
-      showError: false,
-    };
-  },
-  methods: {
-    async login() {
-      try {
-        const response = await axios.post('http://localhost:8000/api/login/', {
-          username: this.username,
-          password: this.password,
-        });
-        // The backend response contains { success: true } on successful login
-        if (response.data.success) {
-            this.showError = false;
-            this.$store.commit('setUser', { username: this.username });
-            this.$store.commit('setUserRole', { isCaptain: response.data.is_captain, isAdmin: response.data.is_staff
-                                                ,isScheduler: response.data.is_scheduler});
-            this.$router.push({ name: 'Settings' });
-        } else {
-          this.showError = true; // Show error if login failed
-        }
-      } catch (error) {
-        console.error('Login error:', error);
-        this.showError = true; 
+name: 'Login',
+data() {
+  return {
+    username: '',
+    password: '',
+    showError: false,
+  };
+},
+methods: {
+  async login() {
+    try {
+      const response = await axios.post('http://localhost:8000/api/login/', {
+        username: this.username,
+        password: this.password,
+      });
+      // The backend response contains { success: true } on successful login
+      if (response.data.success) {
+          this.showError = false;
+          this.$store.commit('setUser', { username: this.username });
+          this.$store.commit('setUserRole', { isCaptain: response.data.is_captain });
+          this.$router.push({ name: 'Settings' });
+      } else {
+        this.showError = true; // Show error if login failed
       }
-    },
+    } catch (error) {
+      console.error('Login error:', error);
+      this.showError = true; 
+      document.getElementById('username').style.border = "1px solid red";
+      document.getElementById('password').style.border = "1px solid red";
+    }
   },
+},
 };
 </script>
 
 <style scoped>
 body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f4f4f4;
 }
 
 .login-container {
-    margin: auto;
-    margin-top: 10%;
-    width: 500px;
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  margin: auto;
+  margin-top: 10%;
+  width: 500px;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .login-container h1{
-    color: var(--headings-color);
-    font-weight: 900;
-    font-size: 45px;
+  color: var(--headings-color);
+  font-weight: 900;
+  font-size: 45px;
 }
 
 .invalid-login{
-    width: var(--login-width-size);
-    border-radius: 4px;
-    border: 2px solid red;
-    background-color: rgba(255,0,0,0.2);
-    padding-left: 5px;
-    padding-right: 5px;
-    text-align: center;
-    margin-bottom: 15px;
-    color: red;
+  width: var(--login-width-size);
+  border-radius: 4px;
+  border: 2px solid red;
+  background-color: rgba(255,0,0,0.2);
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: center;
+  margin-bottom: 15px;
+  color: red;
 }
 
 .form-group {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 5px;
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
 }
 
 input {
-    width: var(--login-width-size);
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
+  width: var(--login-width-size);
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 button {
-    width: var(--login-width-size);
-    font-size: 16px;
+  width: var(--login-width-size);
+  font-size: 16px;
 }
 
 </style>
