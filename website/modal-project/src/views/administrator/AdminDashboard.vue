@@ -27,8 +27,8 @@
                         <td><input type="checkbox" :id="'checkbox' + captain.CaptainId" :name="'checkbox' + captain.name" v-model="selectedCaptains" :value="captain.CaptainId"></td>
                         <td id="captain-name"> {{captain.name}} </td>
                         <td id="captain-id"> {{captain.CaptainId}} </td>
-                        <td id="tugboat"> {{captain.tugboat.TugBoatId}} </td>
-                        <td id="captain-status"> <span  class="status-container">{{captain.tugboat.CurrentStatus}}</span> </td>
+                        <td id="tugboat"> {{captain.tugboat ? captain.tugboat.TugBoatId : 'waiting'}} </td>
+                        <td id="captain-status"> <span  class="status-container">{{captain.tugboat ? captain.tugboat.CurrentStatus : 'waiting'}}</span> </td>
                     </tr>
                 </tbody>
             </table>
