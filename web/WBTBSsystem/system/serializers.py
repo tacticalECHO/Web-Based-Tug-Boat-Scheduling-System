@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Captain, TugBoat
+from .models import Captain, TugBoat, Task
 
 class TugBoatSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,3 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'is_staff']
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['TaskId', 'ReqauriedTugBoat', 'startTime', 'endTime', 'ContainerBoatID', 'Action', 'BerthId', 'State']

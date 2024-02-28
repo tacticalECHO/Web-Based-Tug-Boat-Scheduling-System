@@ -53,13 +53,37 @@ class ChangePasswordView(View):
         except User.DoesNotExist:
             return JsonResponse({'success': False}, status=401)
         
-from .serializers import CaptainSerializer
+@method_decorator(csrf_exempt, name='dispatch')
+class EditTaskView(View):
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        taskId = data.get('taskId')
+        requiredTugBoat = data.get('requiredTugBoat')
+        startTime = data.get('startTime')
+        endTime = data.get('startTime')
+        containerBoatID = data.get('containerBoatId')
+        action = data.get('action')
+        berthId = data.get('berthId')
+        state = data.get('state')
+        
+        try:
+            task = Task.objects.get(TaskId = taskId)
+            task.set_password(new_password)
+            task.save()
+            return JsonResponse({'success': True})
+        except User.DoesNotExist:
+            return JsonResponse({'success': False}, status=401)
+        
+from .serializers import CaptainSerializer, TaskSerializer
 from rest_framework import viewsets
 
 class CaptainViewSet(viewsets.ModelViewSet):
     queryset = Captain.objects.all()
-    serializer_class = CaptainSerializer
-        
+    serializer_class = CaptainSerializer   
 
-def build_new_user(request):
-    new_user = User.objects.create_user()
+    def build_new_user(request):
+        new_user = User.objects.create_user()
+
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer  

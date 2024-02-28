@@ -4,6 +4,7 @@ from . import views
 
 router = DefaultRouter()
 router.register(r'api/display_captain', views.CaptainViewSet)
+router.register('api/display_task', views.TaskViewSet)
 
 urlpatterns = [
     path('api/login/', views.LoginView.as_view(), name='login'),

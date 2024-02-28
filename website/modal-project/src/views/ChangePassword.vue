@@ -4,22 +4,28 @@
         <div class="pages">
             <router-view />
             <h3>Settings</h3>
-            <div class = "form">
-                <b><label for="username">Username  </label></b>
-                &nbsp;  
-                <input type="text" id="username" v-model="username" :placeholder="username" readonly>
+                <div class = "form">
+                    <b><label for="username">Username  </label></b>
+                    &nbsp;  
+                    <input type="text" id="username" v-model="username" :placeholder="username" readonly>
+                </div>
+                <br>
+                <div class = "form">
+                    <b><label for="password">Password  </label></b>
+                    &nbsp;  
+                    <input type="password" id="password" v-model="password" placeholder="Enter new password">
+                </div>
+                <br>
+                <div class = "form">
+                    <b><label for="passwordReEntered">Re-Enter</label></b>
+                    &nbsp; &nbsp; 
+                    <input type="password" id="passwordReEntered"  placeholder="Re-enter new password">
+                </div>
             </div>
-            <br>
-            <div class = "form">
-                <b><label for="password">Password  </label></b>
-                &nbsp;  
-                <input type="password" id="password" v-model="password" placeholder="Enter new password">
+            <div class="cancel-save-buttons">
+                <button class="grey-border-button" id="cancel" @click="redirect('Exit-ChangePassword')">Cancel</button>
+                <button class="blue-button" id="save" @click="save()">Save</button>
             </div>
-        </div>
-        <div class="cancel-save-buttons">
-            <button class="grey-border-button" id="cancel" @click="redirect('Exit-ChangePassword')">Cancel</button>
-            <button class="blue-button" id="save" @click="save()">Save</button>
-        </div>
     </div>
 </template>
 
@@ -31,11 +37,21 @@ import axios from 'axios';
 export default {
     name: 'ChangePassword',
     components: {SideBar},
+    data(){
+        return{
+            password: '',
+            reenter: '',
+        }
+    },
     computed: {
         ...mapState([
             'username',
             'passwordPlaceholder' 
         ]),
+
+        comparePassword(){
+            
+        }
 
     },
     methods: {
@@ -43,19 +59,28 @@ export default {
             this.$router.push({name: 'Exit-ChangePassword'});
         },
         async save() {
-            try {
-                const response = await axios.post('http://localhost:8000/api/change-password/', {
-                username: this.username,
-                password: this.password,
-                });
-                if (response.data.success) {
-                    this.$router.push({ name: 'Login' });
-                } else {
-                    alert('Password change failed.');
+            this.password = document.getElementById('password').value;
+            this.reenter = document.getElementById('passwordReEntered').value;
+            if(this.password === this.reenter){
+                try {
+                    
+                        const response = await axios.post('http://localhost:8000/api/change-password/', {
+                        username: this.username,
+                        password: this.password,
+                        });
+                        if (response.data.success) {
+                            this.$router.push({ name: 'Login' });
+                        } else {
+                            alert('Password change failed.');
+                        }
+                    
+                } catch (error) {
+                    console.error('Change password error:', error);
+                    alert('Password change error.');
                 }
-            } catch (error) {
-                console.error('Change password error:', error);
-                alert('Password change error.');
+            }else {
+                alert('Passwords are not similar.');
+                document.getElementById('passwordReEntered').style.border = "1px solid red";
             }
         }
     }
