@@ -143,15 +143,15 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   const isLoggedIn = store.state.username !== '';
+ router.beforeEach((to, from, next) => {
+   const isLoggedIn = store.state.username !== '';
 
-//   if (!isLoggedIn && to.name !== 'Login') {
-//     next({ name: 'Login' });
-//   } else {
-//     next();
-//   }
-// });
+   if (!isLoggedIn && to.name !== 'Login') {
+     next({ name: 'Login' });
+   } else {
+     next();
+   }
+ });
 
 
 export default router;
