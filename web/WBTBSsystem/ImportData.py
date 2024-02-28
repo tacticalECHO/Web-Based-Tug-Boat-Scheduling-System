@@ -10,7 +10,7 @@ django.setup()
 from system.models import ContainerBoat, Task, Berth
 import pandas as pd
 import numpy as np
-path="web\WBTBSsystem\\test.xlsx"
+PATH="web\WBTBSsystem\\test.xlsx"
 
 def WhichberthAvailable(arrivalTime, departureTime):
     # Determine which berth is available
@@ -25,7 +25,7 @@ def WhichberthAvailable(arrivalTime, departureTime):
     return -1
 def requieredTugBoat(Tonnage):
     return math.ceil(Tonnage/1000)
-def importData():
+def importData(path):
     # Import data from the xlsx file
     data = pd.read_excel(path, header=None)
     data=data.iloc[1:,:]
@@ -50,7 +50,6 @@ def dataIntoDatabase(data):
     # Import data into the database
     for i in range(len(data)):
         if ifrepeat(data.iloc[i,:])==False:
-            print("importing data")
             ContainerBoat.objects.create(ContainerBoatID=data.iloc[i,0],Tonnage=data.iloc[i,1],Country=data.iloc[i,2],arrivalTime=data.iloc[i,3],departureTime=data.iloc[i,4])
 def createTask():
     # Create task
@@ -69,7 +68,7 @@ def createTask():
     return
 if __name__ == "__main__":
     
-    data=importData()
+    data=importData(PATH)
     dataIntoDatabase(data)
     createTask()
     print(data)
