@@ -21,11 +21,13 @@ def AutoSchedule_Complete(): # Check if the task is completed
             if schedule.TaskId.startTime < datetime.datetime.now():
                 schedule.State = 'Completed'
                 schedule.save()
-                for tugboat in schedule.listOfTugBoats.all():
-                    tugboat.CurrentStatus = 'Free'
-                    tugboat.save()
                 schedule.listOfTugBoats.clear()
+                schedule.TaskId.State = 'Completed'
                 schedule.save()
+                schedule.TaskId.save()
+            if schedule.TaskId.endTime.date() < datetime.datetime.now().date()-datetime.timedelta(days=1):
+                schedule.delete()
+                
     return
 
 
@@ -53,7 +55,6 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
                 for tugboat in TugBoatList:
                     if ifTugBoatAvailable(tugboat, task):
                         schedule.listOfTugBoats.add(tugboat)
-                        tugboat.CurrentStatus = 'Busy'
                         n+=1
                         break
             task.State = 'Scheduled'
