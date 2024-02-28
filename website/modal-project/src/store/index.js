@@ -11,6 +11,7 @@ const store = createStore({
           isScheduler: false,
           captains: [],
           tasks: [],
+          schedulers: []
         };
         
     },
@@ -28,6 +29,9 @@ const store = createStore({
         },
         setTask(state, tasks) {
             state.tasks = tasks;
+        },
+        setSchedulers(state, schedulers) {
+            state.schedulers = schedulers;
         }
     },
 
@@ -46,6 +50,13 @@ const store = createStore({
               })
               .catch(error => console.error(error));
         },
+        fetchSchedulers({ commit }) {
+            axios.get('http://localhost:8000/api/display_scheduler/')
+              .then(response => {
+                commit('setSchedulers', response.data);
+              })
+              .catch(error => console.error(error));
+        }
     }
 });
 export default store;

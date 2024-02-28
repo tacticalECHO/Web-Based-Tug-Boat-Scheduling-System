@@ -2,24 +2,24 @@
     <div id="Sidebar">
         <h2>Ningbo Harbour</h2>
             <ul>
-                <li  @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item">
+                <li v-if="isAdmin" @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item">
                   <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     A-Dashboard
                 </li>
-                <li  @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item">
+                <li v-if="isScheduler || isAdmin" @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item">
                   <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     S-Dashboard
                 </li>
-                <li   @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item">
-                    <admin-panel  />
+                <li v-if="isCaptain || isAdmin" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item">
+                    <admin-panel v-if="isCaptain" />
                   <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     C-Dashboard
                 </li>
-                <li  @click="redirect('WorkSchedule')" class="sidebar-item">
+                <li v-if="isScheduler || isAdmin" @click="redirect('WorkSchedule')" class="sidebar-item">
                     <font-awesome-icon :icon="['fas', 'calendar-days']" class="sidebar-icon"/>
                     Work Schedules
                 </li>
-                <li  @click="redirect('TaskManager')" class="sidebar-item">
+                <li v-if="isScheduler || isAdmin" @click="redirect('TaskManager')" class="sidebar-item">
                     <font-awesome-icon :icon="['fas', 'bell']" class="sidebar-icon"/>
                     Task Manager
                 </li>

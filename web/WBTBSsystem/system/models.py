@@ -7,7 +7,7 @@ class Captain(models.Model): # Captain model
     name = models.CharField(max_length=200)
     CaptainId = models.CharField(max_length=200, unique=True)
     def save(self, *args, **kwargs):
-        if not self.Account:  
+        if not self.Account:
             user = User.objects.filter(username=self.CaptainId).first()
             if user:
                 self.Account = user 
@@ -62,3 +62,7 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
     State = models.CharField(max_length=10,choices=(('Scheduled','Scheduled'),('Completed','Completed')),default='Scheduled')
 
 
+class Berth(models.Model): # Berth model
+    BerthId= models.IntegerField(primary_key=True)
+    ContainerBoat= models.OneToOneField(ContainerBoat, on_delete=models.CASCADE,null=True,related_name='berth',blank=True)
+    

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Captain, TugBoat, Task
+from .models import Captain, TugBoat, Task, Scheduler
 
 class TugBoatSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,6 +11,11 @@ class CaptainSerializer(serializers.ModelSerializer):
     class Meta:
         model = Captain
         fields = ['name', 'CaptainId', 'tugboat']
+
+class SchedulerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Scheduler
+        fields = ['name', 'SchedulerId']
 
 from django.contrib.auth.models import User
 
