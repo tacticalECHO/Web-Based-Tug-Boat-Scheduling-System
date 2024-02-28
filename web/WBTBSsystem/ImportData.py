@@ -2,14 +2,10 @@ import datetime
 import os
 import django
 import math
-import time
-
-import pytz
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
 from system.models import ContainerBoat, Task, Berth
 import pandas as pd
-import numpy as np
 PATH="web\WBTBSsystem\\test.xlsx"
 
 def WhichberthAvailable(arrivalTime, departureTime):
@@ -58,10 +54,10 @@ def createTask():
     for CB in ContainerBoatlist:
         BerthId=WhichberthAvailable(CB.arrivalTime,CB.departureTime)
         if BerthId!=-1:
-            Task.objects.create(ReqauriedTugBoat=requieredTugBoat(CB.Tonnage),startTime=CB.arrivalTime-datetime.timedelta(minutes=30),endTime=CB.arrivalTime+datetime.timedelta(minutes=30),ContainerBoatID=CB,Action='Arrival',BerthId=BerthId,State='Unscheduled')
-            Task.objects.create(ReqauriedTugBoat=requieredTugBoat(CB.Tonnage),startTime=CB.departureTime-datetime.timedelta(minutes=30),endTime=CB.departureTime+datetime.timedelta(minutes=30),ContainerBoatID=CB,Action='Departure',BerthId=BerthId,State='Unscheduled')
             berth=Berth.objects.get(BerthId=BerthId)
             berth.ContainerBoat=CB
+            Task.objects.create(ReqauriedTugBoat=requieredTugBoat(CB.Tonnage),startTime=CB.arrivalTime-datetime.timedelta(minutes=30),endTime=CB.arrivalTime+datetime.timedelta(minutes=30),ContainerBoatID=CB,Action='Arrival',BerthId=BerthId,State='Unscheduled')
+            Task.objects.create(ReqauriedTugBoat=requieredTugBoat(CB.Tonnage),startTime=CB.departureTime-datetime.timedelta(minutes=30),endTime=CB.departureTime+datetime.timedelta(minutes=30),ContainerBoatID=CB,Action='Departure',BerthId=BerthId,State='Unscheduled')
             berth.save()
         else:
             print('No berth available')

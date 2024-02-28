@@ -47,13 +47,13 @@ class Task(models.Model): # Task model
     ContainerBoatID = models.ForeignKey(ContainerBoat, on_delete=models.CASCADE)
     Action= models.CharField(max_length=10,choices=(('Arrival','Arrival'),('Departure','Departure')),default='Arrival')
     BerthId = models.IntegerField(default=0)
-    State = models.CharField(max_length=100,choices=(('Scheduled','Scheduled'),('Unscheduled','Unscheduled')),default='Unscheduled')
+    State = models.CharField(max_length=100,choices=(('Scheduled','Scheduled'),('Unscheduled','Unscheduled'),('Completed','Completed'),('Expired','Expired')),default='Unscheduled')
     
-    class Meta:
-        ordering = ('TaskId',)
-
-    def __str__(self):
-        return self.TaskId
+    #class Meta:
+    #    ordering = ('TaskId',)
+#
+    #def __str__(self):
+    #    return self.TaskId*/
 
 class ScheduleEntry(models.Model): # ScheduleEntry model
     ScheduleEntryId= models.AutoField(primary_key=True)
@@ -64,5 +64,5 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
 
 class Berth(models.Model): # Berth model
     BerthId= models.IntegerField(primary_key=True)
-    ContainerBoat= models.OneToOneField(ContainerBoat, on_delete=models.CASCADE,null=True,related_name='berth',blank=True)
+    ContainerBoat= models.OneToOneField(ContainerBoat, on_delete=models.SET_NULL,null=True,related_name='berth',blank=True)
     

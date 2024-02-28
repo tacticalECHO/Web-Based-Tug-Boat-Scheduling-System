@@ -21,15 +21,25 @@ def AutoSchedule_Complete(): # Check if the task is completed
             if schedule.TaskId.startTime < datetime.datetime.now():
                 schedule.State = 'Completed'
                 schedule.save()
-                schedule.listOfTugBoats.clear()
                 schedule.TaskId.State = 'Completed'
                 schedule.save()
                 schedule.TaskId.save()
-            if schedule.TaskId.endTime.date() < datetime.datetime.now().date()-datetime.timedelta(days=1):
+            if schedule.TaskId.endTime.date() <= datetime.datetime.now().date()-datetime.timedelta(days=1):
                 schedule.delete()
                 
     return
 
+def AutoSchedule_task_Complete(): # Check if the task is completed
+    TaskList, TugBoatList, ScheduleEntryList = Get_Information()
+    for task in TaskList:
+        if task.State == 'Scheduled':
+            if task.endTime.date() <= datetime.datetime.now().date()-datetime.timedelta(days=1):
+                task.State = 'Completed'
+                task.save()
+        elif task.State == 'Unscheduled':
+            if task.startTime.date() < datetime.datetime.now().date():
+                task.State = 'Expired'
+                task.save()
 
 def ifTugBoatAvailable(tugboat, task): # Check if the tugboat is available at the task time
     StartTime = task.startTime.time()
@@ -45,6 +55,7 @@ def ifTugBoatAvailable(tugboat, task): # Check if the tugboat is available at th
     return True
 def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first serve)
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
+    AutoSchedule_task_Complete() 
     AutoSchedule_Complete()
     for task in TaskList:
         if task.State == 'Unscheduled' and task.startTime.date() == datetime.datetime.now().date():
@@ -56,11 +67,13 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
                     if ifTugBoatAvailable(tugboat, task):
                         schedule.listOfTugBoats.add(tugboat)
                         n+=1
-                        break
+                        if(n==task.ReqauriedTugBoat):
+                            break
             task.State = 'Scheduled'
             tugboat.save()
             if n < task.ReqauriedTugBoat:
                 task.State = 'Unscheduled'
+                print('No enough tugboat available')
                 schedule.delete()
                 task.save()
                 return
