@@ -5,7 +5,7 @@
             <h2>Today Task</h2>
             <div class="header-style">
                 <form class="search-form">
-                    <input id="search" placeholder="Search...">
+                    <input id="search" v-model="input" placeholder="Search...">
                     <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="search-icon" />
                 </form>
                 <span>
@@ -29,7 +29,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="task in $store.state.tasks" :key="task.TaskId">
+                    <tr v-for="task in taskList()" :key="task.TaskId">
                         <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
                         <td>
                             <span :id="'taskId' + task.TaskId">{{task.TaskId}}</span>
@@ -54,14 +54,14 @@
                                     <option v-for="containerBoat in $store.state.containerBoat" :key="containerBoat.ContainerBoatID">{{ containerBoat.ContainerBoatID }}</option>
                                 </select>
                             </form>
-                            <span @click="selected(task.TaskId, 'containerBoatId')" v-if="containerBoatIdInfo != task.TaskId">{{task.ContainerBoatID}}</span> 
+                            <span @click="selected(task.TaskId, 'containerBoatId')" v-if="containerBoatIdInfo != task.TaskId">{{task.ContainerBoatID.ContainerBoatID}}</span> 
                         </td>
                         <td @click.stop>
                             <form v-if="showRequiredTugBoatForm === task.TaskId" @submit="edit(task.TaskId)">
-                                <input v-model="requiredTugBoat" :id="'requiredTugBoat' + task.taskId" :ref="'requiredTugBoat' + task.taskId" type="text"  :value="task.ReqauriedTugBoat">
+                                <input v-model="requiredTugBoat" :id="'requiredTugBoat' + task.taskId" :ref="'requiredTugBoat' + task.taskId" type="text"  :value="task.RequiredTugBoat">
                                 <input class="submit-button" type="submit" />
                             </form>
-                            <span @click="selected(task.TaskId, 'requiredTugBoat')" v-if="requiredTugBoatInfo != task.TaskId">{{task.ReqauriedTugBoat}}</span> 
+                            <span @click="selected(task.TaskId, 'requiredTugBoat')" v-if="requiredTugBoatInfo != task.TaskId">{{task.RequiredTugBoat}}</span> 
                         </td>
                         <td @click.stop>
                             <form v-if="showBerthIdForm === task.TaskId">
@@ -125,9 +125,25 @@ export default {
             berthIdInfo: null,
             actionInfo: null,
             stateInfo: null,
+            searchValue: null,
+            tasks: [],
+            input: '',
         }
     },
     methods: {
+        taskList(){
+            this.tasks = this.$store.state.tasks;
+            const filtered = this.tasks.filter((task) => {
+                const byTaskId = task.TaskId.toString().includes(this.input);
+                const byContainerBoatId = task.ContainerBoatID.ContainerBoatID.toLowerCase().includes(this.input.toLowerCase());
+                const byBerthId = task.BerthId.toString().includes(this.input);
+                const byAction = task.Action.toLowerCase().includes(this.input.toLowerCase());
+
+                return byTaskId || byContainerBoatId || byBerthId || byAction;
+            });
+
+            return filtered;
+        },
         formatTime(event){
             const dateTime = new Date(event);
             const hours = dateTime.getHours();

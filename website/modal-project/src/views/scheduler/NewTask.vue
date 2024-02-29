@@ -8,32 +8,32 @@
                     <table>
                         <tr>
                             <th><label for="containerBoatId">Container Boat</label></th>
-                            <td><input type="text" v-model="containerBoatId" placeholder="Input the ID of Container Boat"></td>
+                            <td><input type="text" v-model="containerBoatId" placeholder="Input the ID of Container Boat" required></td>
                         </tr>
                         <tr>
                             <th><label for="country">Country</label></th>
-                            <td><input type="text" v-model="country" placeholder="Input the Country"></td>
+                            <td><input type="text" v-model="country" placeholder="Input the Country" required></td>
                         </tr>
                         <tr>
                             <th><label for="tonnage">Tonnage</label></th>
-                            <td><input type="text" v-model="tonnage" placeholder="Input Tonnage of Ship"></td>
+                            <td><input type="text" v-model="tonnage" placeholder="Input Tonnage of Ship" required></td>
                         </tr>
                         <tr>
                             <th><label for="arrivalTime">Arrival Time</label></th>
-                            <td><input type="datetime-local" v-model="arrivalTime" placeholder="Set Arrive Time"></td>
+                            <td><input type="datetime-local" v-model="arrivalTime" placeholder="Set Arrive Time" required></td>
                         </tr>
                         <tr>
                             <th><label for="leaveTime">Leave Time</label></th>
-                            <td><input type="datetime-local" v-model="leaveTime" placeholder="Set Leave Time"></td>
+                            <td><input type="datetime-local" v-model="leaveTime" placeholder="Set Leave Time" required></td>
                         </tr>
                         <tr>
                             <th><label for="requiredTugBoat">Required Tug Boats</label></th>
-                            <td><input type="text" v-model="requiredTugBoat" placeholder="Set number of Tug Boats required"></td>
+                            <td><input type="text" v-model="requiredTugBoat" placeholder="Set number of Tug Boats required" required></td>
                         </tr>
                         <tr>
                             <th><label for="action">Action</label></th>
                             <td>
-                                <select v-model="action">
+                                <select v-model="action" required>
                                     <option>Arrival</option>
                                     <option>Departure</option>
                                 </select>
@@ -56,27 +56,16 @@ import axios from 'axios';
 export default {
     name: 'NewTask',
     components: {SideBar},
-    data() {
-        return{
-            taskSuccess: false,
-            containerBoatSuccess: false,
-        }
-    },
-    mounted() {
-        this.$store.dispatch('fetchTasks');
-        this.$store.dispatch('fetchContainerBoats');
-    },
     methods: {
         async save(){
             try { 
-                const response = await axios.post('http://localhost:8000/api/save-containerboat/', {
+                const response = await axios.post('http://localhost:8000/api/save-newtask/', {
                 containerBoatId: this.containerBoatId,
                 arrivalTime: this.arrivalTime,
                 leaveTime: this.leaveTime,
                 tonnage: this.tonnage,
                 country: this.country,
                 requiredTugBoat: this.requiredTugBoat,
-                containerBoatId: this.containerBoatId,
                 action: this.action,
                 berthId: this.berthId,
                 state: this.state,

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Captain, TugBoat, Task, Scheduler, ContainerBoat, Berth
+from .models import Captain, TugBoat, Task, Scheduler, ContainerBoat, Berth, ScheduleEntry
 
 class TugBoatSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,17 +24,30 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'is_staff']
 
-class TaskSerializer(serializers.ModelSerializer):
+class ContainerBoatSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Task
-        fields = ['TaskId', 'RequiredTugBoat', 'startTime', 'endTime', 'ContainerBoatID', 'Action', 'BerthId', 'State']
-
+        model = ContainerBoat
+        fields = ['ContainerBoatID', 'Tonnage', 'Country', 'arrivalTime', 'departureTime']
+        
 class BerthSerializer(serializers.ModelSerializer):
     class Meta:
         model = Berth
         fields = ['BerthId', 'ContainerBoat']
 
-class ContainerBoatSerializer(serializers.ModelSerializer):
+class TaskSerializer(serializers.ModelSerializer):
+    ContainerBoatID = ContainerBoatSerializer()
     class Meta:
-        model = ContainerBoat
-        fields = ['ContainerBoatID', 'Tonnage', 'Country', 'arrivalTime', 'departureTime']
+        model = Task
+        fields = ['TaskId', 'RequiredTugBoat', 'startTime', 'endTime', 'ContainerBoatID', 'Action', 'BerthId', 'State']
+
+class TugBoatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TugBoat
+        fields = ['CurrentStatus', 'TugBoatId', 'CaptainId ', 'StartWorkingTime', 'EndWorkingTime']
+
+class ScheduleEntrySerializer(serializers.ModelSerializer):
+    TaskId = TaskSerializer()
+    listOfTugBoats = TugBoatSerializer()
+    class Meta:
+        model = ScheduleEntry
+        fields = ['ScheduleEntryId', 'listOfTugBoats', 'TaskId', 'State']

@@ -135,7 +135,8 @@ class SaveTaskView(View):
             if endTime is not None:
                 task.endTime = endTime
             if containerBoatId is not None:
-                task.ContainerBoatID = containerBoatId
+                containerBoat = ContainerBoat.objects.get(ContainerBoatID=containerBoatId)
+                task.ContainerBoatID = containerBoat
             if action is not None:
                 task.Action = action
             if berthId is not None:
@@ -148,7 +149,7 @@ class SaveTaskView(View):
             return JsonResponse({'error': str(e)}, status=400)
 
 @method_decorator(csrf_exempt, name='dispatch')
-class SaveContainerBoatView(View):
+class SaveNewTaskView(View):
     def post(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
@@ -163,20 +164,15 @@ class SaveContainerBoatView(View):
 
             with transaction.atomic():
                 # Create a new ContainerBoat or retrieve an existing one
-                # containerBoat, created = ContainerBoat.objects.get_or_create(
-                #     ContainerBoatID = containerBoatId,
-                #     defaults={
-                #         'Tonnage': tonnage,
-                #         'Country': country,
-                #         'arrivalTime': arrivalTime,
-                #         'departureTime': leaveTime
-                #     }
-                # )
-                try:
-                    containerBoat = ContainerBoat.objects.get(ContainerBoatID = containerBoatId)
-                except ContainerBoat.DoesNotExist:
-                    containerBoat = ContainerBoat(ContainerBoatID = containerBoatId, Tonnage = tonnage, Country = country, arrivalTime = arrivalTime, departureTime = leaveTime)
-                    
+                containerBoat, created = ContainerBoat.objects.get_or_create(
+                    ContainerBoatID = containerBoatId,
+                    defaults={
+                        'Tonnage': tonnage,
+                        'Country': country,
+                        'arrivalTime': arrivalTime,
+                        'departureTime': leaveTime
+                    }
+                )
                 Task.objects.create(
                     RequiredTugBoat=requiredTugBoat,
                     startTime=arrivalTime,
@@ -184,14 +180,21 @@ class SaveContainerBoatView(View):
                     ContainerBoatID=containerBoat,  
                     Action=action,
                     BerthId=0,
-                    State='unscheduled',
+                    State='Unscheduled',
                 )
 
             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
-from .serializers import CaptainSerializer, SchedulerSerializer, TaskSerializer, ContainerBoatSerializer, BerthSerializer
+from .serializers import (
+    CaptainSerializer, 
+    SchedulerSerializer, 
+    TaskSerializer, 
+    ContainerBoatSerializer, 
+    BerthSerializer, 
+    ScheduleEntrySerializer
+)
 from rest_framework import viewsets
 
 class CaptainViewSet(viewsets.ModelViewSet):
@@ -216,3 +219,7 @@ class BerthViewSet(viewsets.ModelViewSet):
 class ContainerBoatViewSet(viewsets.ModelViewSet):
     queryset = ContainerBoat.objects.all()
     serializer_class = ContainerBoatSerializer  
+
+class ScheduleEntryViewSet(viewsets.ModelViewSet):
+    queryset = ScheduleEntry.objects.all()
+    serializer_class = ScheduleEntrySerializer  

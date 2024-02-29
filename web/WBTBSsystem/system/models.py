@@ -24,7 +24,6 @@ class Scheduler(models.Model): # Scheduler model
                 self.Account = user 
         super(Scheduler, self).save(*args, **kwargs)
 
-
 class TugBoat(models.Model): #TugBoat model
     CurrentStatus = models.CharField(max_length=20,choices=(('Free','Free'),('Busy','Busy'),('Maintenance','Maintenance')),default='Free')
     TugBoatId = models.CharField(max_length=200, unique=True) 
@@ -70,7 +69,8 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
     listOfTugBoats = models.ManyToManyField(TugBoat)
     TaskId = models.ForeignKey(Task, on_delete=models.CASCADE)
     State = models.CharField(max_length=10,choices=(('Scheduled','Scheduled'),('Completed','Completed')),default='Scheduled')
-
+    def __int__(self):
+        return self.ScheduleEntryId
 
 class Berth(models.Model): # Berth model
     BerthId= models.IntegerField(primary_key=True)

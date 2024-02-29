@@ -12,8 +12,9 @@ const store = createStore({
           captains: [],
           tasks: [],
           schedulers: [],
-          berth: [],
-          containerBoat: [],
+          berths: [],
+          containerBoats: [],
+          scheduleEntries: [],
         };
         
     },
@@ -29,18 +30,21 @@ const store = createStore({
         setCaptains(state, captains) {
             state.captains = captains;
         },
-        setTask(state, tasks) {
+        setTasks(state, tasks) {
             state.tasks = tasks;
         },
         setSchedulers(state, schedulers) {
             state.schedulers = schedulers;
         },
-        setBerth(state, berth) {
-            state.berth = berth;
+        setBerths(state, berths) {
+            state.berths = berths;
         },
-        setContainerBoat(state, containerBoat) {
-            state.containerBoat = containerBoat;
-        }
+        setContainerBoats(state, containerBoats) {
+            state.containerBoats = containerBoats;
+        },
+        setScheduleEntries(state, scheduleEntries) {
+          state.scheduleEntries = scheduleEntries;
+      }
     },
 
     actions:{
@@ -54,7 +58,10 @@ const store = createStore({
         fetchTasks({ commit }) {
             axios.get('http://localhost:8000/api/display_task/')
               .then(response => {
-                commit('setTask', response.data);
+                commit('setTasks', response.data);
+                if(response.data.success){
+                    location.reload();
+                }
               })
               .catch(error => console.error(error));
         },
@@ -68,17 +75,24 @@ const store = createStore({
         fetchBerths({ commit }) {
             axios.get('http://localhost:8000/api/display_berth/')
               .then(response => {
-                commit('setBerth', response.data);
+                commit('setBerths', response.data);
               })
               .catch(error => console.error(error));
         },
         fetchContainerBoats({ commit }) {
             axios.get('http://localhost:8000/api/display_container_boat/')
               .then(response => {
-                commit('setContainerBoat', response.data);
+                commit('setContainerBoats', response.data);
               })
               .catch(error => console.error(error));
-        }
+        },
+        fetchScheduleEntries({ commit }) {
+          axios.get('http://localhost:8000/api/display_schedule_entry/')
+            .then(response => {
+              commit('setScheduleEntries', response.data);
+            })
+            .catch(error => console.error(error));
+      }
     }
 });
 export default store;

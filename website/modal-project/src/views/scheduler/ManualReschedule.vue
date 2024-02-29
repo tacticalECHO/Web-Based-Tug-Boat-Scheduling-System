@@ -43,8 +43,11 @@ export default {
     components: {SideBar},
     data(){
         return{
-            id: "JHSANG888",
+            id: '',
         }
+    },
+    mounted() {
+        // this.id = this.$route.query.id;
     },
     methods: {
         save(){
@@ -52,9 +55,6 @@ export default {
             this.$router.push({name: 'Save-ManualReschedule'});
         }
     }
-    // mounted() {
-    //     this.id = this.$route.query.id;
-    // },
 }
 </script>
 
