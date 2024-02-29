@@ -75,5 +75,5 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
 class Berth(models.Model): # Berth model
     BerthId= models.IntegerField(primary_key=True)
     ContainerBoat= models.OneToOneField(ContainerBoat, on_delete=models.CASCADE,null=True,related_name='berth',blank=True)
-    def __str__(self):
-        return self.BerthId
+    #def __str__(self):
+     #   return self.BerthId

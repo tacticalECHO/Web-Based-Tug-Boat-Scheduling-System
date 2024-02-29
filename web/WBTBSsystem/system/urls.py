@@ -16,7 +16,7 @@ urlpatterns = [
     path('api/captains-delete/', views.DeleteCaptainsView.as_view(), name='delete_captains'),
     path('api/schedulers-delete/', views.DeleteSchedulersView.as_view(), name='delete_schedulers'),
     path('api/create-user/', views.CreateUserView.as_view(), name='create_user'),
-    path('api/save-task/', views.SaveTaskView.as_view(), name='save_task'),
     path('api/save-newtask/', views.SaveNewTaskView.as_view(), name='save_newtask'),
+    path('api/upload-task-data', views.upload_task_data, name='upload_task_data'),
     path('', include(router.urls)),
 ]

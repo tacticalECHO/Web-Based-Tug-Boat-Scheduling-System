@@ -30,6 +30,7 @@ from system.views import (
     BerthViewSet,
     SaveNewTaskView,
     ScheduleEntryViewSet,
+    upload_task_data,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -52,5 +53,6 @@ urlpatterns = [
     path('api/create-user/', CreateUserView.as_view(), name='create_user'),
     path('api/save-task/', SaveTaskView.as_view(), name='save_task'),
     path('api/save-newtask/', SaveNewTaskView.as_view(), name='save_newtask'),
+    path('api/upload-task-data', upload_task_data, name='upload_task_data'),
     path('', include(router.urls)),
 ]

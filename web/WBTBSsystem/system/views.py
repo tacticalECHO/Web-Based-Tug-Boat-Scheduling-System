@@ -187,6 +187,37 @@ class SaveNewTaskView(View):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
+from django.views.decorators.http import require_http_methods
+from .ImportData import importData, dataIntoDatabase, createTask
+from django.core.files.storage import default_storage
+import os
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_task_data(request):
+    if 'task_data' not in request.FILES:
+        return JsonResponse({'error': 'No file uploaded.'}, status=400)
+    
+    task_data = request.FILES['task_data']
+
+    temp_dir = os.path.join('system/temp')
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+    path = default_storage.save('system/temp/' + task_data.name, task_data)
+    print(path)
+    
+    try:
+        data = importData(path)
+        print("Data imported successfully.")
+        dataIntoDatabase(data)
+        createTask()
+        
+        default_storage.delete(path)
+        
+        return JsonResponse({'message': 'File processed successfully.'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
 from .serializers import (
     CaptainSerializer, 
     SchedulerSerializer, 
