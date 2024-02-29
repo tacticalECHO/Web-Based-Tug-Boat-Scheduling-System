@@ -24,6 +24,7 @@
 <script>
 import SideBar from '@/components/SideBar.vue'
 import MessageButton from '@/components/MessageButton.vue'
+import axios from 'axios';
 
 export default {
     name: 'Dashboard',
@@ -33,7 +34,25 @@ export default {
             this.$router.push({name: 'AutoReschedule'})
         },
         importTaskData(){
-            document.getElementById('import-task-data').click();
+            let input = document.getElementById('import-task-data');
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) {
+                    return;
+                }
+                let formData = new FormData();
+                formData.append('task_data', file);
+                axios.post('http://localhost:8000/api/upload-task-data', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(response => {
+                    console.log(response.data);
+                }).catch(error => {
+                    console.error("Error uploading file: ", error);
+                });
+            };
+            input.click();
         },
         importTugboatData(){
             document.getElementById('import-tugboat-data').click();

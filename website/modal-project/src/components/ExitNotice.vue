@@ -38,7 +38,7 @@ export default {
     // },
     methods: {
         exit(){
-            this.$router.back();
+            this.$router.push({ name: 'Settings' });
         },
         cancel(){
             //save password here

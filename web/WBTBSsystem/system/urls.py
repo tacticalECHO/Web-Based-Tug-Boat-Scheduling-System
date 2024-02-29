@@ -17,5 +17,6 @@ urlpatterns = [
     path('api/create-user/', views.CreateUserView.as_view(), name='create_user'),
     path('api/save-task/', views.SaveTaskView.as_view(), name='save_task'),
     path('api/save-containerboat/', views.SaveContainerBoatView.as_view(), name='save_container_boat'),
+    path('api/upload-task-data', views.upload_task_data, name='upload_task_data'),
     path('', include(router.urls)),
 ]

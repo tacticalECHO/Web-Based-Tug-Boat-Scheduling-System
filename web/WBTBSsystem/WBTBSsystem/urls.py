@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from system.views import LoginView, ChangePasswordView, CaptainViewSet, TaskViewSet, SchedulerViewSet, DeleteSchedulersView, DeleteCaptainsView, CreateUserView, SaveTaskView, ContainerBoatViewSet, BerthViewSet, SaveContainerBoatView
+from system.views import LoginView, ChangePasswordView, CaptainViewSet, TaskViewSet, SchedulerViewSet, DeleteSchedulersView, DeleteCaptainsView, CreateUserView, SaveTaskView, ContainerBoatViewSet, BerthViewSet, SaveContainerBoatView, upload_task_data
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -37,5 +37,6 @@ urlpatterns = [
     path('api/create-user/', CreateUserView.as_view(), name='create_user'),
     path('api/save-task/', SaveTaskView.as_view(), name='save_task'),
     path('api/save-containerboat/', SaveContainerBoatView.as_view(), name='save_container_boat'),
+    path('api/upload-task-data', upload_task_data, name='upload_task_data'),
     path('', include(router.urls)),
 ]
