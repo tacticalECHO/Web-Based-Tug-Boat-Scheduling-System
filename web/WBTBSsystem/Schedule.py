@@ -71,7 +71,7 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
                             break
             task.State = 'Scheduled'
             tugboat.save()
-            if n < task.ReqauriedTugBoat:
+            if n < task.RequiredTugBoat:
                 task.State = 'Unscheduled'
                 print('No enough tugboat available')
                 schedule.delete()
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     for schedule in ScheduleEntry.objects.all():
         print(schedule.TaskId.TaskId, schedule.State)
         for boat in schedule.listOfTugBoats.all():
-            print(boat.TugBoatId)
+            print(boat.TugBoatId, boat.CurrentStatus)
     print('TugBoat:')
     for boat in TugBoat.objects.all():
         print(boat.TugBoatId, boat.CurrentStatus)

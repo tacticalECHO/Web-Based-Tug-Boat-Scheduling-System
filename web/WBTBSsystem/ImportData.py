@@ -56,8 +56,8 @@ def createTask():
         if BerthId!=-1:
             berth=Berth.objects.get(BerthId=BerthId)
             berth.ContainerBoat=CB
-            Task.objects.create(ReqauriedTugBoat=requieredTugBoat(CB.Tonnage),startTime=CB.arrivalTime-datetime.timedelta(minutes=30),endTime=CB.arrivalTime+datetime.timedelta(minutes=30),ContainerBoatID=CB,Action='Arrival',BerthId=BerthId,State='Unscheduled')
-            Task.objects.create(ReqauriedTugBoat=requieredTugBoat(CB.Tonnage),startTime=CB.departureTime-datetime.timedelta(minutes=30),endTime=CB.departureTime+datetime.timedelta(minutes=30),ContainerBoatID=CB,Action='Departure',BerthId=BerthId,State='Unscheduled')
+            Task.objects.create(RequiredTugBoat=requieredTugBoat(CB.Tonnage),startTime=CB.arrivalTime-datetime.timedelta(minutes=30),endTime=CB.arrivalTime+datetime.timedelta(minutes=30),ContainerBoatID=CB,Action='Arrival',BerthId=BerthId,State='Unscheduled')
+            Task.objects.create(RequiredTugBoat=requieredTugBoat(CB.Tonnage),startTime=CB.departureTime-datetime.timedelta(minutes=30),endTime=CB.departureTime+datetime.timedelta(minutes=30),ContainerBoatID=CB,Action='Departure',BerthId=BerthId,State='Unscheduled')
             berth.save()
         else:
             print('No berth available')

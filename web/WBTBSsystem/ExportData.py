@@ -15,7 +15,10 @@ def DataTOExcel():
     ScheduleEntryList=getData()
     data = []
     for i in range(len(ScheduleEntryList)):
-        data.append([ScheduleEntryList[i].TaskId.ContainerBoatID.ContainerBoatID, ScheduleEntryList[i].TaskId.Action,ScheduleEntryList[i].TaskId.startTime,ScheduleEntryList[i].TaskId.endTime,ScheduleEntryList[i].listOfTugBoats,ScheduleEntryList[i].State])
+        tugboatlist=""
+        for j in range(len(ScheduleEntryList[i].listOfTugBoats.all())):
+            tugboatlist+=ScheduleEntryList[i].listOfTugBoats.all()[j].TugBoatId+"\n"
+        data.append([ScheduleEntryList[i].TaskId.ContainerBoatID.ContainerBoatID, ScheduleEntryList[i].TaskId.Action,ScheduleEntryList[i].TaskId.startTime,ScheduleEntryList[i].TaskId.endTime,tugboatlist,ScheduleEntryList[i].State])
     df = pd.DataFrame(data, columns=['ContainerBoatID','Action','startTime','endTime','listOfTugBoats','State'])
     df.to_excel('web\WBTBSsystem\\testOut.xlsx', index=False)
     return
