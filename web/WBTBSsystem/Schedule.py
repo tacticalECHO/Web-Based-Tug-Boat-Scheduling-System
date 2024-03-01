@@ -70,7 +70,6 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
                         if(n==task.RequiredTugBoat):
                             break
             task.State = 'Scheduled'
-            tugboat.save()
             if n < task.RequiredTugBoat:
                 task.State = 'Unscheduled'
                 print('No enough tugboat available')

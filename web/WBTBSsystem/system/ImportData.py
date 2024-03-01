@@ -53,6 +53,7 @@ def createTask():
     ContainerBoatlist=ContainerBoatlist.order_by('arrivalTime')
     for CB in ContainerBoatlist:
         BerthId=WhichberthAvailable(CB.arrivalTime,CB.departureTime)
+        print(BerthId)
         if BerthId!=-1:
             berth=Berth.objects.get(BerthId=BerthId)
             berth.ContainerBoat=CB
