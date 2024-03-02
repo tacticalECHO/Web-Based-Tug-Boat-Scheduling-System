@@ -190,6 +190,7 @@ class SaveNewTaskView(View):
 from django.views.decorators.http import require_http_methods
 from .ImportData import importData, dataIntoDatabase, createTask
 from django.core.files.storage import default_storage
+import pandas as pd
 import os
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -206,14 +207,26 @@ def upload_task_data(request):
     print(path)
     
     try:
-        data = importData(path)
-        print("Data imported successfully.")
+        data = pd.read_excel(path, header=None)
+        data=data.iloc[1:,:]
+        df=pd.DataFrame(data)
+        df.columns=['ContainerBoatID','Tonnage','Country','arrivalTime','departureTime']
+        data = df
         dataIntoDatabase(data)
         createTask()
-        
         default_storage.delete(path)
         
         return JsonResponse({'message': 'File processed successfully.'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+from .ExportData import DataTOExcel
+@csrf_exempt
+@require_http_methods(["POST"])
+def publish_data(request):
+    try:
+        DataTOExcel()
+        return JsonResponse({'message': 'Published successfully.'})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 

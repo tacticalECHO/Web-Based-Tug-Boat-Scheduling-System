@@ -3,17 +3,22 @@
         <SideBar />
         <div class="pages" @click="toggle">
             <router-view />
-            <h2>My Dashboard</h2>
-            <MessageButton />
-            <br>
-            <div class="job">
+            <div class="header-style">
+                <h2>My Dashboard</h2>
+                <span class="message-container">
+                    <button id="message" @click="message()"><font-awesome-icon :icon="['fas', 'bell']" /></button>
+                </span>
+            </div>
+            <div class="job buttons-container">
+                <button id="schedule" @click="schedule()">Schedule</button>
+                <br><br><br>
                 <input type="file" id="import-task-data"/>
                 <label for="import-task-data"><button @click="importTaskData()">Import Task Data</button></label>
                 <br><br><br>
                 <input type="file" id="import-tugboat-data"/>
                 <label for="import-tugboat-data"><button @click="importTugboatData()">Import Tug Boat Data</button></label>
                 <br><br><br>
-                <button id="schedule" @click="schedule()">Schedule</button>
+                <button class="blue-button" id="publish" @click="publish()">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
             </div>
             <div class="header-style" >
                 <div class ="filter-group">
@@ -54,10 +59,11 @@
                         </select>
                     </span>
                     <span class="filter">
-                        <label for="stateFilter">Status: </label>
-                        <select v-model="stateInput">
+                        <label for="statusFilter">Status: </label>
+                        <select v-model="statusInput">
                             <option>All</option>
                             <option>Completed</option>
+                            <option>Confirmed</option>
                             <option>Scheduled</option>
                         </select>
                     </span>
@@ -170,16 +176,16 @@ export default {
             containerBoatInfo: null,
             berthInfo: null,
             actionInfo: null,
-            stateInfo: null,
+            statusInfo: null,
             searchValue: null,
             entries: [],
             tasks: [],
-            entryInput: "All",
-            taskInput: "All",
             containerBoatInput: "All",
+            countryInput: "All",
             tugBoatInput: "All",
             berthInput: "All",
-            stateInput: "All",
+            workTypeInput: "All",
+            statusInput: "All",
         }
     },
     methods: {
@@ -210,6 +216,16 @@ export default {
         importTugboatData(){
             document.getElementById('import-tugboat-data').click();
         },
+        publish(){
+            axios.post('http://localhost:8000/api/publish-data')
+            .then(response => {
+                console.log(response.data.message);
+                alert("Published success!");
+            }).catch(error => {
+                console.error("error: ", error);
+                alert("Failed to publish data, check logs for details.");
+            });
+        },
         checkAll(input) {
             if (input === "All") {
                 return '';
@@ -219,22 +235,22 @@ export default {
         },
         entryList() {
             this.entries = this.$store.state.scheduleEntries;
-            this.entryInput = this.checkAll(this.entryInput);
-            this.taskInput = this.checkAll(this.taskInput);
             this.containerBoatInput = this.checkAll(this.containerBoatInput);
+            this.countryInput = this.checkAll(this.countryInput);
             this.tugBoatInput = this.checkAll(this.tugBoatInput);
             this.berthInput = this.checkAll(this.berthInput);
-            this.stateInput = this.checkAll(this.stateInput);
+            this.workTypeInput = this.checkAll(this.workTypeInput);
+            this.statusInput = this.checkAll(this.statusInput);
 
             const filtered = this.entries.filter((entry) => {  
-                const byEntryId = this.entryInput ? entry.ScheduleEntryId.toString() === this.entryInput : true;
-                const byTaskId = this.taskInput ? entry.TaskId.toString() === this.taskInput : true;
+                const byCountry = this.countryInput ? entry.TaskId.ContainerBoatID.Country.toString() === this.countryInput : true;
                 const byContainerBoatId = this.containerBoatInput ? entry.TaskId.ContainerBoatID.ContainerBoatID.toString() === this.containerBoatInput : true;
-                const byTugBoatId = this.tugBoatInput ? entry.TugBoatId === this.tugBoatInput : true;
+                const byTugBoatId = this.tugBoatInput ? entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).includes(this.tugBoatInput) : true;
                 const byBerthId = this.berthInput ? entry.TaskId.BerthId.toString() === this.berthInput : true;
-                const byState = this.stateInput ? entry.State === this.stateInput : true;
+                const byWorkType = this.workTypeInput ? entry.TaskId.Action === this.workTypeInput : true;
+                const byStatus = this.statusInput ? entry.State === this.statusInput : true;
 
-                return byEntryId && byTaskId && byContainerBoatId && byTugBoatId && byBerthId && byState;
+                return byCountry && byContainerBoatId && byTugBoatId && byBerthId && byWorkType && byStatus;
             });
 
             return filtered;
@@ -318,15 +334,34 @@ export default {
 #Dashboard {
     font-size: 16px;
 }
-
+.buttons-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+#schedule {
+    background-color: #409BBF;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+}
+#publish {
+    background-color: #8BC7DF;
+    width: 90px;
+    margin-left: auto;
+}
 .job input {
     display: none;
 }
-.job button {
+.job button:not(#publish) {
     text-align: left;
     box-shadow: 0 2px 3px lightgrey;
-    width: 300px;
+    margin-right: 10px;
     border: none;
+}
+.job button:not(#publish):not(#schedule) {
+    background-color: #C5E6F3;
 }
  
 .job button:hover {

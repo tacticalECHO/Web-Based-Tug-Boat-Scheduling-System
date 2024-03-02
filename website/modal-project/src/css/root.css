@@ -128,3 +128,20 @@ button {
 .work-table td {
     text-align: center;
 }
+
+/* --message-button-------------------------------------------------------------- */
+.message-container {
+    margin-top: 10px;
+}
+
+#message {
+    background-color: var(--main-button-color);
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    border: 1px solid lightgrey;
+}
+
+#message:hover{
+    background: lightgrey;
+}

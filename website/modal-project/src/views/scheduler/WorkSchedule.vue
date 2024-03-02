@@ -57,11 +57,11 @@
                                 <td class="number"> {{entry.ScheduleEntryId}} </td>
                                 <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
                                 <td class="berth"> {{entry.TaskId.BerthId}} </td>
-                                <td class="time"> {{entry.listOfTugBoats.StartWorkingTime}} </td>
-                                <td class="time"> {{entry.listOfTugBoats.EndWorkingTime}} </td>
-                                <td class="tugboat"> {{entry.listOfTugBoats.TugBoatId}} </td>
-                                <td class="captain"> {{entry.listOfTugBoats.CaptainId}} </td>
-                                <td class="work-status"> <span class="status-container">{{entry.listOfTugBoats.CurrentStatus}} </span></td>
+                                <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.StartWorkingTime).join("/")}} </td>
+                                <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/")}} </td>
+                                <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/")}} </td>
+                                <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join("/")}} </td>
+                                <td class="work-status"> <span class="status-container">{{entry.listOfTugBoats.map(tugBoat => tugBoat.CurrentStatus).join("/")}} </span></td>
                                 <td class="work-type"> <span class="type-container">{{entry.State}}</span></td>
                             </tr>
                         </tbody>
@@ -88,9 +88,6 @@ export default {
     data(){
         return{
             entries: [],
-            tasks: [],
-            entryInput: '',
-            taskInput: '',
             containerBoatInput: '',
             tugBoatInput: '',
             berthInput: '',
@@ -102,14 +99,12 @@ export default {
             this.entries = this.$store.state.scheduleEntries;
 
             const filtered = this.entries.filter((entry) => {  
-                const byEntryId = this.entryInput ? entry.ScheduleEntryId.toString() === this.entryInput : true;
-                const byTaskId = this.taskInput ? entry.TaskId.toString() === this.taskInput : true;
                 const byContainerBoatId = this.containerBoatInput ? entry.TaskId.ContainerBoatID.ContainerBoatID.toString() === this.containerBoatInput : true;
-                const byTugBoatId = this.tugBoatInput ? entry.TugBoatId === this.tugBoatInput : true;
+                const byTugBoatId = this.tugBoatInput ? entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).includes(this.tugBoatInput) : true;
                 const byBerthId = this.berthInput ? entry.TaskId.BerthId.toString() === this.berthInput : true;
                 const byState = this.stateInput ? entry.State === this.stateInput : true;
 
-                return byEntryId && byTaskId && byContainerBoatId && byTugBoatId && byBerthId && byState;
+                return byContainerBoatId && byTugBoatId && byBerthId && byState;
             });
 
             return filtered;

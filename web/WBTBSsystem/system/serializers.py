@@ -41,6 +41,7 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = ['TaskId', 'RequiredTugBoat', 'startTime', 'endTime', 'ContainerBoatID', 'Action', 'BerthId', 'State']
 
 class TugBoatSerializer(serializers.ModelSerializer):
+    CaptainId = CaptainSerializer()
     class Meta:
         model = TugBoat
         fields = ['CurrentStatus', 'TugBoatId', 'CaptainId', 'StartWorkingTime', 'EndWorkingTime']

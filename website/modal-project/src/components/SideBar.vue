@@ -15,7 +15,7 @@
                   <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     C-Dashboard
                 </li>
-                <li v-if="isScheduler || isAdmin" @click="redirect('WorkSchedule')" class="sidebar-item">
+                <li v-if="isScheduler || isAdmin || isCaptain" @click="redirect('WorkSchedule')" class="sidebar-item">
                     <font-awesome-icon :icon="['fas', 'calendar-days']" class="sidebar-icon"/>
                     Work Schedules
                 </li>
