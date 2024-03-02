@@ -19,23 +19,27 @@
                             <td><input type="text" v-model="tonnage" placeholder="Input Tonnage of Ship" required></td>
                         </tr>
                         <tr>
-                            <th><label for="arrivalTime">Arrival Time</label></th>
-                            <td><input type="datetime-local" v-model="arrivalTime" placeholder="Set Arrive Time" required></td>
+                            <th><label for="time">Time</label></th>
+                            <td><input type="datetime-local" v-model="time" placeholder="Set time" required></td>
                         </tr>
-                        <tr>
-                            <th><label for="leaveTime">Leave Time</label></th>
-                            <td><input type="datetime-local" v-model="leaveTime" placeholder="Set Leave Time" required></td>
-                        </tr>
-                        <tr>
+                        <!-- <tr>
                             <th><label for="requiredTugBoat">Required Tug Boats</label></th>
                             <td><input type="text" v-model="requiredTugBoat" placeholder="Set number of Tug Boats required" required></td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <th><label for="action">Action</label></th>
                             <td>
                                 <select v-model="action" required>
                                     <option>Arrival</option>
                                     <option>Departure</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="berth">Berth</label></th>
+                            <td>
+                                <select v-model="berth" required>
+                                    <option v-for="berth in $store.state.berths" :key="berth.BerthId">{{ berth.BerthId }}</option>
                                 </select>
                             </td>
                         </tr>
@@ -56,13 +60,15 @@ import axios from 'axios';
 export default {
     name: 'NewTask',
     components: {SideBar},
+    mounted() {
+        this.$store.dispatch('fetchBerths');
+    },
     methods: {
         async save(){
             try { 
                 const response = await axios.post('http://localhost:8000/api/save-newtask/', {
                 containerBoatId: this.containerBoatId,
-                arrivalTime: this.arrivalTime,
-                leaveTime: this.leaveTime,
+                time: this.time,
                 tonnage: this.tonnage,
                 country: this.country,
                 requiredTugBoat: this.requiredTugBoat,
@@ -112,5 +118,9 @@ th, td {
 
 option {
     background: var(--main-button-color);
+}
+
+td {
+    border: none;
 }
 </style>

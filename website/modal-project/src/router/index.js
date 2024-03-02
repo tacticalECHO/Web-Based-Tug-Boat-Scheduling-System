@@ -104,11 +104,6 @@ const routes = [
     name: 'ConflictScheduleList',
     component: ConflictScheduleList,
   },
-  // {
-  //   path: '/task-manager',
-  //   name: 'TaskManager',
-  //   component: TaskManager,
-  // },
   {
     path: '/settings',
     name: 'Settings',
@@ -126,22 +121,22 @@ const routes = [
       }
     ]
   },
-  // {
-  //   path: '/task-manager/add-new-task',
-  //   name: 'NewTask',
-  //   component: NewTask,
-  //   children: [
-  //     {
-  //       path: 'notice',
-  //       name: 'Exit-NewTask',
-  //       component: ExitNotice,
-  //     },
-  //     {
-  //       path: 'notice',
-  //       name: 'Save-NewTask',
-  //       component: RescheduleNotice,
-  //     }]
-  // }
+  {
+    path: '/add-new-task',
+    name: 'NewTask',
+    component: NewTask,
+    children: [
+      {
+        path: 'notice',
+        name: 'Exit-NewTask',
+        component: ExitNotice,
+      },
+      {
+        path: 'notice',
+        name: 'Save-NewTask',
+        component: RescheduleNotice,
+      }]
+  }
 ];
 
 const router = createRouter({

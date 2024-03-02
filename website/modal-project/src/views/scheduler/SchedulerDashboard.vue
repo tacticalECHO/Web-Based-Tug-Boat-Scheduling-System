@@ -28,7 +28,7 @@
                         <label for="countryFilter">Country: </label>
                         <select v-model="countryInput">
                             <option>All</option>
-                            <option v-for="containerBoat in $store.state.containerBoats" :key="containerBoat.Country">{{containerBoat.Country }}</option>
+                            <option v-for="containerBoat in $store.state.containerBoats" :key="containerBoat.Country">{{ containerBoat.Country }}</option>
                         </select>
                     </span>
                     <span class="filter">
@@ -117,16 +117,16 @@
 
                             <td @click.stop>
                                 <form v-if="tugBoatInfo === entry.ScheduleEntryId" @submit="edit(entry.ScheduleEntryId)">
-                                    <input v-model="requiredTugBoat" :id="'requiredTugBoat' + entry.ScheduleEntryId" :ref="'requiredTugBoat' + entry.ScheduleEntryId" type="text">
+                                    <input v-model="tugBoat" :id="'tugBoat' + entry.ScheduleEntryId" :ref="'tugBoat' + entry.ScheduleEntryId" type="text">
                                     <input class="submit-button" type="submit" />
                                 </form>
-                                <span @click="selected(entry.ScheduleEntryId, 'requiredTugBoat')" v-if="tugBoatInfo != entry.ScheduleEntryId">{{entry.RequiredTugBoat}}</span> 
+                                <span @click="selected(entry.ScheduleEntryId, 'tugBoat')" v-if="tugBoatInfo != entry.ScheduleEntryId">{{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join(', ')}}</span> 
                             </td>
 
                             <td @click.stop>
                                 <form v-if="berthInfo === entry.ScheduleEntryId">
                                     <select @change="edit(entry.ScheduleEntryId)" v-model="berthId"  :id="'berthId' + entry.TaskId.BerthId">
-                                        <option v-for="berth in $store.state.berths" :key="berth.berthID">{{ berth.berthId }}</option>
+                                        <option v-for="berth in $store.state.berths" :key="berth.BerthID">{{ berth.BerthId }}</option>
                                     </select>
                                 </form>
                                 <span @click="selected(entry.ScheduleEntryId, 'berthId')" v-if="berthInfo != entry.ScheduleEntryId">{{ entry.TaskId.BerthId}}</span> 
