@@ -31,6 +31,7 @@ from system.views import (
     SaveNewTaskView,
     ScheduleEntryViewSet,
     upload_task_data,
+    publish_data,
     TugBoatViewSet,
 )
 from rest_framework.routers import DefaultRouter
@@ -56,5 +57,6 @@ urlpatterns = [
     path('api/save-task/', SaveTaskView.as_view(), name='save_task'),
     path('api/save-newtask/', SaveNewTaskView.as_view(), name='save_newtask'),
     path('api/upload-task-data', upload_task_data, name='upload_task_data'),
+    path('api/publish-data', publish_data, name='publish_data'),
     path('', include(router.urls)),
 ]

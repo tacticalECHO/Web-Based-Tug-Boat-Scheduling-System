@@ -6,14 +6,16 @@
             <h2>My Dashboard</h2>
             <MessageButton />
             <br>
-            <div class="job">
+            <div class="job buttons-container">
+                <button id="schedule" @click="schedule()">Schedule</button>
+                <br><br><br>
                 <input type="file" id="import-task-data"/>
                 <label for="import-task-data"><button @click="importTaskData()">Import Task Data</button></label>
                 <br><br><br>
                 <input type="file" id="import-tugboat-data"/>
                 <label for="import-tugboat-data"><button @click="importTugboatData()">Import Tug Boat Data</button></label>
                 <br><br><br>
-                <button id="schedule" @click="schedule()">Schedule</button>
+                <button class="blue-button" id="publish" @click="publish()">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
             </div>
             <div class="header-style" >
                 <div class ="filter-group">
@@ -58,6 +60,7 @@
                         <select v-model="stateInput">
                             <option>All</option>
                             <option>Completed</option>
+                            <option>Confirmed</option>
                             <option>Scheduled</option>
                         </select>
                     </span>
@@ -210,6 +213,16 @@ export default {
         importTugboatData(){
             document.getElementById('import-tugboat-data').click();
         },
+        publish(){
+            axios.post('http://localhost:8000/api/publish-data')
+            .then(response => {
+                console.log(response.data.message);
+                alert("Published success!");
+            }).catch(error => {
+                console.error("error: ", error);
+                alert("Failed to publish data, check logs for details.");
+            });
+        },
         checkAll(input) {
             if (input === "All") {
                 return '';
@@ -318,15 +331,34 @@ export default {
 #Dashboard {
     font-size: 16px;
 }
-
+.buttons-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+#schedule {
+    background-color: #409BBF;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+}
+#publish {
+    background-color: #8BC7DF;
+    width: 90px;
+    margin-left: auto;
+}
 .job input {
     display: none;
 }
-.job button {
+.job button:not(#publish) {
     text-align: left;
     box-shadow: 0 2px 3px lightgrey;
-    width: 300px;
+    margin-right: 10px;
     border: none;
+}
+.job button:not(#publish):not(#schedule) {
+    background-color: #C5E6F3;
 }
  
 .job button:hover {
