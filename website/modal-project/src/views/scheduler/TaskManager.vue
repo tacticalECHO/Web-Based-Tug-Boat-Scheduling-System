@@ -14,85 +14,86 @@
                     <button class="blue-border-button" id="add" @click="redirect('NewTask')">Add  + </button>
                 </span>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" disabled></th>
-                        <th>Task Id</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Container Boat Id</th>
-                        <th>Required Tug Boat</th>
-                        <th>Berth Id</th>
-                        <th>Action</th>
-                        <th>State</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="task in taskList()" :key="task.TaskId">
-                        <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
-                        <td>
-                            <span :id="'taskId' + task.TaskId">{{task.TaskId}}</span>
-                        </td>
-                        <td @click.stop>
-                            <form v-if="showStartTimeForm === task.TaskId" @submit="edit(task.TaskId)">
-                                <input v-model="startTime" :id="'startTime' + task.taskId" :ref="'startTime' + task.taskId" type="datetime-local" :value="formatTime(task.startTime)">
-                                <input class="submit-button" type="submit" />
-                            </form>
-                            <span @click="selected(task.TaskId, 'startTime')" v-if="startTimeInfo != task.TaskId">{{formatTime(task.startTime)}}</span> 
-                        </td>
-                        <td @click.stop>
-                            <form v-if="showEndTimeForm === task.TaskId" @submit="edit(task.TaskId)">
-                                <input v-model="endTime" :id="'endTime' + task.taskId" :ref="'endTime' + task.taskId" type="datetime-local"  :value="formatTime(task.endTime)">
-                                <input class="submit-button" type="submit" />
-                            </form>
-                            <span @click="selected(task.TaskId, 'endTime')" v-if="endTimeInfo != task.TaskId">{{formatTime(task.endTime)}}</span> 
-                        </td>
-                        <td @click.stop>
-                            <form v-if="showContainerBoatIdForm === task.TaskId" @submit="edit(task.TaskId)">
-                                <select @change="edit(task.TaskId)" v-model="containerBoatId">
-                                    <option v-for="containerBoat in $store.state.containerBoat" :key="containerBoat.ContainerBoatID">{{ containerBoat.ContainerBoatID }}</option>
-                                </select>
-                            </form>
-                            <span @click="selected(task.TaskId, 'containerBoatId')" v-if="containerBoatIdInfo != task.TaskId">{{task.ContainerBoatID.ContainerBoatID}}</span> 
-                        </td>
-                        <td @click.stop>
-                            <form v-if="showRequiredTugBoatForm === task.TaskId" @submit="edit(task.TaskId)">
-                                <input v-model="requiredTugBoat" :id="'requiredTugBoat' + task.taskId" :ref="'requiredTugBoat' + task.taskId" type="text"  :value="task.RequiredTugBoat">
-                                <input class="submit-button" type="submit" />
-                            </form>
-                            <span @click="selected(task.TaskId, 'requiredTugBoat')" v-if="requiredTugBoatInfo != task.TaskId">{{task.RequiredTugBoat}}</span> 
-                        </td>
-                        <td @click.stop>
-                            <form v-if="showBerthIdForm === task.TaskId">
-                                <select @change="edit(task.TaskId)" v-model="berthId"  :id="'berthId' + task.taskId"  :value="task.berthId">
-                                    <option v-for="berth in $store.state.berth" :key="berth.berthID">{{ berth.berthId }}</option>
-                                    <option>2</option>
-                                </select>
-                            </form>
-                            <span @click="selected(task.TaskId, 'berthId')" v-if="berthIdInfo != task.TaskId">{{task.BerthId}}</span> 
-                        </td>
-                        <td @click.stop>
-                            <form v-if="showActionForm === task.TaskId">
-                                <select @change="edit(task.TaskId)" v-model="action" :id="'action' + task.taskId" :value="task.Action">
-                                    <option>Arrival</option>
-                                    <option>Departure</option>
-                                </select>
-                            </form>
-                            <span @click="selected(task.TaskId, 'action')" v-if="actionInfo != task.TaskId">{{task.Action}}</span> 
-                        </td>
-                        <td @click.stop>
-                            <form v-if="showStateForm === task.TaskId">
-                                <select @change="edit(task.TaskId)" v-model="state" :id="'state' + task.taskId"  :value="task.State">
-                                    <option>Unscheduled</option>
-                                    <option>Scheduled</option>
-                                </select>
-                            </form>
-                            <span @click="selected(task.TaskId, 'state')" v-if="stateInfo != task.TaskId">{{task.State}}</span> 
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox"></th>
+                            <th>Task Id</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Container Boat Id</th>
+                            <th>Required Tug Boat</th>
+                            <th>Berth Id</th>
+                            <th>Action</th>
+                            <th>State</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="task in taskList()" :key="task.TaskId">
+                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
+                            <td>
+                                <span :id="'taskId' + task.TaskId">{{task.TaskId}}</span>
+                            </td>
+                            <td @click.stop>
+                                <form v-if="showStartTimeForm === task.TaskId" @submit="edit(task.TaskId)">
+                                    <input v-model="startTime" :id="'startTime' + task.taskId" :ref="'startTime' + task.taskId" type="datetime-local">
+                                    <input class="submit-button" type="submit" />
+                                </form>
+                                <span @click="selected(task.TaskId, 'startTime')" v-if="startTimeInfo != task.TaskId">{{formatDate(task.startTime)}}&emsp;&emsp;{{ formatTime(task.startTime) }}</span> 
+                            </td>
+                            <td @click.stop>
+                                <form v-if="showEndTimeForm === task.TaskId" @submit="edit(task.TaskId)">
+                                    <input v-model="endTime" :id="'endTime' + task.taskId" :ref="'endTime' + task.taskId" type="datetime-local">
+                                    <input class="submit-button" type="submit" />
+                                </form>
+                                <span @click="selected(task.TaskId, 'endTime')" v-if="endTimeInfo != task.TaskId">{{formatDate(task.endTime)}}&emsp;&emsp;{{ formatTime(task.endTime) }}</span> 
+                            </td>
+                            <td @click.stop>
+                                <form v-if="showContainerBoatIdForm === task.TaskId" @submit="edit(task.TaskId)">
+                                    <select @change="edit(task.TaskId)" v-model="containerBoatId">
+                                        <option v-for="containerBoat in $store.state.containerBoats" :key="containerBoat.ContainerBoatID">{{ containerBoat.ContainerBoatID }}</option>
+                                    </select>
+                                </form>
+                                <span @click="selected(task.TaskId, 'containerBoatId')" v-if="containerBoatIdInfo != task.TaskId">{{task.ContainerBoatID.ContainerBoatID}}</span> 
+                            </td>
+                            <td @click.stop>
+                                <form v-if="showRequiredTugBoatForm === task.TaskId" @submit="edit(task.TaskId)">
+                                    <input v-model="requiredTugBoat" :id="'requiredTugBoat' + task.taskId" :ref="'requiredTugBoat' + task.taskId" type="text">
+                                    <input class="submit-button" type="submit" />
+                                </form>
+                                <span @click="selected(task.TaskId, 'requiredTugBoat')" v-if="requiredTugBoatInfo != task.TaskId">{{task.RequiredTugBoat}}</span> 
+                            </td>
+                            <td @click.stop>
+                                <form v-if="showBerthIdForm === task.TaskId">
+                                    <select @change="edit(task.TaskId)" v-model="berthId"  :id="'berthId' + task.taskId">
+                                        <option v-for="berth in $store.state.berths" :key="berth.berthID">{{ berth.berthId }}</option>
+                                    </select>
+                                </form>
+                                <span @click="selected(task.TaskId, 'berthId')" v-if="berthIdInfo != task.TaskId">{{task.BerthId}}</span> 
+                            </td>
+                            <td @click.stop>
+                                <form v-if="showActionForm === task.TaskId">
+                                    <select @change="edit(task.TaskId)" v-model="action" :id="'action' + task.taskId">
+                                        <option>Arrival</option>
+                                        <option>Departure</option>
+                                    </select>
+                                </form>
+                                <span @click="selected(task.TaskId, 'action')" v-if="actionInfo != task.TaskId">{{task.Action}}</span> 
+                            </td>
+                            <td @click.stop>
+                                <form v-if="showStateForm === task.TaskId">
+                                    <select @change="edit(task.TaskId)" v-model="state" :id="'state' + task.taskId" >
+                                        <option>Unscheduled</option>
+                                        <option>Scheduled</option>
+                                    </select>
+                                </form>
+                                <span @click="selected(task.TaskId, 'state')" v-if="stateInfo != task.TaskId">{{task.State}}</span> 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>
@@ -146,10 +147,17 @@ export default {
         },
         formatTime(event){
             const dateTime = new Date(event);
-            const hours = dateTime.getHours();
-            const minutes = dateTime.getMinutes();
-            const seconds = dateTime.getSeconds();
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            const hours = dateTime.getHours().toString().padStart(2, '0');
+            const minutes = dateTime.getMinutes().toString().padStart(2, '0');
+
+            return `${hours}:${minutes}`;
+        },
+        formatDate(event){
+            const dateTime = new Date(event);
+            const date = dateTime.getDate().toString().padStart(2, '0');
+            const month = (dateTime.getMonth()+1).toString().padStart(2, '0');
+
+            return `${date}/${month}`;
         },
         resetNull() {
             this.showRequiredTugBoatForm = null;

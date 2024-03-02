@@ -2,7 +2,7 @@
     --headings-color: #000435;
     --main-button-color: #7CAFC2;
     --button-hover-color: #4B7280;
-    --font-size: 13px;
+    --font-size: 0.8em;
     --login-width-size: 380px;
 }
 
@@ -91,6 +91,20 @@ button {
     color: rgb(154, 126, 0);
     border-radius: 30px;
     padding: 8px;
+}
+
+
+/* --table container------------------------------------------------------ */
+.table-container{
+    max-height: 30em; /* Adjust the height as needed */
+    overflow-y: auto;
+}
+
+.table-container thead {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 /* --Work table----------------------------------------------------------- */

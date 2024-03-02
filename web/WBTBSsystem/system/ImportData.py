@@ -5,7 +5,7 @@ import math
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
 from system.models import ContainerBoat, Task, Berth
-import pandas as pd
+# import pandas as pd
 PATH="web\WBTBSsystem\\test.xlsx"
 
 def WhichberthAvailable(arrivalTime, departureTime):

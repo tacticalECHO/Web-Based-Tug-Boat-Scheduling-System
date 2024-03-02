@@ -9,6 +9,7 @@ router.register(r'api/display_scheduler', views.SchedulerViewSet)
 router.register(r'api/display_berth', views.BerthViewSet)
 router.register(r'api/display_container_boat', views.ContainerBoatViewSet)
 router.register(r'api/display_schedule_entry', views.ScheduleEntryViewSet)
+router.register(r'api/display_tugboat', views.TugBoatViewSet)
 
 urlpatterns = [
     path('api/login/', views.LoginView.as_view(), name='login'),

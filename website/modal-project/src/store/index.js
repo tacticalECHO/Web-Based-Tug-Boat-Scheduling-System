@@ -15,6 +15,7 @@ const store = createStore({
           berths: [],
           containerBoats: [],
           scheduleEntries: [],
+          tugboats: [],
         };
         
     },
@@ -44,7 +45,10 @@ const store = createStore({
         },
         setScheduleEntries(state, scheduleEntries) {
           state.scheduleEntries = scheduleEntries;
-      }
+        },
+        setTugBoats(state, tugboats) {
+          state.tugboats = tugboats;
+        }
     },
 
     actions:{
@@ -59,9 +63,6 @@ const store = createStore({
             axios.get('http://localhost:8000/api/display_task/')
               .then(response => {
                 commit('setTasks', response.data);
-                if(response.data.success){
-                    location.reload();
-                }
               })
               .catch(error => console.error(error));
         },
@@ -92,7 +93,14 @@ const store = createStore({
               commit('setScheduleEntries', response.data);
             })
             .catch(error => console.error(error));
-      }
+        },
+        fetchTugBoats({ commit }) {
+          axios.get('http://localhost:8000/api/display_tugboat/')
+            .then(response => {
+              commit('setTugBoats', response.data);
+            })
+            .catch(error => console.error(error));
+        }
     }
 });
 export default store;

@@ -224,7 +224,8 @@ from .serializers import (
     TaskSerializer, 
     ContainerBoatSerializer, 
     BerthSerializer, 
-    ScheduleEntrySerializer
+    ScheduleEntrySerializer,
+    TugBoatSerializer 
 )
 from rest_framework import viewsets
 
@@ -254,3 +255,7 @@ class ContainerBoatViewSet(viewsets.ModelViewSet):
 class ScheduleEntryViewSet(viewsets.ModelViewSet):
     queryset = ScheduleEntry.objects.all()
     serializer_class = ScheduleEntrySerializer  
+
+class TugBoatViewSet(viewsets.ModelViewSet):
+    queryset = TugBoat.objects.all()
+    serializer_class = TugBoatSerializer  

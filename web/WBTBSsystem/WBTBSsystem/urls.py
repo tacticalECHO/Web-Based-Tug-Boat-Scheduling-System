@@ -31,6 +31,7 @@ from system.views import (
     SaveNewTaskView,
     ScheduleEntryViewSet,
     upload_task_data,
+    TugBoatViewSet,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -41,6 +42,7 @@ router.register(r'api/display_scheduler', SchedulerViewSet)
 router.register(r'api/display_berth', BerthViewSet)
 router.register(r'api/display_container_boat', ContainerBoatViewSet)
 router.register(r'api/display_schedule_entry', ScheduleEntryViewSet)
+router.register(r'api/display_tugboat', TugBoatViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

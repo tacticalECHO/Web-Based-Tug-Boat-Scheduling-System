@@ -6,6 +6,8 @@ class Captain(models.Model): # Captain model
     Account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='captain', null=True, blank=True)
     name = models.CharField(max_length=200)
     CaptainId = models.CharField(max_length=200, unique=True)
+    def __str__(self):
+        return self.CaptainId
     def save(self, *args, **kwargs):
         if not self.Account:
             user = User.objects.filter(username=self.CaptainId).first()
@@ -30,6 +32,8 @@ class TugBoat(models.Model): #TugBoat model
     CaptainId = models.OneToOneField(Captain, on_delete=models.CASCADE, related_name='tugboat', null=True)
     StartWorkingTime = models.TimeField(default='T00:00:00Z')
     EndWorkingTime = models.TimeField(default='T08:00:00Z')
+    def __str__(self):
+        return self.TugBoatId
     
 class ContainerBoat(models.Model): # ContainerBoat model
     ContainerBoatID = models.CharField(max_length=200)
@@ -39,12 +43,6 @@ class ContainerBoat(models.Model): # ContainerBoat model
     departureTime = models.DateTimeField()
     def __str__(self):
         return self.ContainerBoatID
-    # def save(self, *args, **kwargs):
-    #     if not self.ContainerBoatId:  
-    #         containerBoat = ContainerBoat.objects.filter(ContainerBoatId=self.ContainerBoatId).first()
-    #         if containerBoat:
-    #             self.ContainerBoatId = containerBoat 
-    #     super(ContainerBoat, self).save(*args, **kwargs)
 
 class Task(models.Model): # Task model
     TaskId = models.AutoField(primary_key=True)
@@ -75,5 +73,5 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
 class Berth(models.Model): # Berth model
     BerthId= models.IntegerField(primary_key=True)
     ContainerBoat= models.OneToOneField(ContainerBoat, on_delete=models.CASCADE,null=True,related_name='berth',blank=True)
-    #def __str__(self):
-     #   return self.BerthId
+    def __str__(self):
+       return self.BerthId
