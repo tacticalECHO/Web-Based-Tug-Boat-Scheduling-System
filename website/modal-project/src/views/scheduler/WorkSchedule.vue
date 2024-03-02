@@ -6,20 +6,6 @@
             <div class="header-style" >
                 <div class ="filter-group">
                     <span class="filter">
-                        <label for="entryFilter">Entry: </label>
-                        <select v-model="entryFilter" @change="entryInput = entryFilter">
-                            <option></option>
-                            <option v-for="entry in $store.state.scheduleEntries" :key="entry.ScheduleEntryId">{{ entry.ScheduleEntryId }}</option>
-                        </select>
-                    </span>
-                    <span class="filter">
-                        <label for="taskFilter">Task: </label>
-                        <select v-model="taskFilter" @change="taskInput = taskFilter">
-                            <option></option>
-                            <option v-for="task in $store.state.tasks" :key="task.TaskId">{{ task.TaskId }}</option>
-                        </select>
-                    </span>
-                    <span class="filter">
                         <label for="containerBoatFilter">Container Boat: </label>
                         <select v-model="containerBoatFilter" @change="containerBoatInput = containerBoatFilter">
                             <option></option>
@@ -49,9 +35,8 @@
                         </select>
                     </span>
                 </div>
-                <button class="blue-button" id="Publish">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
             </div>
-            <div class="table-container">
+            <div  class="display-data">
                 <div class="work-table">
                     <table>
                         <thead>

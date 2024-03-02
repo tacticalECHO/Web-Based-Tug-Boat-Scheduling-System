@@ -17,7 +17,6 @@ import NewStaff from '@/views/administrator/NewStaff.vue'
 // scheduler------------------------------------------------------------------
 import SchedulerDashboard from '@/views/scheduler/SchedulerDashboard.vue'
 import WorkSchedule from '@/views/scheduler/WorkSchedule.vue'
-import TaskManager from '@/views/scheduler/TaskManager.vue'
 import NewTask from '@/views/scheduler/NewTask.vue'
 import ManualReschedule from '@/views/scheduler/ManualReschedule.vue'
 import ConflictScheduleList from '@/views/scheduler/ConflictScheduleList.vue'
@@ -48,6 +47,13 @@ const routes = [
     path: '/dashboard',
     name: 'CaptainDashboard',
     component: CaptainDashboard,
+    children: [
+      {
+        path: 'message',
+        name: 'CaptainMessage',
+        component: Message,
+      },
+    ]
   },
   {
     path: '/dashboard',
@@ -56,7 +62,7 @@ const routes = [
     children: [
       {
         path: 'message',
-        name: 'Message',
+        name: 'SchedulerMessage',
         component: Message,
       },
       {
@@ -98,11 +104,11 @@ const routes = [
     name: 'ConflictScheduleList',
     component: ConflictScheduleList,
   },
-  {
-    path: '/task-manager',
-    name: 'TaskManager',
-    component: TaskManager,
-  },
+  // {
+  //   path: '/task-manager',
+  //   name: 'TaskManager',
+  //   component: TaskManager,
+  // },
   {
     path: '/settings',
     name: 'Settings',
@@ -120,22 +126,22 @@ const routes = [
       }
     ]
   },
-  {
-    path: '/task-manager/add-new-task',
-    name: 'NewTask',
-    component: NewTask,
-    children: [
-      {
-        path: 'notice',
-        name: 'Exit-NewTask',
-        component: ExitNotice,
-      },
-      {
-        path: 'notice',
-        name: 'Save-NewTask',
-        component: RescheduleNotice,
-      }]
-  }
+  // {
+  //   path: '/task-manager/add-new-task',
+  //   name: 'NewTask',
+  //   component: NewTask,
+  //   children: [
+  //     {
+  //       path: 'notice',
+  //       name: 'Exit-NewTask',
+  //       component: ExitNotice,
+  //     },
+  //     {
+  //       path: 'notice',
+  //       name: 'Save-NewTask',
+  //       component: RescheduleNotice,
+  //     }]
+  // }
 ];
 
 const router = createRouter({

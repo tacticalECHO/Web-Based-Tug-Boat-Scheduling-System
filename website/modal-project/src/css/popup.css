@@ -18,7 +18,6 @@
     display: flex;
     flex-direction: column;
     align-items: left;
-    z-index: 1;
 }
 
 .notice-buttons {

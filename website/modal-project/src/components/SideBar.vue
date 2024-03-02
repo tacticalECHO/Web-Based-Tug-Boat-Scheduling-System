@@ -19,10 +19,6 @@
                     <font-awesome-icon :icon="['fas', 'calendar-days']" class="sidebar-icon"/>
                     Work Schedules
                 </li>
-                <li v-if="isScheduler || isAdmin" @click="redirect('TaskManager')" class="sidebar-item">
-                    <font-awesome-icon :icon="['fas', 'bell']" class="sidebar-icon"/>
-                    Task Manager
-                </li>
             </ul>
 
             <div class="sidebar-bottom-section">
@@ -73,8 +69,21 @@ export default {
         }
     },
     methods: {
-        // redirect(event){
-        //     this.$router.push({name: event});
+
+        // //control the availibility of sidebar based on screen size
+        // openNav(x) {
+        //     document.getElementById("Sidebar").style.display="block";
+        //     if(x.matches){
+        //         document.getElementById("close_button").style.display="none";
+        //     }
+        //     else{
+        //         document.getElementById("close_button").style.display="block";
+        //     }
+        // },
+        // //close the sidebar
+        // closeNav() {
+        //     document.getElementById("Sidebar").style.display="";
+        //     document.getElementById("close_button").style.display="";
         // }
     }
 }
