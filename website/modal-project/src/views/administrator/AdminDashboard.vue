@@ -19,7 +19,7 @@
                         <th>Captain Name</th>
                         <th>Captain ID</th>
                         <th>Tug Boat</th>
-                        <th>Captain Status</th>
+                        <th>Tug Boat Status</th>
                     </tr>
                 </thead>
                 <tbody>

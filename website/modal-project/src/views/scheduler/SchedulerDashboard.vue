@@ -10,13 +10,15 @@
                 </span>
             </div>
             <div class="job buttons-container">
-                <button id="schedule" @click="schedule()">Schedule</button>
+                <button id="schedule" @click="schedule()">Schedule <font-awesome-icon :icon="['fas', 'calendar-day']" /></button>
                 <br><br><br>
                 <input type="file" id="import-task-data"/>
-                <label for="import-task-data"><button @click="importTaskData()">Import Task Data</button></label>
+                <label for="import-task-data"><button @click="importTaskData()">Import Task Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
                 <br><br><br>
                 <input type="file" id="import-tugboat-data"/>
-                <label for="import-tugboat-data"><button @click="importTugboatData()">Import Tug Boat Data</button></label>
+                <label for="import-tugboat-data"><button @click="importTugboatData()">Import Tug Boat Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
+                <br><br><br>
+                <button id="download" @click="download()">Download <font-awesome-icon :icon="['fas', 'download']" /></button>
                 <br><br><br>
                 <button class="blue-button" id="publish" @click="publish()">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
             </div>
@@ -256,16 +258,38 @@ export default {
                     }
                 }).then(response => {
                     console.log(response.data);
+                    alert("Imported success!");
                 }).catch(error => {
                     console.error("Error uploading file: ", error);
+                    alert("Failed to import, check logs for details.");
                 });
             };
             input.click();
         },
         importTugboatData(){
-            document.getElementById('import-tugboat-data').click();
+            let input = document.getElementById('import-task-data');
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) {
+                    return;
+                }
+                let formData = new FormData();
+                formData.append('tug_boat_data', file);
+                axios.post('http://localhost:8000/api/upload-tug-boat-data', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(response => {
+                    console.log(response.data);
+                    alert("Imported success!");
+                }).catch(error => {
+                    console.error("Error uploading file: ", error);
+                    alert("Failed to import, check logs for details.");
+                });
+            };
+            input.click();
         },
-        publish(){
+        download(){
             axios.post('http://localhost:8000/api/publish-data')
             .then(response => {
                 console.log(response.data.message);
@@ -274,6 +298,9 @@ export default {
                 console.error("error: ", error);
                 alert("Failed to publish data, check logs for details.");
             });
+        },
+        publish(){
+
         },
         checkAll(input) {
             if (input === "All") {
