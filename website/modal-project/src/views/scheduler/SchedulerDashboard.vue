@@ -65,6 +65,7 @@
                             <option>Completed</option>
                             <option>Confirmed</option>
                             <option>Scheduled</option>
+                            <option>Unscheduled</option>
                         </select>
                     </span>
                 </div>
@@ -138,15 +139,63 @@
                                 <span @click="selected(entry.ScheduleEntryId, 'berthId')" v-if="berthInfo != entry.ScheduleEntryId">{{ entry.TaskId.BerthId}}</span> 
                             </td>
 
-                            <td  @click.stop class="work-type"><span class="status-container">{{entry.TaskId.Action}}</span></td>
+                            <td  @click.stop class="work-type"><span class="status-container" :style="getActionStyle(entry.TaskId.Action)">{{entry.TaskId.Action}}</span></td>
 
                             <td  @click.stop class="start-time">{{}}</td>
 
                             <td  @click.stop class="end-time">{{}}</td>
 
-                            <td  @click.stop class="work-status"> <span class="status-container">{{entry.State}} </span></td>
+                            <td  @click.stop class="work-status"> <span class="status-container" :style="getStatusStyle(entry.State)">{{entry.State}} </span></td>
 
                             <td  @click.stop class="publish-time">{{}}</td>
+                        </tr>
+
+                        <tr v-for="task in taskList()" :key="task.TaskId">
+                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
+
+                            <td  @click.stop class="number"> {{task.TaskId}} </td>
+
+                            <td @click.stop>
+                                <form v-if="timeInfo === task.TaskId" @submit="edit(task.TaskId)">
+                                    <input v-model="time" :id="'time' + task.TaskId" :ref="'time' + task.TaskId" type="datetime-local">
+                                    <input class="submit-button" type="submit" />
+                                </form>
+                                <span @click="selected(task.TaskId, 'time')" v-if="timeInfo != task.TaskId">{{formatDate(task.endTime)}}&emsp;&emsp;{{ formatTime(task.endTime) }}</span> 
+                            </td>
+
+                            <td @click.stop>
+                                <form v-if="containerBoatInfo === task.TaskId" @submit="edit(task.TaskId)">
+                                    <select @change="edit(task.TaskId)" v-model="containerBoatId">
+                                        <option v-for="containerBoat in $store.state.containerBoats" :key="containerBoat.ContainerBoatID">{{ containerBoat.ContainerBoatID }}</option>
+                                    </select>
+                                </form>
+                                <span @click="selected(task.TaskId, 'containerBoatId')" v-if="containerBoatInfo != task.TaskId">{{task.ContainerBoatID.ContainerBoatID}}</span> 
+                            </td>
+
+                            <td  @click.stop class="country">{{task.ContainerBoatID.Country}}</td>
+
+                            <td @click.stop>
+                            </td>
+
+                            <td @click.stop>
+                                <form v-if="berthInfo === task.TaskId">
+                                    <select @change="edit(task.TaskId)" v-model="berthId"  :id="'berthId' + task.BerthId">
+                                        <option v-for="berth in $store.state.berths" :key="berth.BerthID">{{ berth.BerthId }}</option>
+                                    </select>
+                                </form>
+                                <span @click="selected(task.TaskId, 'berthId')" v-if="berthInfo != task.TaskId">{{ task.BerthId}}</span> 
+                            </td>
+
+                            <td  @click.stop class="work-type"><span class="status-container" :style="getActionStyle(task.Action)">{{task.Action}}</span></td>
+
+                            <td  @click.stop class="start-time">{{}}</td>
+
+                            <td  @click.stop class="end-time">{{}}</td>
+
+                            <td  @click.stop class="work-status"> <span class="status-container" :style="getStatusStyle(task.State)">{{task.State}} </span></td>
+
+                            <td  @click.stop class="publish-time">{{}}</td>
+
                         </tr>
                     </tbody>
                 </table>
@@ -233,14 +282,17 @@ export default {
                 return input;
             }
         },
-        entryList() {
-            this.entries = this.$store.state.scheduleEntries;
+        formatInput(){
             this.containerBoatInput = this.checkAll(this.containerBoatInput);
             this.countryInput = this.checkAll(this.countryInput);
             this.tugBoatInput = this.checkAll(this.tugBoatInput);
             this.berthInput = this.checkAll(this.berthInput);
             this.workTypeInput = this.checkAll(this.workTypeInput);
             this.statusInput = this.checkAll(this.statusInput);
+        },
+        entryList() {
+            this.entries = this.$store.state.scheduleEntries;
+            this.formatInput();
 
             const filtered = this.entries.filter((entry) => {  
                 const byCountry = this.countryInput ? entry.TaskId.ContainerBoatID.Country.toString() === this.countryInput : true;
@@ -251,6 +303,24 @@ export default {
                 const byStatus = this.statusInput ? entry.State === this.statusInput : true;
 
                 return byCountry && byContainerBoatId && byTugBoatId && byBerthId && byWorkType && byStatus;
+            });
+
+            return filtered;
+        },
+        taskList() {
+            this.tasks = this.$store.state.tasks;
+            this.formatInput();
+
+            const filtered = this.tasks.filter((task) => {  
+                const byCountry = this.countryInput ? task.ContainerBoatID.Country.toString() === this.countryInput : true;
+                const byContainerBoatId = this.containerBoatInput ? task.ContainerBoatID.ContainerBoatID.toString() === this.containerBoatInput : true;
+                const byTugBoatId = this.tugBoatInput === '';
+                const byBerthId = this.berthInput ? task.BerthId.toString() === this.berthInput : true;
+                const byWorkType = this.workTypeInput ? task.Action === this.workTypeInput : true;
+                const byStatus = this.statusInput ? task.State === this.statusInput : true;
+                const unscheduled = task.State === 'Unscheduled';
+
+                return byCountry && byContainerBoatId && byTugBoatId && byBerthId && byWorkType && byStatus && unscheduled;
             });
 
             return filtered;
@@ -325,6 +395,42 @@ export default {
                 console.error('Edit task error:', error);
                 alert('Edit Task Error.');
             }
+        },
+        getStatusStyle(state){
+            let backgroundColor;
+
+            switch (state) {
+                case 'Scheduled':
+                backgroundColor = 'green';
+                break;
+                case 'Confirmed':
+                backgroundColor = 'red';
+                break;
+                case 'Completed':
+                backgroundColor = 'rgb(254, 219, 46)';
+                break;
+                default:
+                backgroundColor = 'lightgrey';
+            }
+
+            return {
+                background: backgroundColor,
+            };
+        },
+        getActionStyle(action){
+            let backgroundColor;
+
+            switch (action) {
+                case 'Arrival':
+                backgroundColor = '#72bedf';
+                break;
+                default:
+                backgroundColor = '#020071';
+            }
+
+            return {
+                background: backgroundColor,
+            };
         }
     }
 }
@@ -379,8 +485,8 @@ export default {
     /* flex-direction: column; */
     font-size: var(--font-size);
     border: 2px solid grey;
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 5px;
+    padding: 5px;
     margin-right: 5px;
 }
 
@@ -399,24 +505,6 @@ form {
     width: fit-content;
 }
 
-#search {
-    padding: 10px;
-    border-radius: 20px;
-    border: 1px solid lightgrey;
-}
-
-.search-form {
-    position: relative;
-    display: inline-block;
-}
-
-.search-icon {
-    position: absolute;
-    top: 40%;
-    right: 10px;
-    transform: translateY(-50%);
-}
-
 button{
     color: black;
     border-radius: 20px;
@@ -431,9 +519,9 @@ button{
         justify-content: space-between;
     }
 
-    .filter {
+    /* .filter {
         flex-basis: calc(50% - 20px);
-    }
+    } */
 }
 
 table {

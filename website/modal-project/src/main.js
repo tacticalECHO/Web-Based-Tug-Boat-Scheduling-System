@@ -5,6 +5,7 @@ import './css/popup.css'
 import store from './store';
 import router from './router'
 import { redirect } from './js/methods.js'
+// import VueNotifications from 'vue-notifications'
 
 //icons---------------------------------------------------------
 import { library } from '@fortawesome/fontawesome-svg-core'

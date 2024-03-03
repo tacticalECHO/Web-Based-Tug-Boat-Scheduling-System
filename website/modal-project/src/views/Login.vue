@@ -76,7 +76,7 @@ methods: {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  height: 100vh;
+  height: 96vh;
 }
 .sidebar {
   flex: 3; 
@@ -85,16 +85,14 @@ methods: {
   align-items: center;
   justify-content: center;
 }
-
 .sidebar img {
   width: 100%;
-  height: auto;
+  max-height: 100vh;
 }
 body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
   margin: 0;
   background-color: #f4f4f4;
 } 

@@ -175,6 +175,7 @@ export default {
 .filter-group {
     padding: 10px;
 }
+
 .filter{
     font-size: var(--font-size);
     border: 2px solid grey;

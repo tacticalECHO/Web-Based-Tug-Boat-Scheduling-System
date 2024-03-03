@@ -1,18 +1,19 @@
 <template>
-    <div id="Sidebar">
-        <h2>Ningbo Harbour</h2>
+    <div id="Sidebar"> 
+        <div v-if="screen() || sidebarOpened" id="sidebar">
+            <h2>Ningbo Harbour</h2>
             <ul>
                 <li v-if="isAdmin" @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item">
-                  <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
+                <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     A-Dashboard
                 </li>
                 <li v-if="isScheduler || isAdmin" @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item">
-                  <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
+                <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     S-Dashboard
                 </li>
                 <li v-if="isCaptain || isAdmin" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item">
                     <admin-panel v-if="isCaptain" />
-                  <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
+                <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     C-Dashboard
                 </li>
                 <li v-if="isScheduler || isAdmin || isCaptain" @click="redirect('WorkSchedule')" class="sidebar-item">
@@ -32,33 +33,16 @@
                         {{profile_name}}
                     </li>
                 </ul>
+            </div>
         </div>
+        <button class="blue-border-button" @click="openSidebar()" v-if="!screen()" id="open-sidebar"><font-awesome-icon :icon="['fas', 'forward']" /></button>
+        <button class="blue-border-button" @click="closeSidebar()" v-if="sidebarOpened && closeButton()" id="close-sidebar"><font-awesome-icon :icon="['fas', 'backward']" /></button>
     </div>
     
 </template>
 
 <script>
 import { mapState } from 'vuex';
-// @method_decorator(csrf_exempt, name='dispatch')
-// class EditTaskView(View):
-//     def post(self, request, *args, **kwargs):
-//         data = json.loads(request.body)
-//         taskId = data.get('taskId')
-//         requiredTugBoat = data.get('requiredTugBoat')
-//         startTime = data.get('startTime')
-//         endTime = data.get('startTime')
-//         containerBoatID = data.get('containerBoatId')
-//         action = data.get('action')
-//         berthId = data.get('berthId')
-//         state = data.get('state')
-        
-//         try:
-//             task = Task.objects.get(TaskId = taskId)
-//             task.set_password(new_password)
-//             task.save()
-//             return JsonResponse({'success': True})
-//         except User.DoesNotExist:
-//             return JsonResponse({'success': False}, status=401)
 
 export default {
     name: 'SideBar',
@@ -68,43 +52,84 @@ export default {
             return this.username || 'Guest';
         }
     },
+    data() {
+        return {
+            screenWidth: window.innerWidth,
+            screenHeight: window.innerHeight,
+            screenResized: null,
+            sidebarOpened: null,
+        }
+    },
+    created() {
+        // Update screen size on window resize
+        window.addEventListener('resize', this.handleResize);
+    },
+    destroyed() {
+        // Remove the event listener when the component is destroyed
+        window.removeEventListener('resize', this.handleResize);
+    },
     methods: {
-
-        // //control the availibility of sidebar based on screen size
-        // openNav(x) {
-        //     document.getElementById("Sidebar").style.display="block";
-        //     if(x.matches){
-        //         document.getElementById("close_button").style.display="none";
-        //     }
-        //     else{
-        //         document.getElementById("close_button").style.display="block";
-        //     }
-        // },
-        // //close the sidebar
-        // closeNav() {
-        //     document.getElementById("Sidebar").style.display="";
-        //     document.getElementById("close_button").style.display="";
-        // }
+        screen(){
+            if(this.screenHeight > 380 && this.screenWidth > 820){
+                this.sidebarOpened = true;
+                return true;
+            }
+            return false;
+        },
+        closeButton(){
+            if(this.screenHeight <= 380 || this.screenWidth <= 820){
+                return true;
+            }
+        },
+        handleResize() {
+            // Update screen size on window resize
+            this.screenWidth = window.innerWidth;
+            this.screenHeight = window.innerHeight;
+            console.log("height: "+this.screenHeight+" width: "+this.screenWidth)
+            if(this.screenHeight <= 380 || this.screenWidth <= 820){
+                this.screenResized = true;
+                this.sidebarOpened = false;
+            }else{
+                this.screenResized = false;
+            }
+        },
+        openSidebar() {
+            this.sidebarOpened = true;
+        },
+        closeSidebar() {
+            this.sidebarOpened = false;
+        }
     }
 }
 </script>
 
 <style scoped>
 #Sidebar {
+    top: 0;
     z-index: 9999;
+    width: 230px;
+}
+
+#close-sidebar {
+    float: right;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#sidebar {
+    z-index: 9999;
+    width: 200px;
+    background-color: white;
+    border-right: 1px solid grey;
     text-align: center;
     margin-top: 0px;
-    width: 200px;
     position: fixed;
     height: 100%;
-    background-color: white;
     color: black;
-    border-right: 1px solid grey;
     top: 0;
     left: 0;
     overflow-x: hidden;
     overflow-y: hidden;
-    transition: .5s;
 }
 
 #Sidebar h2 {
