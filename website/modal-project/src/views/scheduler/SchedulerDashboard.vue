@@ -369,9 +369,14 @@ export default {
 }
 
 .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     padding: 10px;
 }
 .filter{
+    display: flex;
+    /* flex-direction: column; */
     font-size: var(--font-size);
     border: 2px solid grey;
     border-radius: 10px;
@@ -419,6 +424,16 @@ button{
 
 .header-style{
     padding: 10px;
+}
+
+@media (max-width: 768px) {
+    .filter-group {
+        justify-content: space-between;
+    }
+
+    .filter {
+        flex-basis: calc(50% - 20px);
+    }
 }
 
 table {

@@ -1,5 +1,9 @@
 <template>
     <div id = "Login">
+        <div class="sidebar"> 
+        <!-- Add your image here -->
+        <img src="\images\login.png" alt="Sidebar Image">
+        </div>
         <div class = "login-container">
             <h1>Ningbo Harbour</h1>
             <div v-if = "showError" class = "invalid-login">
@@ -68,6 +72,24 @@ methods: {
 </script>
 
 <style scoped>
+ #Login {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  height: 100vh;
+}
+.sidebar {
+  flex: 3; 
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar img {
+  width: 100%;
+  height: auto;
+}
 body {
   display: flex;
   align-items: center;
@@ -75,16 +97,17 @@ body {
   height: 100vh;
   margin: 0;
   background-color: #f4f4f4;
-}
+} 
 
 .login-container {
+  flex: 1;
   margin: auto;
   margin-top: 10%;
-  width: 500px;
+  max-width: 500px;
   background-color: #fff;
   padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
   display: flex;
   flex-direction: column;
   align-items: center;
