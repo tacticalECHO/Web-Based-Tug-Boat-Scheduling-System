@@ -63,7 +63,7 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
     ScheduleEntryId= models.AutoField(primary_key=True)
     listOfTugBoats = models.ManyToManyField(TugBoat)
     TaskId = models.ForeignKey(Task, on_delete=models.CASCADE)
-    Status = models.CharField(max_length=10,choices=(('Scheduled','Scheduled'),('Completed','Completed'),('Conformed','Conformed')),default='Scheduled')
+    Status = models.CharField(max_length=10,choices=(('Scheduled','Scheduled'),('Completed','Completed'),('Confirmed','Confirmed')),default='Scheduled')
     PublishTime=models.DateTimeField()
     StartTime=models.DateTimeField(null=True,blank=True)
     EndTime=models.DateTimeField(null=True,blank=True)

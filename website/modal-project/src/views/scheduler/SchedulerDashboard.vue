@@ -56,8 +56,7 @@
                         <label for="workTypeFilter">Work Type: </label>
                         <select v-model="workTypeInput">
                             <option>All</option>
-                            <option>InBound</option>
-                            <option>OutBound</option>
+                            <option v-for="task in $store.state.tasks" :key="task.Action">{{ task.Action }}</option>
                         </select>
                     </span>
                     <span class="filter">

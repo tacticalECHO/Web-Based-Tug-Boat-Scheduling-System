@@ -49,6 +49,9 @@ export default {
             'passwordPlaceholder' 
         ]),
     },
+    mounted() {
+        this.$store.commit('setExitPath', 'Settings');
+    },
     methods: {
         cancel(){
             this.$router.push({name: 'Exit-ChangePassword'});

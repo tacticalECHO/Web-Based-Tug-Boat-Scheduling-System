@@ -16,6 +16,7 @@ const store = createStore({
           containerBoats: [],
           scheduleEntries: [],
           tugboats: [],
+          exitPath: 'Settings',
         };
         
     },
@@ -48,7 +49,10 @@ const store = createStore({
         },
         setTugBoats(state, tugboats) {
           state.tugboats = tugboats;
-        }
+        },
+        setExitPath(state, path) {
+          state.exitPath = path;
+        },
     },
 
     actions:{

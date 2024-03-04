@@ -62,6 +62,7 @@ export default {
     components: {SideBar},
     mounted() {
         this.$store.dispatch('fetchBerths');
+        this.$store.commit('setExitPath', 'SchedulerDashboard');
     },
     methods: {
         async save(){

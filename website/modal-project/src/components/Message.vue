@@ -33,13 +33,13 @@ export default {
         close(){
             if (this.$store.state.isCaptain) {
             this.$router.push({ name: 'CaptainDashboard' });
-        } else if (this.$store.state.isAdmin) {
-            this.$router.push({ name: 'AdminDashboard' });
-        } else if (this.$store.state.isScheduler) {
-            this.$router.push({ name: 'SchedulerDashboard' });
-        } else {
-            this.$router.push({ name: 'Settings' });
-        }
+            } else if (this.$store.state.isAdmin) {
+                this.$router.push({ name: 'AdminDashboard' });
+            } else if (this.$store.state.isScheduler) {
+                this.$router.push({ name: 'SchedulerDashboard' });
+            } else {
+                this.$router.push({ name: 'Settings' });
+            }
         },
         details(){
             this.$router.push({name: 'MessageDetails'});
