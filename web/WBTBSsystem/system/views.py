@@ -188,7 +188,7 @@ class SaveNewTaskView(View):
             return JsonResponse({'error': str(e)}, status=400)
 
 from django.views.decorators.http import require_http_methods
-from .ImportData import importData, dataIntoDatabase, createTask
+from .ImportData import dataIntoDatabase_ContainerBoat, createTask
 from django.core.files.storage import default_storage
 import pandas as pd
 import os
@@ -212,7 +212,7 @@ def upload_task_data(request):
         df=pd.DataFrame(data)
         df.columns=['ContainerBoatID','Tonnage','Country','arrivalTime','departureTime']
         data = df
-        dataIntoDatabase(data)
+        dataIntoDatabase_ContainerBoat(data)
         createTask()
         default_storage.delete(path)
         

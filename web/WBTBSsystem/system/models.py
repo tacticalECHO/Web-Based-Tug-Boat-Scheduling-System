@@ -39,8 +39,6 @@ class ContainerBoat(models.Model): # ContainerBoat model
     ContainerBoatID = models.CharField(max_length=200)
     Tonnage = models.IntegerField(default=0)
     Country = models.CharField(max_length=200)
-    arrivalTime = models.DateTimeField()
-    departureTime = models.DateTimeField()
     def __str__(self):
         return self.ContainerBoatID
 
@@ -48,9 +46,8 @@ class Task(models.Model): # Task model
     TaskId = models.AutoField(primary_key=True)
     RequiredTugBoat = models.IntegerField(default=0)
     startTime = models.DateTimeField()
-    endTime = models.DateTimeField()
     ContainerBoatID = models.ForeignKey(ContainerBoat, on_delete=models.CASCADE)
-    Action= models.CharField(max_length=10,choices=(('Arrival','Arrival'),('Departure','Departure')),default='Arrival')
+    Action= models.CharField(max_length=10,choices=(('INBOUND','INBOUND'),('OUTBOUND','OUTBOUND')),default='INBOUND')
     BerthId = models.IntegerField(default=0)
     State = models.CharField(max_length=100,choices=(('Scheduled','Scheduled'),('Unscheduled','Unscheduled')),default='Unscheduled')
     def __int__(self):
@@ -66,7 +63,10 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
     ScheduleEntryId= models.AutoField(primary_key=True)
     listOfTugBoats = models.ManyToManyField(TugBoat)
     TaskId = models.ForeignKey(Task, on_delete=models.CASCADE)
-    State = models.CharField(max_length=10,choices=(('Scheduled','Scheduled'),('Completed','Completed')),default='Scheduled')
+    Status = models.CharField(max_length=10,choices=(('Scheduled','Scheduled'),('Completed','Completed'),('Conformed','Conformed')),default='Scheduled')
+    PublishTime=models.DateTimeField()
+    StartTime=models.DateTimeField(null=True,blank=True)
+    EndTime=models.DateTimeField(null=True,blank=True)
     def __int__(self):
         return self.ScheduleEntryId
 
