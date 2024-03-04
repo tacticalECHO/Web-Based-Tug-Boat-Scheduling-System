@@ -3,6 +3,12 @@
         <div class="sidebar"> 
         <!-- Add your image here -->
         <img src="\images\login.png" alt="Sidebar Image">
+        <div class="image-text">
+          <div class="text-wrapper">
+            <p>Ningbo Harbour</p>
+            <p>Tug Boat Scheduling System</p>
+          </div>
+        </div>
         </div>
         <div class = "login-container">
             <h1>Ningbo Harbour</h1>
@@ -79,6 +85,7 @@ methods: {
   height: 96vh;
 }
 .sidebar {
+  position: relative;
   flex: 3; 
   background-color: #f0f0f0;
   display: flex;
@@ -88,6 +95,23 @@ methods: {
 .sidebar img {
   width: 100%;
   max-height: 100vh;
+}
+.image-text {
+  position: absolute;
+  top: 50px;
+  left: 5%; 
+  width: 55%;
+  background-color: rgba(0, 0, 0, 0.137);
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  display: inline-block;
+}
+.text-wrapper p {
+  font-size: 40px;
+  text-align: left;
+  font-weight: bold;
+  margin: 10px 0;
+  display: inline-block;
 }
 body {
   display: flex;
@@ -153,4 +177,21 @@ button {
   font-size: 16px;
 }
 
+@media (max-width: 768px) {
+  #Login {
+    flex-direction: column;
+    justify-content: flex-start;
+    height: auto;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .login-container {
+    margin-top: 20px;
+    width: 80%;
+    max-width: none;
+  }
+}
 </style>

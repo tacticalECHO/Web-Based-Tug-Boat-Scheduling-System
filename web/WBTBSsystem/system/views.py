@@ -219,6 +219,9 @@ def upload_task_data(request):
         return JsonResponse({'message': 'File processed successfully.'})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+def upload_tug_boat_data(request):
+    pass
 
 from .ExportData import DataTOExcel
 @csrf_exempt

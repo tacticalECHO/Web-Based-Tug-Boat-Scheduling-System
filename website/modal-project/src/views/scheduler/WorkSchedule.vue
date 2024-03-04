@@ -195,4 +195,11 @@ button{
 .header-style{
     padding: 10px;
 }
+
+@media (max-width: 768px) {
+    .filter-group {
+        justify-content: space-between;
+    }
+
+}
 </style>
