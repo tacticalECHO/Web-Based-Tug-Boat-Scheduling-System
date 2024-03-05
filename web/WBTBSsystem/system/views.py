@@ -188,7 +188,7 @@ class SaveNewTaskView(View):
             return JsonResponse({'error': str(e)}, status=400)
 
 from django.views.decorators.http import require_http_methods
-from .ImportData import importData, dataIntoDatabase, createTask
+from .ImportData import dataIntoDatabase_ContainerBoat, createTask
 from django.core.files.storage import default_storage
 import pandas as pd
 import os
@@ -212,13 +212,16 @@ def upload_task_data(request):
         df=pd.DataFrame(data)
         df.columns=['ContainerBoatID','Tonnage','Country','arrivalTime','departureTime']
         data = df
-        dataIntoDatabase(data)
+        dataIntoDatabase_ContainerBoat(data)
         createTask()
         default_storage.delete(path)
         
         return JsonResponse({'message': 'File processed successfully.'})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+def upload_tug_boat_data(request):
+    pass
 
 from .ExportData import DataTOExcel
 @csrf_exempt
@@ -254,7 +257,7 @@ class SchedulerViewSet(viewsets.ModelViewSet):
         new_user = User.objects.create_user()
 
 class TaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all()
+    queryset = Task.objects.all().order_by('startTime')
     serializer_class = TaskSerializer  
 
 class BerthViewSet(viewsets.ModelViewSet):
@@ -266,7 +269,7 @@ class ContainerBoatViewSet(viewsets.ModelViewSet):
     serializer_class = ContainerBoatSerializer  
 
 class ScheduleEntryViewSet(viewsets.ModelViewSet):
-    queryset = ScheduleEntry.objects.all()
+    queryset = ScheduleEntry.objects.all().order_by('StartTime')
     serializer_class = ScheduleEntrySerializer  
 
 class TugBoatViewSet(viewsets.ModelViewSet):

@@ -7,29 +7,29 @@
                 <div class ="filter-group">
                     <span class="filter">
                         <label for="containerBoatFilter">Container Boat: </label>
-                        <select v-model="containerBoatFilter" @change="containerBoatInput = containerBoatFilter">
-                            <option>All</option>
+                        <select v-model="containerBoatInput">
+                            <option value="">All</option>
                             <option v-for="containerBoat in $store.state.containerBoats" :key="containerBoat.ContainerBoatID">{{ containerBoat.ContainerBoatID }}</option>
                         </select>
                     </span>
                     <span class="filter">
                         <label for="tugBoatFilter">Tug Boat: </label>
-                        <select v-model="tugBoatFilter" @change="tugBoatInput = tugBoatFilter">
-                            <option>All</option>
+                        <select v-model="tugBoatInput">
+                            <option value="">All</option>
                             <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
                         </select>
                     </span>
                     <span class="filter">
                         <label for="berthFilter">Berth: </label>
-                        <select v-model="berthFilter">
-                            <option>All</option>
+                        <select v-model="berthInput">
+                            <option value="">All</option>
                             <option v-for="berth in $store.state.berths" :key="berth.BerthId">{{ berth.BerthId }}</option>
                         </select>
                     </span>
                     <span class="filter">
-                        <label for="stateFilter">State: </label>
-                        <select v-model="stateFilter" @change="stateInput = stateFilter">
-                            <option>All</option>
+                        <label for="stateFilter">Status: </label>
+                        <select v-model="stateInput">
+                            <option value="">All</option>
                             <option>Scheduled</option>
                             <option>Confirmed</option>
                             <option>Completed</option>
@@ -60,7 +60,7 @@
                                 <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/")}} </td>
                                 <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join("/")}} </td>
                                 <td class="work-status"> 
-                                    <span class="status-container" :style="getStatusStyle(entry.State)">{{entry.State}} </span>
+                                    <span class="status-container" :style="getStatusStyle(entry.Status)">{{entry.Status}} </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -92,7 +92,6 @@ export default {
             tugBoatInput: '',
             berthInput: '',
             stateInput: '',
-            stateInfo: null,
         }
     },
     methods: {
@@ -153,14 +152,14 @@ export default {
             let backgroundColor;
 
             switch (state) {
-                case 'Scheduled':
+                case 'Confirmed':
                 backgroundColor = 'green';
                 break;
-                case 'Confirmed':
-                backgroundColor = 'red';
+                case 'Scheduled':
+                backgroundColor = 'rgb(254, 219, 46)';
                 break;
                 case 'Completed':
-                backgroundColor = 'rgb(254, 219, 46)';
+                backgroundColor = 'darkgrey';
                 break;
                 default:
                 backgroundColor = 'lightgrey';
@@ -197,5 +196,12 @@ button{
 
 .header-style{
     padding: 10px;
+}
+
+@media (max-width: 768px) {
+    .filter-group {
+        justify-content: space-between;
+    }
+
 }
 </style>

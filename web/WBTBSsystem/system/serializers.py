@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ContainerBoatSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContainerBoat
-        fields = ['ContainerBoatID', 'Tonnage', 'Country', 'arrivalTime', 'departureTime']
+        fields = ['ContainerBoatID', 'Tonnage', 'Country']
         
 class BerthSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,7 +38,7 @@ class TaskSerializer(serializers.ModelSerializer):
     ContainerBoatID = ContainerBoatSerializer()
     class Meta:
         model = Task
-        fields = ['TaskId', 'RequiredTugBoat', 'startTime', 'endTime', 'ContainerBoatID', 'Action', 'BerthId', 'State']
+        fields = ['TaskId', 'RequiredTugBoat', 'startTime', 'ContainerBoatID', 'Action', 'BerthId', 'State']
 
 class TugBoatSerializer(serializers.ModelSerializer):
     CaptainId = CaptainSerializer()
@@ -51,4 +51,4 @@ class ScheduleEntrySerializer(serializers.ModelSerializer):
     listOfTugBoats = TugBoatSerializer(many=True)
     class Meta:
         model = ScheduleEntry
-        fields = ['ScheduleEntryId', 'listOfTugBoats', 'TaskId', 'State']
+        fields = ['ScheduleEntryId', 'listOfTugBoats', 'TaskId', 'Status', 'PublishTime', 'StartTime', 'EndTime']

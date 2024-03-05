@@ -20,7 +20,7 @@ def DataTOExcel():
             tugboatlist+=ScheduleEntryList[i].listOfTugBoats.all()[j].TugBoatId+"\n"
         data.append([ScheduleEntryList[i].TaskId.ContainerBoatID.ContainerBoatID, ScheduleEntryList[i].TaskId.Action,ScheduleEntryList[i].TaskId.startTime,ScheduleEntryList[i].TaskId.endTime,tugboatlist,ScheduleEntryList[i].State])
     df = pd.DataFrame(data, columns=['ContainerBoatID','Action','startTime','endTime','listOfTugBoats','State'])
-    df.to_excel('web\WBTBSsystem\\testOut.xlsx', index=False)
+    df.to_excel('system\downloads\\testOut.xlsx', index=False)
     return
 
 def main():

@@ -16,7 +16,6 @@
 </template>
 
 <script>
-
 export default {
     name: 'ExitNotice',
     // data() {
@@ -37,11 +36,10 @@ export default {
     //     }
     // },
     methods: {
-        exit(){
-            this.$router.push({ name: 'Settings' });
+        exit() {
+            this.$router.push({ name: this.$store.state.exitPath });
         },
-        cancel(){
-            //save password here
+        cancel() {
             this.$router.back();
         }
     }
