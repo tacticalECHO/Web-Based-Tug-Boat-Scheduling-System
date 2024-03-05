@@ -1,7 +1,7 @@
 <template>
     <div id="WorkSchedule">
         <SideBar />
-        <div class="pages" @click="toggle">
+        <div class="pages">
             <h2>Work Schedules</h2>
             <div class="header-style" >
                 <div class ="filter-group">
@@ -59,13 +59,8 @@
                                 <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/")}} </td>
                                 <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/")}} </td>
                                 <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join("/")}} </td>
-                                <td class="work-status" @click.stop> 
-                                    <span v-if="stateInfo != entry.ScheduleEntryId" @click="stateInfo = entry.ScheduleEntryId" class="status-container">{{entry.State}} </span>
-                                    <form v-if="stateInfo === entry.ScheduleEntryId">
-                                        <select @change="edit(entry.ScheduleEntryId)" v-model="state">
-                                            <option>{{ displayState(entry.State) }}</option>
-                                        </select>
-                                    </form>
+                                <td class="work-status"> 
+                                    <span class="status-container" :style="getStatusStyle(entry.State)">{{entry.State}} </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -129,19 +124,6 @@ export default {
         //         alert('Updated Error.');
         //     }
         // },
-        toggle(event){
-            if (!event.target.closest('form')) {
-                this.stateInfo = null;
-            }
-        },
-        displayState(state){
-            if(state === "Scheduled"){
-                return "Start Job";
-            }else if(state === "Confirmed"){
-                return "Complete Job";
-            }
-            return "";
-        },
         checkAll(input) {
             if (input === "All") {
                 return '';
@@ -166,7 +148,28 @@ export default {
             });
 
             return filtered;
-        }
+        },
+        getStatusStyle(state){
+            let backgroundColor;
+
+            switch (state) {
+                case 'Scheduled':
+                backgroundColor = 'green';
+                break;
+                case 'Confirmed':
+                backgroundColor = 'red';
+                break;
+                case 'Completed':
+                backgroundColor = 'rgb(254, 219, 46)';
+                break;
+                default:
+                backgroundColor = 'lightgrey';
+            }
+
+            return {
+                background: backgroundColor,
+            };
+        },
     }
 }
 </script>

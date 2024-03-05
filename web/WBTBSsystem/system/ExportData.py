@@ -5,7 +5,7 @@ import math
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
 from system.models import ContainerBoat, Task, Berth, ScheduleEntry
-# import pandas as pd
+import pandas as pd
 
 def getData():
     ScheduleEntryList=ScheduleEntry.objects.all()

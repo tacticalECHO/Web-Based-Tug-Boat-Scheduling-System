@@ -81,8 +81,8 @@ button {
     text-align: left;
     margin-top: 0px;
     margin-right: 15px;
-    position: sticky;
-    z-index: 1;
+    /* position: sticky; */
+    z-index: 0;
     transition: margin-left 0.5s;
 }
 

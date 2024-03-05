@@ -85,7 +85,6 @@ export default {
             // Update screen size on window resize
             this.screenWidth = window.innerWidth;
             this.screenHeight = window.innerHeight;
-            console.log("height: "+this.screenHeight+" width: "+this.screenWidth)
             if(this.screenHeight <= 380 || this.screenWidth <= 820){
                 this.screenResized = true;
                 this.sidebarOpened = false;
@@ -107,13 +106,19 @@ export default {
 #Sidebar {
     top: 0;
     z-index: 9999;
-    width: 230px;
 }
 
 #close-sidebar {
-    float: right;
+    margin-left: 195px;
     padding: 10px;
     cursor: pointer;
+    z-index: 99999;
+    position: fixed;
+}
+
+#open-sidebar {
+    z-index: 9998;
+    position: fixed;
 }
 
 #sidebar {

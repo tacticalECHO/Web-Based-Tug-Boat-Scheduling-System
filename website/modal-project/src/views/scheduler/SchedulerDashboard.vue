@@ -33,7 +33,7 @@
                         <label for="countryFilter">Country: </label>
                         <select v-model="countryInput">
                             <option>All</option>
-                            <option v-for="containerBoat in $store.state.containerBoats" :key="containerBoat.Country">{{ containerBoat.Country }}</option>
+                            <option v-for="(country, index) in countryList()" :key="index">{{ country }}</option>
                         </select>
                     </span>
                     <span class="filter">
@@ -97,11 +97,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="entry in entryList()" :key="entry.ScheduleEntryId">
+                        <tr v-for="(entry,index) in entryList()" :key="index">
 
                             <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
 
-                            <td  @click.stop class="number"> {{entry.ScheduleEntryId}} </td>
+                            <td  @click.stop class="number"> {{index+1}} </td>
 
                             <td @click.stop>
                                 <form v-if="timeInfo === entry.ScheduleEntryId" @submit="edit(entry.ScheduleEntryId)">
@@ -150,10 +150,10 @@
                             <td  @click.stop class="publish-time">{{}}</td>
                         </tr>
 
-                        <tr v-for="task in taskList()" :key="task.TaskId">
+                        <tr v-for="(task, index) in taskList()" :key="index">
                             <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
 
-                            <td  @click.stop class="number"> {{task.TaskId}} </td>
+                            <td  @click.stop class="number"> {{index+1}} </td>
 
                             <td @click.stop>
                                 <form v-if="timeInfo === task.TaskId" @submit="edit(task.TaskId)">
@@ -229,6 +229,7 @@ export default {
             searchValue: null,
             entries: [],
             tasks: [],
+            containerBoats: [],
             containerBoatInput: "All",
             countryInput: "All",
             tugBoatInput: "All",
@@ -289,6 +290,10 @@ export default {
             this.berthInput = this.checkAll(this.berthInput);
             this.workTypeInput = this.checkAll(this.workTypeInput);
             this.statusInput = this.checkAll(this.statusInput);
+        },
+        countryList(){
+            const country = [...new Set(this.$store.state.containerBoats.map(boat => boat.Country))];
+            return country;
         },
         entryList() {
             this.entries = this.$store.state.scheduleEntries;
