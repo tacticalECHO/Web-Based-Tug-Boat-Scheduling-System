@@ -12,7 +12,10 @@ PATH="web\WBTBSsystem\\test.xlsx"
 
 def IsberthAvailable(berthID):
     # Determine if the berth is available
-    berth=Berth.objects.get(BerthId=berthID)
+    try:
+        berth=Berth.objects.get(BerthId=berthID)
+    except:
+        return False
     if berth.ContainerBoat==None:
         return True
     else:
