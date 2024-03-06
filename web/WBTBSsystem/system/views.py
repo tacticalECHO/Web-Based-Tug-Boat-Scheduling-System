@@ -186,45 +186,41 @@ class SaveNewTaskView(View):
             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-        
-# @method_decorator(csrf_exempt, name='dispatch')
-# class SaveEntryAndTaskView(View):
-#     def post(self, request, *args, **kwargs):
-#         try:
-#             data = json.loads(request.body)
-#             print("Received data:", data)
-#             containerBoatId = data.get('containerBoatId')
-#             tonnage = data.get('tonnage')
-#             country = data.get('country')
-#             arrivalTime = data.get('arrivalTime')
-#             leaveTime = data.get('leaveTime')
-#             requiredTugBoat = data.get('requiredTugBoat')
-#             action = data.get('action')
 
-#             with transaction.atomic():
-#                 # Create a new ContainerBoat or retrieve an existing one
-#                 containerBoat, created = ContainerBoat.objects.get_or_create(
-#                     ContainerBoatID = containerBoatId,
-#                     defaults={
-#                         'Tonnage': tonnage,
-#                         'Country': country,
-#                         'arrivalTime': arrivalTime,
-#                         'departureTime': leaveTime
-#                     }
-#                 )
-#                 Task.objects.create(
-#                     RequiredTugBoat=requiredTugBoat,
-#                     startTime=arrivalTime,
-#                     endTime=leaveTime,
-#                     ContainerBoatID=containerBoat,  
-#                     Action=action,
-#                     BerthId=0,
-#                     State='Unscheduled',
-#                 )
+@method_decorator(csrf_exempt, name='dispatch')
+class SaveEntryAndTaskView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)
+            entryId = data.get('entryId')
+            plannedTime = data.get('plannedTime')
+            containerBoatId = data.get('containerBoat')
+            tugboat = data.get('tugboat')
+            berth = data.get('berth')
+            action = data.get('action')
 
-#             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
+            try:
+                entry = ScheduleEntry.objects.get(ScheduleEntryId=entryId)
+            except ScheduleEntry.DoesNotExist:
+                 return JsonResponse({'error': f'Task with id={taskId} does not exist'}, status=404)
+                  
+            if plannedTime is not None:
+                entry.startTime = plannedTime
+            if containerBoat is not None:
+                containerBoat = ContainerBoat.objects.get(ContainerBoatID=containerBoatId)
+                entry.TaskId.ContainerBoatID = containerBoat
+            if action is not None:
+                entry.Action = action
+            if berth is not None:
+                entry.BerthId = berth
+            if tugboat is not None:
+                entry.listOfTugBoats = tugboat
+            entry.save()
+            return JsonResponse({'success': True, 'status': 'success', 'message': 'Schedule Entry Saved successfully'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)    
+
 
 from django.views.decorators.http import require_http_methods
 from .ImportData import dataIntoDatabase_ContainerBoat, createTask

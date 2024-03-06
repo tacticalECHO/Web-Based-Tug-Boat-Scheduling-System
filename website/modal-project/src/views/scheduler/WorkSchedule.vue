@@ -126,7 +126,7 @@ export default {
                 const byContainerBoatId = this.containerBoatInput ? entry.TaskId.ContainerBoatID.ContainerBoatID.toString() === this.containerBoatInput : true;
                 const byTugBoatId = this.tugBoatInput ? entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).includes(this.tugBoatInput) : true;
                 const byBerthId = this.berthInput ? entry.TaskId.BerthId.toString() === this.berthInput : true;
-                const byState = this.stateInput ? entry.State === this.stateInput : true;
+                const byState = this.stateInput ? entry.Status === this.stateInput : true;
                 const byCompleted = entry.Status === 'Completed';
 
                 return byContainerBoatId && byTugBoatId && byBerthId && byState && (isCompleted ? byCompleted : !byCompleted);
