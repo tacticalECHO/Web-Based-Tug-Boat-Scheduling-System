@@ -296,6 +296,7 @@ export default {
             berthInput: '',
             workTypeInput: '',
             statusInput: '',
+            selectedTasks: [],
         }
     },
     methods: {
@@ -326,14 +327,14 @@ export default {
             input.click();
         },
         importTugboatData(){
-            let input = document.getElementById('import-task-data');
+            let input = document.getElementById('import-tugboat-data');
             input.onchange = (e) => {
                 const file = e.target.files[0];
                 if (!file) {
                     return;
                 }
                 let formData = new FormData();
-                formData.append('tug_boat_data', file);
+                formData.append('tugboat_data', file);
                 axios.post('http://localhost:8000/api/upload-tug-boat-data', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'

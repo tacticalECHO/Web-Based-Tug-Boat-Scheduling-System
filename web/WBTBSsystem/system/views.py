@@ -94,7 +94,7 @@ class CreateUserView(View):
             password = data.get('password', '12345678')
 
             if position == 'Administrator':
-                user = User.objects.create_superuser(username=username, email='example@gmail.com', password=password, first_name=name)
+                user = User.objects.create_superuser(username=username, email='admin@gmail.com', password=password, first_name=name)
             else:
             
                 user = User.objects.create_user(username=username, password=password, first_name=name)
@@ -149,6 +149,22 @@ class SaveTaskView(View):
             return JsonResponse({'error': str(e)}, status=400)
 
 @method_decorator(csrf_exempt, name='dispatch')
+class UpdateScheduleEntryView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)
+            entryId = data.get('entryId')
+            newState = data.get('newState')
+            entry = ScheduleEntry.objects.filter(ScheduleEntryId=entryId).first()
+            entry.Status = newState 
+            entry.save()
+            return JsonResponse({'success': True, 'status': 'success', 'message': 'Entry updated successfully.'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+            
+        
+@method_decorator(csrf_exempt, name='dispatch')
 class SaveNewTaskView(View):
     def post(self, request, *args, **kwargs):
         try:
@@ -157,9 +173,10 @@ class SaveNewTaskView(View):
             containerBoatId = data.get('containerBoatId')
             tonnage = data.get('tonnage')
             country = data.get('country')
-            arrivalTime = data.get('arrivalTime')
-            leaveTime = data.get('leaveTime')
-            requiredTugBoat = data.get('requiredTugBoat')
+            time = data.get('time')
+            berthId = data.get('berthId')
+            # leaveTime = data.get('leaveTime')
+            # requiredTugBoat = data.get('requiredTugBoat')
             action = data.get('action')
 
             with transaction.atomic():
@@ -169,24 +186,22 @@ class SaveNewTaskView(View):
                     defaults={
                         'Tonnage': tonnage,
                         'Country': country,
-                        'arrivalTime': arrivalTime,
-                        'departureTime': leaveTime
+                        #'arrivalTime': arrivalTime,
+                        #'departureTime': leaveTime
                     }
                 )
                 Task.objects.create(
-                    RequiredTugBoat=requiredTugBoat,
-                    startTime=arrivalTime,
-                    endTime=leaveTime,
+                    # RequiredTugBoat=requiredTugBoat,
+                    startTime=time,
                     ContainerBoatID=containerBoat,  
                     Action=action,
-                    BerthId=0,
+                    BerthId=int(berthId),
                     State='Unscheduled',
                 )
 
             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-        
 # @method_decorator(csrf_exempt, name='dispatch')
 # class SaveEntryAndTaskView(View):
 #     def post(self, request, *args, **kwargs):
@@ -227,7 +242,7 @@ class SaveNewTaskView(View):
 #             return JsonResponse({'error': str(e)}, status=400)
 
 from django.views.decorators.http import require_http_methods
-from .ImportData import dataIntoDatabase_ContainerBoat, createTask
+from .ImportData import dataIntoDatabase_ContainerBoat, createTask, dataIntoDatabase_TugBoat
 from django.core.files.storage import default_storage
 import pandas as pd
 import os
@@ -249,18 +264,41 @@ def upload_task_data(request):
         data = pd.read_excel(path, header=None)
         data=data.iloc[1:,:]
         df=pd.DataFrame(data)
-        df.columns=['ContainerBoatID','Tonnage','Country','arrivalTime','departureTime']
+        df.columns=['ContainerBoatID','Tonnage','Country','ScheduleTime','Action','BerthID']
         data = df
         dataIntoDatabase_ContainerBoat(data)
-        createTask()
+        createTask(data)
         default_storage.delete(path)
         
         return JsonResponse({'message': 'File processed successfully.'})
     except Exception as e:
+        default_storage.delete(path)
         return JsonResponse({'error': str(e)}, status=500)
-    
+
+@csrf_exempt
+@require_http_methods(["POST"])
 def upload_tug_boat_data(request):
-    pass
+    if 'tugboat_data' not in request.FILES:
+        return JsonResponse({'error': 'No file uploaded.'}, status=400)
+    
+    tugboat_data = request.FILES['tugboat_data']
+
+    temp_dir = os.path.join('system/temp')
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+    path = default_storage.save('system/temp/' +tugboat_data.name, tugboat_data)
+    print(path)
+    
+    try:
+        data = pd.read_excel(path)
+        print("1")
+        dataIntoDatabase_TugBoat(data)
+        default_storage.delete(path)
+        
+        return JsonResponse({'message': 'File processed successfully.'})
+    except Exception as e:
+        default_storage.delete(path)
+        return JsonResponse({'error': str(e)}, status=500)
 
 from .ExportData import DataTOExcel
 @csrf_exempt
