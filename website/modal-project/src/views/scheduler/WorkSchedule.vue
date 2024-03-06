@@ -52,8 +52,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="entry in entryList()" :key="entry.ScheduleEntryId">
-                                <td class="number"> {{entry.ScheduleEntryId}} </td>
+                            <tr v-for="(entry,index) in entryList('Incomplete')" :key="index">
+                                <td class="number"> {{index+1}} </td>
                                 <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
                                 <td class="berth"> {{entry.TaskId.BerthId}} </td>
                                 <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/")}} </td>
@@ -61,6 +61,17 @@
                                 <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join("/")}} </td>
                                 <td class="work-status"> 
                                     <span class="status-container" :style="getStatusStyle(entry.Status)">{{entry.Status}} </span>
+                                </td>
+                            </tr>
+                            <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
+                                <td class="number"> {{index+1}} </td>
+                                <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
+                                <td class="berth"> {{entry.TaskId.BerthId}} </td>
+                                <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/")}} </td>
+                                <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/")}} </td>
+                                <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join("/")}} </td>
+                                <td class="work-status"> 
+                                    <span class="status-container">{{entry.Status}} </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -95,34 +106,6 @@ export default {
         }
     },
     methods: {
-        // async edit(id){
-        //     const state = this.state;
-        //     const tugBoatState = null;
-        //     if(this.state === "Start Job"){
-        //         state = "Confirmed";
-        //         tugBoatState = "Busy";
-        //     }else if(this.state === "Complete Job"){
-        //         state = "Completed";
-        //         tugBoatState = "Free";
-        //     }
-        //     try { 
-        //         const response = await axios.post('http://localhost:8000/api/save-task/', {
-        //         scheduleEntryId: id,
-        //         state: state,
-        //         tugBoatState: tugBoatState,
-        //         });
-        //         if (response.data.success) {
-        //             alert('Updated Successfully - ' + state);
-        //             window.location.reload();
-        //             stateInfo = null;
-        //         } else {
-        //             alert('Updated Failed.');
-        //         }
-        //     } catch (error) {
-        //         console.error('Updated error:', error);
-        //         alert('Updated Error.');
-        //     }
-        // },
         checkAll(input) {
             if (input === "All") {
                 return '';
@@ -130,44 +113,26 @@ export default {
                 return input;
             }
         },
-        entryList() {
+        entryList(state) {
             this.entries = this.$store.state.scheduleEntries;
             this.containerBoatInput = this.checkAll(this.containerBoatInput);
             this.tugBoatInput = this.checkAll(this.tugBoatInput);
             this.berthInput = this.checkAll(this.berthInput);
             this.stateInput = this.checkAll(this.stateInput);
 
+            const isCompleted = state === 'Completed';
+
             const filtered = this.entries.filter((entry) => {  
                 const byContainerBoatId = this.containerBoatInput ? entry.TaskId.ContainerBoatID.ContainerBoatID.toString() === this.containerBoatInput : true;
                 const byTugBoatId = this.tugBoatInput ? entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).includes(this.tugBoatInput) : true;
                 const byBerthId = this.berthInput ? entry.TaskId.BerthId.toString() === this.berthInput : true;
                 const byState = this.stateInput ? entry.State === this.stateInput : true;
+                const byCompleted = entry.Status === 'Completed';
 
-                return byContainerBoatId && byTugBoatId && byBerthId && byState;
+                return byContainerBoatId && byTugBoatId && byBerthId && byState && (isCompleted ? byCompleted : !byCompleted);
             });
 
             return filtered;
-        },
-        getStatusStyle(state){
-            let backgroundColor;
-
-            switch (state) {
-                case 'Confirmed':
-                backgroundColor = 'green';
-                break;
-                case 'Scheduled':
-                backgroundColor = 'rgb(254, 219, 46)';
-                break;
-                case 'Completed':
-                backgroundColor = 'darkgrey';
-                break;
-                default:
-                backgroundColor = 'lightgrey';
-            }
-
-            return {
-                background: backgroundColor,
-            };
         },
     }
 }

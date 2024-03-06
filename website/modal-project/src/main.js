@@ -2,9 +2,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import './css/root.css'
 import './css/popup.css'
-import store from './store';
+import store from './store'
 import router from './router'
-import { redirect } from './js/methods.js'
+import { redirect, formatTime, formatDate, getActionStyle, getStatusStyle } from './js/methods.js'
 // import VueNotifications from 'vue-notifications'
 
 //icons---------------------------------------------------------
@@ -20,6 +20,10 @@ app.use(store)
 app.mount('#app')
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.config.globalProperties.redirect = redirect
+app.config.globalProperties.formatTime = formatTime
+app.config.globalProperties.formatDate = formatDate
+app.config.globalProperties.getActionStyle = getActionStyle
+app.config.globalProperties.getStatusStyle = getStatusStyle
 
 export default {
     components: {

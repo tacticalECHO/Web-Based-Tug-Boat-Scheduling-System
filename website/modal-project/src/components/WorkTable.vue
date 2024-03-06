@@ -3,7 +3,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>No.1</th>
+                    <th>No.</th>
                     <th>Container Boat</th>
                     <th>Berth</th>
                     <th>Time</th>
@@ -13,23 +13,36 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="task in taskList()" :key="task.TaskId">
-                    <td class="number">  <span :id="'taskId' + task.TaskId">{{task.TaskId}}</span> </td>
-                    <td class="container-boat"> {{task.ContainerBoatID.ContainerBoatID}} </td>
-                    <td class="berth"> {{task.BerthId}} </td>
-                    <td class="time"> {{task.startTime}} </td>
-                    <td class="captain"> {{task.captain}} </td>
+                <tr v-for="(entry,index) in entryList('Incompleted')" :key="index">
+                    <td class="number">  <span :id="'taskId' + entry.ScheduleEntryId">{{index+1}}</span> </td>
+                    <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
+                    <td class="berth"> {{entry.TaskId.BerthId}} </td>
+                    <td class="time"> {{formatDate(entry.TaskId.startTime)}} &emsp;&emsp; {{formatTime(entry.TaskId.startTime)}} </td>
+                    <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join(",")}} </td>
                     <td @click.stop>
-                        <form v-if="showStateForm === task.TaskId">
-                            <select @change="edit(task.TaskId)" v-model="state" :id="'state' + task.taskId" >
+                        <form v-if="showStateForm === entry.ScheduleEntryId">
+                            <select @change="edit(entry.ScheduleEntryId)" v-model="state" :id="'state' + entry.ScheduleEntryId" >
                                 <option>Unscheduled</option>
                                 <option>Scheduled</option>     
                                 <option>Done</option>                               
                             </select>
                         </form>
-                        <span class="status-container" @click="selected(task.TaskId, 'state')" v-if="stateInfo != task.TaskId">{{task.State}}</span> 
+                        <span class="status-container" @click="selected(entry.ScheduleEntryId, 'state')" v-if="stateInfo != entry.ScheduleEntryId" :style="getStatusStyle(entry.Status, 'Incomplete')">{{entry.Status}}</span> 
                     </td>
-                    <td class="work-type"> <span class="type-container">{{task.Action}}</span></td>
+                    <td class="work-type"> <span class="type-container" :style="getActionStyle(entry.TaskId.Action, 'Incomplete')">{{entry.TaskId.Action}}</span></td>
+                </tr>
+
+                <!-- --completed---------------------------------------------------------------------------------------------- -->
+                <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
+                    <td class="number">  <span :id="'taskId' + entry.ScheduleEntryId">{{index+1}}</span> </td>
+                    <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
+                    <td class="berth"> {{entry.TaskId.BerthId}} </td>
+                    <td class="time"> {{formatDate(entry.TaskId.startTime)}} &emsp;&emsp; {{formatTime(entry.TaskId.startTime)}} </td>
+                    <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join(",")}} </td>
+                    <td>
+                        <span class="status-container" @click="selected(entry.ScheduleEntryId, 'state')" :style="getStatusStyle(entry.Status, 'Completed')">{{entry.Status}}</span> 
+                    </td>
+                    <td class="work-type"> <span class="type-container" :style="getActionStyle(entry.TaskId.Action, 'Completed')">{{entry.TaskId.Action}}</span></td>
                 </tr>
             </tbody>
         </table>
@@ -38,11 +51,13 @@
 
 <script>
 import axios from 'axios';
+import { mapState } from 'vuex';
 
 export default {
     name: 'WorkTable',
     mounted(){
-        this.$store.dispatch('fetchTasks');
+        this.$store.dispatch('fetchScheduleEntries');
+        this.$store.dispatch('fetchCaptains');
     },
     data() {
         return {
@@ -50,23 +65,27 @@ export default {
             stateInfo: null,
             showContainerBoatIdForm: null,
             containerBoatIdInfo: null,
-            tasks: [],
-            input: '',
+            entries: [],
+            captains: [],
+        }
+    },
+    computed: {
+        ...mapState(['username', 'isCaptain', 'isAdmin', 'isScheduler']),
+        captain() {
+            return this.username;
         }
     },
     methods: {
-        taskList(){
-            this.tasks = this.$store.state.tasks;
-            const filtered = this.tasks.filter((task) => {
-                const byTaskId = task.TaskId.toString().includes(this.input);
-                const byContainerBoatId = task.ContainerBoatID.ContainerBoatID.toLowerCase().includes(this.input.toLowerCase());
-                const byBerthId = task.BerthId.toString().includes(this.input);
-                const byAction = task.Action.toLowerCase().includes(this.input.toLowerCase());
+        entryList(state){
+            this.entries = this.$store.state.scheduleEntries;
+            const isCompleted = state === 'Completed';
 
-                return byTaskId || byContainerBoatId || byBerthId || byAction;
+            return this.entries.filter((entry) => {
+                const byCaptain = entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).includes(this.captain);
+                const byCompleted = entry.Status === 'Completed';
+
+                return byCaptain && (isCompleted ? byCompleted : !byCompleted);
             });
-
-            return filtered;
         },
         resetNull() {
             this.showStateForm = null;
@@ -89,24 +108,7 @@ export default {
                 this.resetNull();
             }
         },
-        async edit(id) {
-            try { 
-                const response = await axios.post('http://localhost:8000/api/save-task/', {
-                taskId: id,
-                state: this.state,
-                });
-                if (response.data.success) {
-                    alert('Edit Successfully');
-                    window.location.reload();
-                    this.resetNull();
-                } else {
-                    alert('Edit Task Failed.');
-                }
-            } catch (error) {
-                console.error('Edit task error:', error);
-                alert('Edit Task Error.');
-            }
-        }
+        async edit(id) {}
     }
 }
 </script>

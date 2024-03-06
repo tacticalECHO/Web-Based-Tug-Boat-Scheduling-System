@@ -186,6 +186,45 @@ class SaveNewTaskView(View):
             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+        
+# @method_decorator(csrf_exempt, name='dispatch')
+# class SaveEntryAndTaskView(View):
+#     def post(self, request, *args, **kwargs):
+#         try:
+#             data = json.loads(request.body)
+#             print("Received data:", data)
+#             containerBoatId = data.get('containerBoatId')
+#             tonnage = data.get('tonnage')
+#             country = data.get('country')
+#             arrivalTime = data.get('arrivalTime')
+#             leaveTime = data.get('leaveTime')
+#             requiredTugBoat = data.get('requiredTugBoat')
+#             action = data.get('action')
+
+#             with transaction.atomic():
+#                 # Create a new ContainerBoat or retrieve an existing one
+#                 containerBoat, created = ContainerBoat.objects.get_or_create(
+#                     ContainerBoatID = containerBoatId,
+#                     defaults={
+#                         'Tonnage': tonnage,
+#                         'Country': country,
+#                         'arrivalTime': arrivalTime,
+#                         'departureTime': leaveTime
+#                     }
+#                 )
+#                 Task.objects.create(
+#                     RequiredTugBoat=requiredTugBoat,
+#                     startTime=arrivalTime,
+#                     endTime=leaveTime,
+#                     ContainerBoatID=containerBoat,  
+#                     Action=action,
+#                     BerthId=0,
+#                     State='Unscheduled',
+#                 )
+
+#             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=400)
 
 from django.views.decorators.http import require_http_methods
 from .ImportData import dataIntoDatabase_ContainerBoat, createTask
@@ -269,7 +308,7 @@ class ContainerBoatViewSet(viewsets.ModelViewSet):
     serializer_class = ContainerBoatSerializer  
 
 class ScheduleEntryViewSet(viewsets.ModelViewSet):
-    queryset = ScheduleEntry.objects.all().order_by('StartTime')
+    queryset = ScheduleEntry.objects.all().order_by('TaskId__startTime')
     serializer_class = ScheduleEntrySerializer  
 
 class TugBoatViewSet(viewsets.ModelViewSet):

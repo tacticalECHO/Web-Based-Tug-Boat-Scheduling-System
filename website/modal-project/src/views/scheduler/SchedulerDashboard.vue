@@ -131,8 +131,9 @@
 
                             <td @click.stop>
                                 <form v-if="tugBoatInfo === entry.ScheduleEntryId" @submit="edit(entry.ScheduleEntryId)">
-                                    <input v-model="tugBoat" :id="'tugBoat' + entry.ScheduleEntryId" :ref="'tugBoat' + entry.ScheduleEntryId" type="text">
-                                    <input class="submit-button" type="submit" />
+                                    <select @change="edit(entry.ScheduleEntryId)" v-model="tugBoat">
+                                        <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
+                                    </select>
                                 </form>
                                 <span @click="selected(entry.ScheduleEntryId, 'tugBoat')" v-if="tugBoatInfo != entry.ScheduleEntryId">{{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join(', ')}}</span> 
                             </td>
@@ -156,7 +157,6 @@
 
                             <td  @click.stop class="publish-time">{{entry.publishTime}}</td>
                         </tr>
-                        <!-- <ScheduleEntry /> -->
 <!-- --Unscheduled--------------------------------------------------------------------------------------------------------- -->
                         <tr v-for="(task, index) in taskList()" :key="index">
                             <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
@@ -296,7 +296,6 @@ export default {
             berthInput: '',
             workTypeInput: '',
             statusInput: '',
-            // Input: [containerBoatInput, countryInput, tugBoatInput, berthInput, workTypeInput, statusInput]
         }
     },
     methods: {
@@ -362,21 +361,6 @@ export default {
         publish(){
 
         },
-        checkAll(input) {
-            if (input === "All") {
-                return '';
-            } else {
-                return input;
-            }
-        },
-        formatInput(){
-            this.containerBoatInput = this.checkAll(this.containerBoatInput);
-            this.countryInput = this.checkAll(this.countryInput);
-            this.tugBoatInput = this.checkAll(this.tugBoatInput);
-            this.berthInput = this.checkAll(this.berthInput);
-            this.workTypeInput = this.checkAll(this.workTypeInput);
-            this.statusInput = this.checkAll(this.statusInput);
-        },
         countryList(){
             const country = [...new Set(this.$store.state.containerBoats.map(boat => boat.Country))];
             return country;
@@ -384,7 +368,6 @@ export default {
         entryList(state) {
             this.entries = this.$store.state.scheduleEntries;
             const isCompleted = state === 'Completed';
-            this.formatInput();
 
             return this.entries.filter((entry) => {
                 const byCountry = !this.countryInput || entry.TaskId.ContainerBoatID.Country.toString() === this.countryInput;
@@ -400,7 +383,6 @@ export default {
         },
         taskList() {
             this.tasks = this.$store.state.tasks;
-            this.formatInput();
 
             const filtered = this.tasks.filter((task) => {  
                 const byCountry = this.countryInput ? task.ContainerBoatID.Country.toString() === this.countryInput : true;
@@ -416,20 +398,6 @@ export default {
 
             return filtered;
         },
-        formatTime(event){
-            const dateTime = new Date(event);
-            const hours = dateTime.getHours().toString().padStart(2, '0');
-            const minutes = dateTime.getMinutes().toString().padStart(2, '0');
-
-            return `${hours}:${minutes}`;
-        },
-        formatDate(event){
-            const dateTime = new Date(event);
-            const date = dateTime.getDate().toString().padStart(2, '0');
-            const month = (dateTime.getMonth()+1).toString().padStart(2, '0');
-
-            return `${date}/${month}`;
-        },
         resetNull() {
             this.tugBoatInfo = null;
             this.timeInfo = null;
@@ -441,11 +409,8 @@ export default {
         },
         selected(id, column) {
             this.resetNull();
-            if(column === 'requiredTugBoat'){
+            if(column === 'tugBoat'){
                 this.tugBoatInfo = id;
-                // this.$nextTick(() => {
-                //     this.$refs['requiredTugBoat'+id].focus();
-                // });
             }else if (column === 'time'){
                 this.timeInfo = id;
             }else if (column === 'containerBoatId'){
@@ -487,58 +452,11 @@ export default {
                 alert('Edit Task Error.');
             }
         },
-        getStatusStyle(state){
-            let backgroundColor;
-
-            switch (state) {
-                case 'Confirmed':
-                backgroundColor = 'green';
-                break;
-                case 'Scheduled':
-                backgroundColor = 'rgb(254, 219, 46)';
-                break;
-                case 'Completed':
-                backgroundColor = 'darkgrey';
-                break;
-                default:
-                backgroundColor = 'lightgrey';
-            }
-
-            return {
-                background: backgroundColor,
-            };
-        },
-        getActionStyle(action){
-            let backgroundColor;
-
-            switch (action) {
-                case 'Arrival':
-                backgroundColor = '#72bedf';
-                break;
-                default:
-                backgroundColor = '#020071';
-            }
-
-            return {
-                background: backgroundColor,
-            };
-        }
     }
 }
 </script>
 
 <style scoped>
-.disabled-row {
-    background: rgb(233, 232, 232);
-    color: darkgrey;
-}
-
-.disabled-row .status-container {
-    /* background: darkgrey; */
-    /* color: white; */
-    background: rgb(233, 232, 232);
-    color: darkgrey;
-}
 .disabled-column {
     background: rgb(233, 232, 232);
 }

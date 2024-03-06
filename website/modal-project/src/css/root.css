@@ -142,6 +142,18 @@ button {
     text-align: center;
 }
 
+.disabled-row {
+    background: rgb(233, 232, 232);
+    color: darkgrey;
+}
+
+.disabled-row .status-container {
+    /* background: darkgrey; */
+    /* color: white; */
+    background: rgb(233, 232, 232);
+    color: darkgrey;
+}
+
 /* --message-button-------------------------------------------------------------- */
 .message-container {
     margin-top: 10px;
