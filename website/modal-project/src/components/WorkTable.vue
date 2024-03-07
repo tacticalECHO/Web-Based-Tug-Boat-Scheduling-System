@@ -1,53 +1,51 @@
 <template>
     <div id="work-table" class="pages">
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Container Boat</th>
-                        <th>Berth</th>
-                        <th>Time</th>
-                        <th>Captain</th>
-                        <th>Work Status</th>
-                        <th>Work Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(entry,index) in entryList('Incompleted')" :key="index">
-                        <td class="number">  <span :id="'taskId' + entry.ScheduleEntryId">{{index+1}}</span> </td>
-                        <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
-                        <td class="berth"> {{entry.TaskId.BerthId}} </td>
-                        <td class="time"> {{formatDate(entry.TaskId.startTime)}} &emsp;&emsp; {{formatTime(entry.TaskId.startTime)}} </td>
-                        <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join(",")}} </td>
-                        <td @click.stop>
-                            <form v-if="showStateForm === entry.ScheduleEntryId">
-                                <select @change="edit(entry.ScheduleEntryId)" v-model="state" :id="'state' + entry.ScheduleEntryId" >
-                                    <option>Unscheduled</option>
-                                    <option>Scheduled</option>     
-                                    <option>Done</option>                               
-                                </select>
-                            </form>
-                            <span class="status-container" @click="selected(entry.ScheduleEntryId, 'state')" v-if="stateInfo != entry.ScheduleEntryId" :style="getStatusStyle(entry.Status, 'Incomplete')">{{entry.Status}}</span> 
-                        </td>
-                        <td class="work-type"> <span class="type-container" :style="getActionStyle(entry.TaskId.Action, 'Incomplete')">{{entry.TaskId.Action}}</span></td>
-                    </tr>
+        <table>
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Container Boat</th>
+                    <th>Berth</th>
+                    <th>Time</th>
+                    <th>Captain</th>
+                    <th>Work Status</th>
+                    <th>Work Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(entry,index) in entryList('Incompleted')" :key="index">
+                    <td class="number">  <span :id="'taskId' + entry.ScheduleEntryId">{{index+1}}</span> </td>
+                    <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
+                    <td class="berth"> {{entry.TaskId.BerthId}} </td>
+                    <td class="time"> {{formatDate(entry.TaskId.startTime)}} &emsp;&emsp; {{formatTime(entry.TaskId.startTime)}} </td>
+                    <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join(",")}} </td>
+                    <td @click.stop>
+                        <form v-if="showStateForm === entry.ScheduleEntryId">
+                            <select @change="edit(entry.ScheduleEntryId)" v-model="state" :id="'state' + entry.ScheduleEntryId" >
+                                <option>Unscheduled</option>
+                                <option>Scheduled</option>     
+                                <option>Done</option>                               
+                            </select>
+                        </form>
+                        <span class="status-container" @click="selected(entry.ScheduleEntryId, 'state')" v-if="stateInfo != entry.ScheduleEntryId" :style="getStatusStyle(entry.Status, 'Incomplete')">{{entry.Status}}</span> 
+                    </td>
+                    <td class="work-type"> <span class="type-container" :style="getActionStyle(entry.TaskId.Action, 'Incomplete')">{{entry.TaskId.Action}}</span></td>
+                </tr>
 
-                    <!-- --completed---------------------------------------------------------------------------------------------- -->
-                    <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
-                        <td class="number">  <span :id="'taskId' + entry.ScheduleEntryId">{{index+1}}</span> </td>
-                        <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
-                        <td class="berth"> {{entry.TaskId.BerthId}} </td>
-                        <td class="time"> {{formatDate(entry.TaskId.startTime)}} &emsp;&emsp; {{formatTime(entry.TaskId.startTime)}} </td>
-                        <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join(",")}} </td>
-                        <td>
-                            <span class="status-container" @click="selected(entry.ScheduleEntryId, 'state')" :style="getStatusStyle(entry.Status, 'Completed')">{{entry.Status}}</span> 
-                        </td>
-                        <td class="work-type"> <span class="type-container" :style="getActionStyle(entry.TaskId.Action, 'Completed')">{{entry.TaskId.Action}}</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                <!-- --completed---------------------------------------------------------------------------------------------- -->
+                <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
+                    <td class="number">  <span :id="'taskId' + entry.ScheduleEntryId">{{index+1}}</span> </td>
+                    <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
+                    <td class="berth"> {{entry.TaskId.BerthId}} </td>
+                    <td class="time"> {{formatDate(entry.TaskId.startTime)}} &emsp;&emsp; {{formatTime(entry.TaskId.startTime)}} </td>
+                    <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join(",")}} </td>
+                    <td>
+                        <span class="status-container" @click="selected(entry.ScheduleEntryId, 'state')" :style="getStatusStyle(entry.Status, 'Completed')">{{entry.Status}}</span> 
+                    </td>
+                    <td class="work-type"> <span class="type-container" :style="getActionStyle(entry.TaskId.Action, 'Completed')">{{entry.TaskId.Action}}</span></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
