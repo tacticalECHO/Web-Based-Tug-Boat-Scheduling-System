@@ -66,7 +66,7 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
             schedule.save()
             task.save()
 
-    return
+    return (True, "Scheduling completed successfully.")
 
 
 

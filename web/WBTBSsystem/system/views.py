@@ -203,6 +203,17 @@ class SaveNewTaskView(View):
             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
+from .Schedule import AutoSchedule 
+@method_decorator(csrf_exempt, name='dispatch')
+class AutoScheduleView(View):
+    def post(self, request, *args, **kwargs):
+        success, message = AutoSchedule()
+
+        if success:
+            return JsonResponse({'success': True, 'message': message})
+        else:
+            return JsonResponse({'success': False, 'message': message})
 # @method_decorator(csrf_exempt, name='dispatch')
 # class SaveEntryAndTaskView(View):
 #     def post(self, request, *args, **kwargs):
