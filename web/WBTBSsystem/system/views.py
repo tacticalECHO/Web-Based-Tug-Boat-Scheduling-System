@@ -12,6 +12,7 @@ import json
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.db import transaction
+import datetime
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(View):
@@ -325,6 +326,17 @@ from rest_framework import viewsets
 class CaptainViewSet(viewsets.ModelViewSet):
     queryset = Captain.objects.all()
     serializer_class = CaptainSerializer
+    def update_tugboatStatus(request):
+        ScheduleEntryList=ScheduleEntry.objects.all()
+        for schedule in ScheduleEntryList:
+            if schedule.StartTime<=datetime.datetime.now() and schedule.EndTime>=datetime.datetime.now():
+                for tugboat in schedule.listOfTugBoats.all():
+                    tugboat.CurrentStatus='Busy'
+                    tugboat.save()
+            elif schedule.EndTime<datetime.datetime.now():
+                for tugboat in schedule.listOfTugBoats.all():
+                    tugboat.CurrentStatus='Free'
+                    tugboat.save()
 
 class SchedulerViewSet(viewsets.ModelViewSet):
     queryset = Scheduler.objects.all()
