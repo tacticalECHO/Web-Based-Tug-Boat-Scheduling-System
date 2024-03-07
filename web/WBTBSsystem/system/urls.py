@@ -22,5 +22,6 @@ urlpatterns = [
     path('api/upload-tug-boat-data', views.upload_tug_boat_data, name='upload_tug_boat_data'),
     path('api/publish-data', views.publish_data, name='publish_data'),
     path('api/update-schedule-entry', views.UpdateScheduleEntryView.as_view(), name='update_schedule_entry'),
+    path('api/update-entry-task/', views.UpdateEntryAndTaskView.as_view(), name="update_entry_task"),
     path('', include(router.urls)),
 ]

@@ -108,45 +108,45 @@ class CreateUserView(View):
             print("Error:", e)
             return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
-@method_decorator(csrf_exempt, name='dispatch')
-class SaveTaskView(View):
-    def post(self, request, *args, **kwargs):
-        try:
-            data = json.loads(request.body)
-            print("Received data:", data)
-            taskId = data.get('taskId')
-            requiredTugBoat = data.get('requiredTugBoat')
-            startTime = data.get('startTime')
-            endTime = data.get('endTime')
-            containerBoatId = data.get('containerBoatId')
-            action = data.get('action')
-            berthId = data.get('berthId')
-            state = data.get('state')
+# @method_decorator(csrf_exempt, name='dispatch')
+# class UpdateTaskView(View):
+#     def post(self, request, *args, **kwargs):
+#         try:
+#             data = json.loads(request.body)
+#             print("Received data:", data)
+#             taskId = data.get('taskId')
+#             requiredTugBoat = data.get('requiredTugBoat')
+#             startTime = data.get('startTime')
+#             endTime = data.get('endTime')
+#             containerBoatId = data.get('containerBoatId')
+#             action = data.get('action')
+#             berthId = data.get('berthId')
+#             state = data.get('state')
 
-            try:
-                task = Task.objects.get(TaskId=taskId)
-            except Task.DoesNotExist:
-                 return JsonResponse({'error': f'Task with id={taskId} does not exist'}, status=404)
+#             try:
+#                 task = Task.objects.get(TaskId=taskId)
+#             except Task.DoesNotExist:
+#                  return JsonResponse({'error': f'Task with id={taskId} does not exist'}, status=404)
                   
-            if requiredTugBoat is not None:
-                task.RequiredTugBoat = requiredTugBoat
-            if startTime is not None:
-                task.startTime = startTime
-            if endTime is not None:
-                task.endTime = endTime
-            if containerBoatId is not None:
-                containerBoat = ContainerBoat.objects.get(ContainerBoatID=containerBoatId)
-                task.ContainerBoatID = containerBoat
-            if action is not None:
-                task.Action = action
-            if berthId is not None:
-                task.BerthId = berthId
-            if state is not None:
-                task.State = state
-            task.save()
-            return JsonResponse({'success': True, 'status': 'success', 'message': 'Task Saved successfully'})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
+#             if requiredTugBoat is not None:
+#                 task.RequiredTugBoat = requiredTugBoat
+#             if startTime is not None:
+#                 task.startTime = startTime
+#             if endTime is not None:
+#                 task.endTime = endTime
+#             if containerBoatId is not None:
+#                 containerBoat = ContainerBoat.objects.get(ContainerBoatID=containerBoatId)
+#                 task.ContainerBoatID = containerBoat
+#             if action is not None:
+#                 task.Action = action
+#             if berthId is not None:
+#                 task.BerthId = berthId
+#             if state is not None:
+#                 task.State = state
+#             task.save()
+#             return JsonResponse({'success': True, 'status': 'success', 'message': 'Task Updated successfully'})
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=400)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class UpdateScheduleEntryView(View):
@@ -202,44 +202,70 @@ class SaveNewTaskView(View):
             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-# @method_decorator(csrf_exempt, name='dispatch')
-# class SaveEntryAndTaskView(View):
-#     def post(self, request, *args, **kwargs):
-#         try:
-#             data = json.loads(request.body)
-#             print("Received data:", data)
-#             containerBoatId = data.get('containerBoatId')
-#             tonnage = data.get('tonnage')
-#             country = data.get('country')
-#             arrivalTime = data.get('arrivalTime')
-#             leaveTime = data.get('leaveTime')
-#             requiredTugBoat = data.get('requiredTugBoat')
-#             action = data.get('action')
+        
+@method_decorator(csrf_exempt, name='dispatch')
+class UpdateEntryAndTaskView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)
 
-#             with transaction.atomic():
-#                 # Create a new ContainerBoat or retrieve an existing one
-#                 containerBoat, created = ContainerBoat.objects.get_or_create(
-#                     ContainerBoatID = containerBoatId,
-#                     defaults={
-#                         'Tonnage': tonnage,
-#                         'Country': country,
-#                         'arrivalTime': arrivalTime,
-#                         'departureTime': leaveTime
-#                     }
-#                 )
-#                 Task.objects.create(
-#                     RequiredTugBoat=requiredTugBoat,
-#                     startTime=arrivalTime,
-#                     endTime=leaveTime,
-#                     ContainerBoatID=containerBoat,  
-#                     Action=action,
-#                     BerthId=0,
-#                     State='Unscheduled',
-#                 )
+            scheduleEntryId = data.get('entryId')
+            taskId = data.get('taskId')
+            startTime = data.get('plannedTime')
+            containerBoatId = data.get('containerBoatId')
+            removeTugBoatId = data.get('removeTugBoatId')
+            newTugBoatId = data.get('newTugBoatId')
+            berthId = data.get('berthId')
+            action = data.get('action')
 
-#             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
+            # try:
+            #     task = Task.objects.get(TaskId=taskId)
+            # except Task.DoesNotExist:
+            #      return JsonResponse({'error': f'Task with id={taskId} does not exist'}, status=404)
+            task = Task.objects.filter(TaskId=taskId).first()
+                  
+            if startTime is not None:
+                task.startTime = startTime
+            if containerBoatId is not None:
+                containerBoat = ContainerBoat.objects.get(ContainerBoatID=containerBoatId)
+                task.ContainerBoatID = containerBoat
+            if berthId is not None:
+                task.BerthId = berthId
+            if action is not None:
+                task.Action = action
+            # task.save()
+            try:
+                task.save()
+            except Exception as e:
+                print("task save error")
+                return JsonResponse({'error': str(e)}, status=400)
+
+            if scheduleEntryId is not None:
+                
+                entry = ScheduleEntry.objects.filter(ScheduleEntryId=scheduleEntryId).first()
+                
+                # if taskId is not None:
+                #     task = Task.objects.get(TaskId=taskId)
+                #     entry.TaskId = task
+
+                if removeTugBoatId is not None and newTugBoatId is not None:
+                    try:
+                        removeTugBoat = TugBoat.objects.get(TugBoatId=removeTugBoatId)
+                        entry.listOfTugBoats.remove(removeTugBoat)
+                    except TugBoat.DoesNotExist:
+                        return JsonResponse({'error': f'Tugboat with id={removeTugBoatId} does not exist'}, status=404)
+
+                    try:
+                        newTugBoat = TugBoat.objects.get(TugBoatId=newTugBoatId)
+                        entry.listOfTugBoats.add(newTugBoat)
+                    except TugBoat.DoesNotExist:
+                        return JsonResponse({'error': f'Tugboat with id={newTugBoatId} does not exist'}, status=404)    
+            entry.save()
+
+            return JsonResponse({'success': True, 'status': 'success', 'message': 'Entries saved successfully'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
 
 from django.views.decorators.http import require_http_methods
 from .ImportData import dataIntoDatabase_ContainerBoat, createTask, dataIntoDatabase_TugBoat

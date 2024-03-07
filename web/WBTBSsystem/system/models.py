@@ -69,6 +69,12 @@ class ScheduleEntry(models.Model): # ScheduleEntry model
     EndTime = models.DateTimeField(null=True,blank=True)
     def __int__(self):
         return self.ScheduleEntryId
+    # def save(self, *args, **kwargs):
+    #     if not self.ScheduleEntryId:  
+    #         scheduleEntry = ScheduleEntry.objects.filter(ScheduleEntryId=self.ScheduleEntryId).first()
+    #         if scheduleEntry:
+    #             self.ScheduleEntryId = scheduleEntry 
+    #     super(ScheduleEntry, self).save(*args, **kwargs)
 
 class Berth(models.Model): # Berth model
     BerthId= models.IntegerField(primary_key=True)

@@ -1,15 +1,6 @@
 import { createStore } from 'vuex';
 import axios from 'axios';
 
-const resetNull = (state) => {
-  state.tugBoatInfo = null;
-  state.timeInfo = null;
-  state.containerBoatInfo = null;
-  state.berthInfo = null;
-  state.actionInfo = null;
-  state.stateInfo = null;
-};
-
 const store = createStore({
     state() {
         return {
@@ -26,12 +17,6 @@ const store = createStore({
           scheduleEntries: [],
           tugboats: [],
           exitPath: 'Settings',
-          tugBoatInfo: null,
-          timeInfo: null,
-          containerBoatInfo: null,
-          berthInfo: null,
-          actionInfo: null,
-          statusInfo: null,
           id: 1,
         };
         

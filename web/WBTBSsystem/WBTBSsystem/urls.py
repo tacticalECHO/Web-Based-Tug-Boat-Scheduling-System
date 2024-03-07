@@ -25,7 +25,6 @@ from system.views import (
     DeleteSchedulersView,
     DeleteCaptainsView,
     CreateUserView,
-    SaveTaskView,
     ContainerBoatViewSet,
     BerthViewSet,
     SaveNewTaskView,
@@ -35,6 +34,7 @@ from system.views import (
     publish_data,
     TugBoatViewSet,
     UpdateScheduleEntryView,
+    UpdateEntryAndTaskView,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -56,11 +56,11 @@ urlpatterns = [
     path('api/captains-delete/', DeleteCaptainsView.as_view(), name='delete_captains'),
     path('api/schedulers-delete/', DeleteSchedulersView.as_view(), name='delete_schedulers'),
     path('api/create-user/', CreateUserView.as_view(), name='create_user'),
-    path('api/save-task/', SaveTaskView.as_view(), name='save_task'),
     path('api/save-newtask/', SaveNewTaskView.as_view(), name='save_newtask'),
     path('api/upload-task-data', upload_task_data, name='upload_task_data'),
     path('api/upload-tug-boat-data', upload_tug_boat_data, name='upload_tug_boat_data'),
     path('api/publish-data', publish_data, name='publish_data'),
     path('api/update-schedule-entry', UpdateScheduleEntryView.as_view(), name='update_schedule_entry'),
+    path('api/update-entry-task/', UpdateEntryAndTaskView.as_view(), name="update_entry_task"),
     path('', include(router.urls)),
 ]
