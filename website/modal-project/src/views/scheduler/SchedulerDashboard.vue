@@ -134,6 +134,14 @@
                                         </select>
                                     </form>
                                 </span>
+                                <button class="blue-border-button" @click="tugBoatSelected(entry.ScheduleEntryId, 'add')" v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != 'add'">
+                                    <font-awesome-icon :icon="['fas', 'plus']" />
+                                </button>
+                                <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === 'add'">
+                                    <select @change="edit(entry.ScheduleEntryId, entry.TaskId.TaskId)" v-model="tugBoat">
+                                        <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
+                                    </select>
+                                </form>
                             </td>
 
                             <td @click.stop>
@@ -217,7 +225,7 @@
                             <td>{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</td>
                             <td>{{entry.TaskId.ContainerBoatID.ContainerBoatID}}</td>
                             <td class="country">{{entry.TaskId.ContainerBoatID.Country}}</td>
-                            <td>{{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join(', ')}}</td>
+                            <td>{{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join('/ ')}}</td>
                             <td>{{ entry.TaskId.BerthId}}</td>
                             <td class="work-type"><span class="status-container">{{entry.TaskId.Action}}</span></td>
                             <td class="start-time">{{entry.startTime}}</td>

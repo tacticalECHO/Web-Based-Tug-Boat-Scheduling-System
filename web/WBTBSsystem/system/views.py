@@ -241,13 +241,14 @@ class UpdateEntryAndTaskView(View):
 
                 entry = ScheduleEntry.objects.filter(ScheduleEntryId=scheduleEntryId).first()
 
-                if removeTugBoatId is not None and newTugBoatId is not None:
+                if removeTugBoatId is not None:
                     try:
                         removeTugBoat = TugBoat.objects.get(TugBoatId=removeTugBoatId)
                         entry.listOfTugBoats.remove(removeTugBoat)
                     except TugBoat.DoesNotExist:
                         return JsonResponse({'error': f'Tugboat with id={removeTugBoatId} does not exist'}, status=404)
-
+                    
+                if newTugBoatId is not None:
                     try:
                         newTugBoat = TugBoat.objects.get(TugBoatId=newTugBoatId)
                         entry.listOfTugBoats.add(newTugBoat)
