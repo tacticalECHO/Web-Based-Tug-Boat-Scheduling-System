@@ -30,8 +30,8 @@
                             <th><label for="action">Action</label></th>
                             <td>
                                 <select v-model="action" required>
-                                    <option>Arrival</option>
-                                    <option>Departure</option>
+                                    <option>INBOUND</option>
+                                    <option>OUTBOUND</option>
                                 </select>
                             </td>
                         </tr>

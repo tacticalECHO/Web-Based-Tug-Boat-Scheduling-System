@@ -6,7 +6,7 @@ import sys
 sys.path.append('web\WBTBSsystem')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
-from system.models import ContainerBoat, Task, Berth
+from system.models import ContainerBoat, Task, Berth, TugBoat, Captain
 import pandas as pd
 PATH="web\WBTBSsystem\\test.xlsx"
 
@@ -36,7 +36,7 @@ def str_to_date(str):
 def ifrepeat(data):
     # Determine if the data is repeated
     try:
-        ContainerBoat.objects.get(ContainerBoatID=data[0])
+        ContainerBoat.objects.get(ContainerBoatID=data.iloc[0])
         return True
     except:
         return False
@@ -46,6 +46,21 @@ def dataIntoDatabase_ContainerBoat(data):
         if ifrepeat(data.iloc[i,:])==False:
             ContainerBoat.objects.create(ContainerBoatID=data.iloc[i,0],Tonnage=data.iloc[i,1],Country=data.iloc[i,2])
     return
+def dataIntoDatabase_TugBoat(data):
+    # Import TugBoat data into the database, ignore if TugBoat already exists
+    for index, row in data.iterrows():
+        try:
+            captain = Captain.objects.get(CaptainId=row['CaptainId'])
+            captain_id = captain
+        except Captain.DoesNotExist:
+            captain_id = None
+        TugBoat.objects.create(
+            TugBoatId=row['TugBoatId'],
+            CurrentStatus=row['CurrentStatus'],
+            CaptainId=captain_id,
+            StartWorkingTime=row['StartWorkingTime'],
+            EndWorkingTime=row['EndWorkingTime'],
+        )
 def IfTaskRepeat(data):
     # Determine if the task is repeated
     try:

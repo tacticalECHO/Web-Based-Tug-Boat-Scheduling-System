@@ -14,7 +14,7 @@
             </thead>
             <tbody>
                 <tr v-for="(entry,index) in entryList('Incompleted')" :key="index">
-                    <td class="number">  <span :id="'taskId' + entry.ScheduleEntryId">{{index+1}}</span> </td>
+                    <td class="number">  <span :id="'entryId' + entry.ScheduleEntryId">{{index+1}}</span> </td>
                     <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
                     <td class="berth"> {{entry.TaskId.BerthId}} </td>
                     <td class="time"> {{formatDate(entry.TaskId.startTime)}} &emsp;&emsp; {{formatTime(entry.TaskId.startTime)}} </td>
@@ -22,9 +22,9 @@
                     <td @click.stop>
                         <form v-if="showStateForm === entry.ScheduleEntryId">
                             <select @change="edit(entry.ScheduleEntryId)" v-model="state" :id="'state' + entry.ScheduleEntryId" >
-                                <option>Unscheduled</option>
-                                <option>Scheduled</option>     
-                                <option>Done</option>                               
+                                <!-- <option>Scheduled</option> -->
+                                <option>Confirmed</option>    
+                                <option>Completed</option>                               
                             </select>
                         </form>
                         <span class="status-container" @click="selected(entry.ScheduleEntryId, 'state')" v-if="stateInfo != entry.ScheduleEntryId" :style="getStatusStyle(entry.Status, 'Incomplete')">{{entry.Status}}</span> 
@@ -108,7 +108,20 @@ export default {
                 this.resetNull();
             }
         },
-        async edit(id) {}
+        async edit(entryId) {
+            const newState = this.state;
+            try {
+                const response = await axios.post('http://localhost:8000/api/update-schedule-entry', { 
+                    entryId: entryId,
+                    newState: newState
+                });
+                console.log(response.data);
+                alert('Update Successfully');
+            } catch (error) {
+                console.error(error);
+                alert('Update Failed');
+            }
+        }
     }
 }
 </script>

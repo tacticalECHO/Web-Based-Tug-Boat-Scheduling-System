@@ -49,14 +49,13 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
             schedule = ScheduleEntry(TaskId=task, Status='Scheduled', PublishTime=datetime.datetime.now(), StartTime=ST, EndTime=ET)
             schedule.save()
             n=0
-            for i in range(task.RequiredTugBoat):
-                for tugboat in TugBoatList:
-                    if ifTugBoatAvailable(tugboat, task):
-                        print(tugboat.TugBoatId)
-                        schedule.listOfTugBoats.add(tugboat)
-                        n+=1
-                        if(n==task.RequiredTugBoat):
-                            break
+            for tugboat in TugBoatList:
+                if ifTugBoatAvailable(tugboat, task):
+                    print(tugboat.TugBoatId)
+                    schedule.listOfTugBoats.add(tugboat)
+                    n+=1
+                    if(n==task.RequiredTugBoat):
+                        break
             task.State = 'Scheduled'
             if n < task.RequiredTugBoat:
                 task.State = 'Unscheduled'
