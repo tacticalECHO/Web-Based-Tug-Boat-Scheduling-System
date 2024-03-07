@@ -12,6 +12,7 @@ import json
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.db import transaction
+import datetime
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(View):
@@ -209,7 +210,6 @@ class UpdateEntryAndTaskView(View):
         try:
             data = json.loads(request.body)
             print("Received data:", data)
-
             scheduleEntryId = data.get('entryId')
             taskId = data.get('taskId')
             startTime = data.get('plannedTime')
@@ -219,21 +219,17 @@ class UpdateEntryAndTaskView(View):
             berthId = data.get('berthId')
             action = data.get('action')
 
-            # try:
-            #     task = Task.objects.get(TaskId=taskId)
-            # except Task.DoesNotExist:
-            #      return JsonResponse({'error': f'Task with id={taskId} does not exist'}, status=404)
             task = Task.objects.filter(TaskId=taskId).first()
-                  
             if startTime is not None:
                 task.startTime = startTime
+            # error (cannot edit)
             if containerBoatId is not None:
                 containerBoat = ContainerBoat.objects.get(ContainerBoatID=containerBoatId)
                 task.ContainerBoatID = containerBoat
             if berthId is not None:
                 task.BerthId = berthId
             if action is not None:
-                task.Action = action
+                task.Action = str(action)
             # task.save()
             try:
                 task.save()
@@ -242,12 +238,8 @@ class UpdateEntryAndTaskView(View):
                 return JsonResponse({'error': str(e)}, status=400)
 
             if scheduleEntryId is not None:
-                
+
                 entry = ScheduleEntry.objects.filter(ScheduleEntryId=scheduleEntryId).first()
-                
-                # if taskId is not None:
-                #     task = Task.objects.get(TaskId=taskId)
-                #     entry.TaskId = task
 
                 if removeTugBoatId is not None and newTugBoatId is not None:
                     try:
@@ -261,12 +253,23 @@ class UpdateEntryAndTaskView(View):
                         entry.listOfTugBoats.add(newTugBoat)
                     except TugBoat.DoesNotExist:
                         return JsonResponse({'error': f'Tugboat with id={newTugBoatId} does not exist'}, status=404)    
-            entry.save()
+                entry.save()
 
             return JsonResponse({'success': True, 'status': 'success', 'message': 'Entries saved successfully'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+        
+from .Schedule import AutoSchedule 
+@method_decorator(csrf_exempt, name='dispatch')
+class AutoScheduleView(View):
+    def post(self, request, *args, **kwargs):
+        success, message = AutoSchedule()
 
+        if success:
+            return JsonResponse({'success': True, 'message': message})
+        else:
+            return JsonResponse({'success': False, 'message': message})
+        
 from django.views.decorators.http import require_http_methods
 from .ImportData import dataIntoDatabase_ContainerBoat, createTask, dataIntoDatabase_TugBoat
 from django.core.files.storage import default_storage
@@ -351,6 +354,17 @@ from rest_framework import viewsets
 class CaptainViewSet(viewsets.ModelViewSet):
     queryset = Captain.objects.all()
     serializer_class = CaptainSerializer
+    def update_tugboatStatus(request):
+        ScheduleEntryList=ScheduleEntry.objects.all()
+        for schedule in ScheduleEntryList:
+            if schedule.StartTime<=datetime.datetime.now() and schedule.EndTime>=datetime.datetime.now():
+                for tugboat in schedule.listOfTugBoats.all():
+                    tugboat.CurrentStatus='Busy'
+                    tugboat.save()
+            elif schedule.EndTime<datetime.datetime.now():
+                for tugboat in schedule.listOfTugBoats.all():
+                    tugboat.CurrentStatus='Free'
+                    tugboat.save()
 
 class SchedulerViewSet(viewsets.ModelViewSet):
     queryset = Scheduler.objects.all()

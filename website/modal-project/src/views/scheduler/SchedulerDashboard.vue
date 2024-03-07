@@ -269,7 +269,17 @@ export default {
     },
     methods: {
         schedule() {
-            this.$router.push({name: 'AutoReschedule'})
+            //this.$router.push({name: 'AutoReschedule'})
+            axios.post('http://localhost:8000/api/auto-schedule', {})
+            .then(response => {
+                console.log(response.data);
+                alert("Schedule operation successful!");
+            })
+            .catch(error => {
+                console.error("Error during schedule operation: ", error);
+                alert("Schedule operation failed, check logs for details.");
+            });
+
         },
         importTaskData(){
             let input = document.getElementById('import-task-data');

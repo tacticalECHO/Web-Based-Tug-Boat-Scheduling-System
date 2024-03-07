@@ -35,6 +35,7 @@ from system.views import (
     TugBoatViewSet,
     UpdateScheduleEntryView,
     UpdateEntryAndTaskView,
+    AutoScheduleView,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -62,5 +63,6 @@ urlpatterns = [
     path('api/publish-data', publish_data, name='publish_data'),
     path('api/update-schedule-entry', UpdateScheduleEntryView.as_view(), name='update_schedule_entry'),
     path('api/update-entry-task/', UpdateEntryAndTaskView.as_view(), name="update_entry_task"),
+    path('api/auto-schedule', AutoScheduleView.as_view(), name='auto_schedule'),
     path('', include(router.urls)),
 ]
