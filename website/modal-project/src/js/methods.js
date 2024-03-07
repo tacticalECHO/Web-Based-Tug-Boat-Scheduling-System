@@ -52,7 +52,7 @@ export function getActionStyle(action, type){
     let backgroundColor;
 
     switch (action) {
-        case 'Arrival':
+        case 'INBOUND':
             backgroundColor = '#72bedf';
             break;
         default:

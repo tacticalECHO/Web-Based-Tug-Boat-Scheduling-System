@@ -134,9 +134,9 @@
                                         </select>
                                     </form>
                                 </span>
-                                <button class="blue-border-button" @click="tugBoatSelected(entry.ScheduleEntryId, 'add')" v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != 'add'">
-                                    <font-awesome-icon :icon="['fas', 'plus']" />
-                                </button>
+                                <span @click="tugBoatSelected(entry.ScheduleEntryId, 'add')" v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != 'add'">
+                                    <font-awesome-icon :icon="['fas', 'circle-plus']" id="add-tugboat"/>
+                                </span>
                                 <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === 'add'">
                                     <select @change="edit(entry.ScheduleEntryId, entry.TaskId.TaskId)" v-model="tugBoat">
                                         <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
@@ -451,6 +451,14 @@ export default {
 </script>
 
 <style scoped>
+#add-tugboat {
+    color: var(--main-button-color);
+    font-size: 1.5em;
+}
+#add-tugboat:hover{
+    color: lightgrey;
+}
+
 .disabled-column {
     background: rgb(233, 232, 232);
 }

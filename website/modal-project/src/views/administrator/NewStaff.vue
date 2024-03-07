@@ -4,6 +4,8 @@
             <div class="popup-container">
                 <button @click="close">X</button>
                 <br/>
+                <font-awesome-icon :icon="['fas', 'user-plus']" :size="['2x']"/>
+                <br/>
                 <div class = "form">
                     <div class="form-group">
                         <b><label for="username">ID</label></b>  
