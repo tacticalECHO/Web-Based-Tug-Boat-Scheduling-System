@@ -110,10 +110,12 @@ export default {
         },
         async edit(entryId) {
             const newState = this.state;
+            const currentTime = new Date().toISOString();
             try {
                 const response = await axios.post('http://localhost:8000/api/update-schedule-entry', { 
                     entryId: entryId,
-                    newState: newState
+                    newState: newState,
+                    timeStamp: currentTime
                 });
                 console.log(response.data);
                 alert('Update Successfully');

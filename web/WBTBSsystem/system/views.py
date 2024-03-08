@@ -12,7 +12,7 @@ import json
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.db import transaction
-import datetime
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(View):
@@ -149,6 +149,8 @@ class CreateUserView(View):
 #         except Exception as e:
 #             return JsonResponse({'error': str(e)}, status=400)
 
+from django.utils.dateparse import parse_datetime
+from django.utils.timezone import make_aware, get_default_timezone
 @method_decorator(csrf_exempt, name='dispatch')
 class UpdateScheduleEntryView(View):
     def post(self, request, *args, **kwargs):
@@ -157,10 +159,32 @@ class UpdateScheduleEntryView(View):
             print("Received data:", data)
             entryId = data.get('entryId')
             newState = data.get('newState')
+            timeStampStr = data.get('timeStamp')
+            print(timeStampStr)
+            if timeStampStr:
+                timeStamp = parse_datetime(timeStampStr)
+                if timeStamp and not timeStamp.tzinfo:
+                    timeStamp = make_aware(timeStamp, get_default_timezone())
+                timeStamp = timeStamp.astimezone(get_default_timezone())
+                timeStamp = timeStamp.replace(second = 0,microsecond = 0, tzinfo=None)
+            else:
+                timeStamp = None
+            print(timeStamp)
+
             entry = ScheduleEntry.objects.filter(ScheduleEntryId=entryId).first()
-            entry.Status = newState 
-            entry.save()
-            return JsonResponse({'success': True, 'status': 'success', 'message': 'Entry updated successfully.'})
+            if entry:
+                entry.Status = newState
+                print("1")
+                if newState == 'Confirmed':
+                    entry.StartTime = timeStamp
+                    print(entry.StartTime)
+                elif newState == 'Completed':
+                    entry.EndTime = timeStamp
+                entry.save()
+                print("1")
+                return JsonResponse({'success': True, 'message': 'Entry updated successfully.'})
+            else:
+                return JsonResponse({'error': 'ScheduleEntry not found'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
             
@@ -351,21 +375,36 @@ from .serializers import (
     TugBoatSerializer 
 )
 from rest_framework import viewsets
-
+from datetime import datetime
 class CaptainViewSet(viewsets.ModelViewSet):
     queryset = Captain.objects.all()
     serializer_class = CaptainSerializer
-    def update_tugboatStatus(request):
-        ScheduleEntryList=ScheduleEntry.objects.all()
-        for schedule in ScheduleEntryList:
-            if schedule.StartTime<=datetime.datetime.now() and schedule.EndTime>=datetime.datetime.now():
-                for tugboat in schedule.listOfTugBoats.all():
-                    tugboat.CurrentStatus='Busy'
-                    tugboat.save()
-            elif schedule.EndTime<datetime.datetime.now():
-                for tugboat in schedule.listOfTugBoats.all():
-                    tugboat.CurrentStatus='Free'
-                    tugboat.save()
+    def list(self, request, *args, **kwargs):
+        self.update_tugboatStatus()
+        return super(CaptainViewSet, self).list(request, *args, **kwargs)
+    def update_tugboatStatus(self):
+        current_time = datetime.now().time()
+        TugBoatList=TugBoat.objects.all()
+        for boat in TugBoatList:
+            if boat.StartWorkingTime<=current_time and boat.EndWorkingTime>=current_time:
+                #for tugboat in schedule.listOfTugBoats.all():
+                boat.CurrentStatus='Busy'
+                boat.save()
+            elif boat.EndWorkingTime<current_time:
+                #for tugboat in schedule.listOfTugBoats.all():
+                    boat.CurrentStatus='Free'
+                    boat.save()
+    # def update_tugboatStatus(self):
+    #     ScheduleEntryList=ScheduleEntry.objects.all()
+    #     for schedule in ScheduleEntryList:
+    #         if schedule.StartTime<=datetime.datetime.now() and schedule.EndTime>=datetime.datetime.now():
+    #             for tugboat in schedule.listOfTugBoats.all():
+    #                 tugboat.CurrentStatus='Busy'
+    #                 tugboat.save()
+    #         elif schedule.EndTime<datetime.datetime.now():
+    #             for tugboat in schedule.listOfTugBoats.all():
+    #                 tugboat.CurrentStatus='Free'
+    #                 tugboat.save()
 
 class SchedulerViewSet(viewsets.ModelViewSet):
     queryset = Scheduler.objects.all()
