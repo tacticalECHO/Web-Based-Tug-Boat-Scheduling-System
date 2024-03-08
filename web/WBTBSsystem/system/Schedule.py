@@ -4,6 +4,8 @@ import time
 import pytz
 import os
 import django
+import sys
+sys.path.append('web\WBTBSsystem')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
 from system.models import Captain, TugBoat, ContainerBoat, Task, ScheduleEntry, User

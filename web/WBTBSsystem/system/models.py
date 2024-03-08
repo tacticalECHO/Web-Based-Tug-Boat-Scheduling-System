@@ -46,7 +46,7 @@ class Task(models.Model): # Task model
     TaskId = models.AutoField(primary_key=True)
     RequiredTugBoat = models.IntegerField(default=0)
     startTime = models.DateTimeField()
-    ContainerBoatID = models.OneToOneField(ContainerBoat, on_delete=models.CASCADE)
+    ContainerBoatID = models.ForeignKey(ContainerBoat, on_delete=models.CASCADE)
     Action = models.CharField(max_length=10,choices=(('INBOUND','INBOUND'),('OUTBOUND','OUTBOUND')),default='INBOUND')
     BerthId = models.IntegerField(default=0)
     State = models.CharField(max_length=100,choices=(('Scheduled','Scheduled'),('Unscheduled','Unscheduled')),default='Unscheduled')
