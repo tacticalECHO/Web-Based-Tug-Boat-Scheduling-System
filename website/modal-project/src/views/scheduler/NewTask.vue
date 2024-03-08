@@ -74,7 +74,7 @@ export default {
                 country: this.country,
                 requiredTugBoat: this.requiredTugBoat,
                 action: this.action,
-                berthId: this.berthId,
+                berthId: this.berth,
                 state: this.state,
                 },
                 {
