@@ -32,6 +32,8 @@ def AutoSchedule_task_Complete(): # Check if the task is completed
 def ifTugBoatAvailable(tugboat, task): # Check if the tugboat is available at the task time
     StartTime = task.startTime-datetime.timedelta(hours=1)
     EndTime = task.startTime+datetime.timedelta(hours=1)
+    if tugboat.CurrentStatus =='Maintenance':
+        return False
     if StartTime.time()< tugboat.StartWorkingTime or EndTime.time() > tugboat.EndWorkingTime:
         return False
     for schedule in ScheduleEntry.objects.all():
