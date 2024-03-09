@@ -50,6 +50,7 @@ class Task(models.Model): # Task model
     Action = models.CharField(max_length=10,choices=(('INBOUND','INBOUND'),('OUTBOUND','OUTBOUND')),default='INBOUND')
     BerthId = models.IntegerField(default=0)
     State = models.CharField(max_length=100,choices=(('Scheduled','Scheduled'),('Unscheduled','Unscheduled')),default='Unscheduled')
+    TaskManual = models.IntegerField(default=0)
     def __int__(self):
         return self.TaskId
     def save(self, *args, **kwargs):
