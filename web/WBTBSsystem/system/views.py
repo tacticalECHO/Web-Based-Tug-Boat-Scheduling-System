@@ -70,6 +70,47 @@ class DeleteCaptainsView(View):
             return JsonResponse({'error': str(e)}, status=400)
 
 @method_decorator(csrf_exempt, name='dispatch')
+class DeleteTasksView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            ids = data.get('ids', [])
+            print(ids)
+            tasks = Task.objects.filter(TaskId__in=ids)
+           
+            print(tasks)
+            for task in tasks:
+                if task.ContainerBoatID:
+                    task.ContainerBoatID.delete()
+
+            return JsonResponse({'message': 'Tasks deleted successfully'}, status=200)
+        except Exception as e:
+
+            print(f"Error deleting tasks: {str(e)}")
+
+            return JsonResponse({'error': str(e)}, status=400)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteScheduleEntriesView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            ids = data.get('ids', [])
+            tasks = ScheduleEntry.objects.filter(TaskId__in=ids)
+            print(tasks)
+
+            for task in tasks:
+                if task.TaskId:
+                    task.TaskId.delete()
+
+            return JsonResponse({'message': 'Tasks deleted successfully'}, status=200)
+        except Exception as e:
+
+            print(f"Error deleting tasks: {str(e)}")
+
+            return JsonResponse({'error': str(e)}, status=400)
+
+@method_decorator(csrf_exempt, name='dispatch')
 class DeleteSchedulersView(View):
     def post(self, request, *args, **kwargs):
         try:
