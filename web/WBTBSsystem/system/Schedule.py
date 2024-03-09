@@ -50,7 +50,7 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
         if task.State == 'Unscheduled' and (task.startTime.date() == datetime.datetime.now().date() or task.startTime.date()== datetime.datetime.now().date()+datetime.timedelta(days=1))  and task.startTime > datetime.datetime.now():
             ST=task.startTime-datetime.timedelta(hours=1)
             ET=task.startTime+datetime.timedelta(hours=1)
-            schedule = ScheduleEntry(TaskId=task, Status='Scheduled', PublishTime=datetime.datetime.now(), StartTime=ST, EndTime=ET)
+            schedule = ScheduleEntry(TaskId=task, Status='Scheduled', StartTime=ST, EndTime=ET)
             schedule.save()
             n=0
             for tugboat in TugBoatList:
