@@ -68,7 +68,6 @@ export function getActionStyle(action, type){
     }
 
     return {
-        color: 'white',
         background: backgroundColor,
     };
 }

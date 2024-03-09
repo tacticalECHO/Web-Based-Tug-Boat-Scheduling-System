@@ -242,24 +242,33 @@ class UpdateEntryAndTaskView(View):
             newTugBoatId = data.get('newTugBoatId')
             berthId = data.get('berthId')
             action = data.get('action')
+            tugBoatList = data.get('tugBoatList')
 
             task = Task.objects.filter(TaskId=taskId).first()
-            if startTime is not None:
-                task.startTime = startTime
-            # error (cannot edit)
-            if containerBoatId is not None:
-                containerBoat = ContainerBoat.objects.get(ContainerBoatID=containerBoatId)
-                task.ContainerBoatID = containerBoat
-            if berthId is not None:
-                task.BerthId = berthId
-            if action is not None:
-                task.Action = str(action)
-            # task.save()
             try:
+                if startTime is not None:
+                    task.startTime = startTime
+                # error (cannot edit)
+                if containerBoatId is not None:
+                    containerBoat = ContainerBoat.objects.get(ContainerBoatID=containerBoatId)
+                    task.ContainerBoatID = containerBoat
+                if berthId is not None:
+                    task.BerthId = berthId
+                if action is not None:
+                    task.Action = str(action)
+                if tugBoatList is not None:
+                    tugs = TugBoat.objects.filter(TugBoatId__in=tugBoatList)
+                    scheduleEntry = ScheduleEntry.objects.create(
+                        TaskId = task,
+                        PublishTime = "2000-01-01 00:00", #????????
+                        Status = "Scheduled",
+                        )
+                    scheduleEntry.listOfTugBoats.set(tugs)
+                    task.State = "Scheduled"
                 task.save()
             except Exception as e:
-                print("task save error")
-                return JsonResponse({'error': str(e)}, status=400)
+                print(e)
+                return JsonResponse({'error': e}, status=404) 
 
             if scheduleEntryId is not None:
 
@@ -274,14 +283,16 @@ class UpdateEntryAndTaskView(View):
                     
                 if newTugBoatId is not None:
                     try:
-                        newTugBoat = TugBoat.objects.get(TugBoatId=newTugBoatId)
-                        entry.listOfTugBoats.add(newTugBoat)
+                        if newTugBoatId != "":
+                            newTugBoat = TugBoat.objects.get(TugBoatId=newTugBoatId)
+                            entry.listOfTugBoats.add(newTugBoat)
                     except TugBoat.DoesNotExist:
                         return JsonResponse({'error': f'Tugboat with id={newTugBoatId} does not exist'}, status=404)    
                 entry.save()
 
             return JsonResponse({'success': True, 'status': 'success', 'message': 'Entries saved successfully'})
         except Exception as e:
+            print(e)
             return JsonResponse({'error': str(e)}, status=400)
         
 from .Schedule import AutoSchedule 
