@@ -47,6 +47,8 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     AutoSchedule_task_Complete() 
     for task in TaskList:
+        if task.TaskManual == 1:
+            continue
         if task.State == 'Unscheduled' and (task.startTime.date() == datetime.datetime.now().date() or task.startTime.date()== datetime.datetime.now().date()+datetime.timedelta(days=1))  and task.startTime > datetime.datetime.now():
             ST=task.startTime-datetime.timedelta(hours=1)
             ET=task.startTime+datetime.timedelta(hours=1)
