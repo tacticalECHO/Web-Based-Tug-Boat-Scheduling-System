@@ -16,6 +16,25 @@ def Get_Information(): # Get all the information from the database
     ScheduleEntryList=ScheduleEntry.objects.all()
     return TaskList, TugBoatList, ScheduleEntryList
 
+def AutoSchedule_ScheduleEntry_Complete(): # Check if the schedule entry is completed
+    TaskList, TugBoatList, ScheduleEntryList = Get_Information()
+    for schedule in ScheduleEntryList:
+        if schedule.EndTime==None:
+            continue
+        if schedule.EndTime.date() <= datetime.datetime.now().date()-datetime.timedelta(days=1):
+            schedule.Status = 'Completed'
+            schedule.save()
+
+def AutoSchedule_Reschedule(): # Reschedule the task
+    TaskList, TugBoatList, ScheduleEntryList = Get_Information()
+    for schedule in ScheduleEntryList:
+        if schedule.TaskId.TaskManual == 1:
+            continue
+        if schedule.Status=='Scheduled':
+            schedule.TaskId.State = 'Unscheduled'
+            schedule.TaskId.save()
+            schedule.delete()
+    AutoSchedule()
 
 def AutoSchedule_task_Complete(): # Check if the task is completed
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
