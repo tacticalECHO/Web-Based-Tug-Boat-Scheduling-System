@@ -1,6 +1,7 @@
 <template>
     <div id="work-table" class="pages">
-        <table>
+        <div v-if="waiting()" class="waiting">Waiting ... </div>
+        <table v-if="!waiting()">
             <thead>
                 <tr>
                     <th>No.</th>
@@ -76,6 +77,12 @@ export default {
         }
     },
     methods: {
+        waiting(){
+            if(this.$store.state.scheduleEntries.length === 0){
+                return true
+            }
+            return false
+        },
         entryList(state){
             this.entries = this.$store.state.scheduleEntries;
             const isCompleted = state === 'Completed';

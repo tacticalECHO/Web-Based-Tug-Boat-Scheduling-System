@@ -37,7 +37,8 @@
                     </span>
                 </div>
             </div>
-            <div  class="display-data">
+            <div v-if="waiting()" class="waiting">Waiting ... </div>
+            <div v-if="!waiting()" class="display-data">
                 <div class="work-table">
                     <table>
                         <thead>
@@ -106,6 +107,12 @@ export default {
         }
     },
     methods: {
+        waiting(){
+            if(this.$store.state.scheduleEntries.length === 0){
+                return true
+            }
+            return false
+        },
         checkAll(input) {
             if (input === "All") {
                 return '';

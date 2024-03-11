@@ -77,7 +77,8 @@
                     <button class="blue-border-button" id="add" @click="redirect('NewTask')">Add  + </button>
                 </span>
             </div>
-            <div class="table-container">
+            <div v-if="waiting()" class="waiting">No Task Available</div>
+            <div v-if="!waiting()" class="table-container">
                 <table>
                     <thead>
                         <tr>
@@ -305,6 +306,12 @@ export default {
         }
     },
     methods: {
+        waiting(){
+            if(this.$store.state.tasks.length === 0){
+                return true
+            }
+            return false
+        },
         schedule() {
             //this.$router.push({name: 'AutoReschedule'})
             axios.post('http://localhost:8000/api/auto-schedule', {})
