@@ -72,7 +72,7 @@
                     </span>
                 </div>
                 <span>
-                    <button class="blue-border-button" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                    <button class="blue-border-button" id="delete" @click="redirect('')">Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
                     &nbsp;
                     <button class="blue-border-button" id="add" @click="redirect('NewTask')">Add  + </button>
                 </span>
@@ -86,7 +86,7 @@
                             <th rowspan="2">Planned Time</th>
                             <th rowspan="2">Container Boat</th>
                             <th rowspan="2">Country</th>
-                            <th rowspan="2">Tug Boat</th>
+                            <th style="text-align: center" colspan="2">Tug Boat</th>
                             <th rowspan="2">Berth</th>
                             <th rowspan="2">Work Type</th>
                             <th style="text-align: center" colspan="2" >Actual Time</th>
@@ -94,6 +94,8 @@
                             <th rowspan="2">Publish Time</th>
                         </tr>
                         <tr>
+                            <th>Need</th>
+                            <th>IDs</th>
                             <th>Start</th>
                             <th>End</th>
                         </tr>
@@ -102,9 +104,10 @@
 <!-- --Scheduled / Confirmed--------------------------------------------------------------------------------------------------------- -->
                         <tr v-for="(entry,index) in entryList('Incomplete')" :key="index">
 
-                            <td><input type="checkbox" :id="'mycheckbox' + entry.ScheduleEntryId" :name='myCheckbox' v-model="selectedScheduleEntries" :value="entry.TaskId.TaskId"></td>
+                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
 
-                            <td class="number"> {{index+1}} </td>
+                            <!-- <td class="number"> {{index+1}} </td> -->
+                            <td class="number"> {{entry.ScheduleEntryId}} </td>
 
                             <td @click.stop>
                                 <form v-if="timeInfo === entry.ScheduleEntryId" @submit="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)">
@@ -123,13 +126,16 @@
                                 <span @click="selected(entry.ScheduleEntryId, 'containerBoatId')" v-if="containerBoatInfo != entry.ScheduleEntryId">{{entry.TaskId.ContainerBoatID.ContainerBoatID}}</span> 
                             </td>
 
-                            <td  @click.stop class="country">{{entry.TaskId.ContainerBoatID.Country}}</td>
+                            <td @click.stop class="country">{{entry.TaskId.ContainerBoatID.Country}}</td>
+                            
+                            <td @click.stop>
+                                <span>{{ entry.TaskId.RequiredTugBoat }}</span>
+                            </td>
 
                             <td @click.stop>
                                 <span v-for="tugBoats in entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId)" :key="tugBoats">
                                     <span @click="tugBoatSelected(entry.ScheduleEntryId, tugBoats)"  v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != tugBoats">
-                                        <span :style="getTugBoatStyle(entry, tugBoats)">{{ tugBoats }}</span>
-                                        &nbsp;
+                                        <span>{{ tugBoats }} / </span>
                                     </span>
                                     <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === tugBoats">
                                         <select @change="edit(entry.TaskId.TaskId, entry.ScheduleEntryId, tugBoats)" v-model="tugBoat">
@@ -169,7 +175,7 @@
                         </tr>
 <!-- --Unscheduled--------------------------------------------------------------------------------------------------------- -->
                         <tr v-for="(task, index) in taskList()" :key="index">
-                            <td><input type="checkbox" :id="'myCheckbox' + task.TaskId" :name="myCheckbox" v-model="selectedTasks" :value="task.TaskId"></td>
+                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
 
                             <td class="number"> {{index+1}} </td>
 
@@ -192,13 +198,21 @@
 
                             <td class="country">{{task.ContainerBoatID.Country}}</td>
 
+                            <td @click.stop>
+                                <span>{{ task.RequiredTugBoat }}</span>
+                            </td>
+
                             <td @click.stop class="disabled-column">
                                 <span @click="selected('task'+task.TaskId, 'tugBoat')" v-if="tugBoatInfo != 'task'+task.TaskId">
                                     <font-awesome-icon :icon="['fas', 'circle-plus']" id="add-tugboat"/>
                                 </span>
-                                <form v-if="tugBoatInfo === 'task'+task.TaskId" @submit.prevent="edit(task.TaskId)">
-                                    <select multiple :size=task.RequiredTugBoat v-model="listOfTugBoat">
-                                        <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
+                                <form v-if="tugBoatInfo === 'task'+task.TaskId" @submit.prevent="manualSchedule(task.TaskId)">
+                                    <select multiple v-model="listOfTugBoat">
+                                        <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">
+                                            <!-- <span :style="getTugBoatStyle(tugboat.TugBoatId)"> -->
+                                                {{ tugboat.TugBoatId }}
+                                            <!-- </span> -->
+                                        </option>
                                     </select>
                                     <button class="submit-button" type="submit"></button>
                                 </form>
@@ -234,11 +248,12 @@
                         </tr>
 <!-- --Completed---------------------------------------------------------------------------------------------------------- -->
                         <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
-                            <td><input type="checkbox" :id="'myCheckbox' + entry.TaskId" :name="myCheckbox" v-model="selectedTasks" :value="entry.TaskId.TaskId"></td>
+                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
                             <td class="number"> {{index+1}} </td>
                             <td>{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</td>
                             <td>{{entry.TaskId.ContainerBoatID.ContainerBoatID}}</td>
                             <td class="country">{{entry.TaskId.ContainerBoatID.Country}}</td>
+                            <td @click.stop><span>{{ entry.TaskId.RequiredTugBoat }}</span></td>
                             <td>{{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join('/ ')}}</td>
                             <td>{{ entry.TaskId.BerthId}}</td>
                             <td class="work-type"><span class="status-container">{{entry.TaskId.Action}}</span></td>
@@ -267,7 +282,6 @@ export default {
         this.$store.dispatch('fetchContainerBoats');
         this.$store.dispatch('fetchBerths');
         this.$store.dispatch('fetchTugBoats');
-        this.$store.dispatch('fetchScheduleEntries');
     },
     data() {
         return {
@@ -288,37 +302,9 @@ export default {
             workTypeInput: '',
             statusInput: '',
             selectedTasks: [],
-            selectedScheduleEntries: [],
         }
     },
     methods: {
-        async deleteSelected() {
-            if (this.selectedTasks.length > 0) {
-                await fetch(`http://127.0.0.1:8000/api/tasks-delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids: this.selectedTasks })
-                });
-            }
-
-            if (this.selectedScheduleEntries.length > 0) {
-                await fetch(`http://127.0.0.1:8000/api/scheduleentries-delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids: this.selectedScheduleEntries })
-                });
-            }
-
-            this.$store.dispatch('fetchTasks');
-            this.$store.dispatch('fetchScheduleEntries');
-
-            this.selectedTasks = [];
-            this.selectedScheduleEntries = [];
-        },
         schedule() {
             //this.$router.push({name: 'AutoReschedule'})
             axios.post('http://localhost:8000/api/auto-schedule', {})
@@ -330,7 +316,6 @@ export default {
                 console.error("Error during schedule operation: ", error);
                 alert("Schedule operation failed, check logs for details.");
             });
-
         },
         importTaskData(){
             let input = document.getElementById('import-task-data');
@@ -469,10 +454,13 @@ export default {
                     newTugBoatId: this.tugBoat,
                     berthId: this.berthId,
                     action: this.action,
-                    tugBoatList: this.listOfTugBoat,
                 });
                 if (response.data.success) {
-                    alert('Edit Successfully');
+                    if(response.data.conflict){
+                        alert('There are conflicted entries. Rescheduling...');
+                    }else{
+                        alert('Edit Successfully');
+                    }
                     window.location.reload();
                     this.resetNull();
                 } else {
@@ -483,25 +471,58 @@ export default {
                 alert('Edit Task Error.');
             }
         },
-        getTugBoatStyle(entry, tugBoatId){
-            const tugBoat = entry.listOfTugBoats.find(tug => tug.TugBoatId === tugBoatId);
-            let backgroundColor;
-
-            switch (tugBoat.CurrentStatus) {
-                case 'Free':
-                    backgroundColor = 'green';
-                    break;
-                case 'Busy':
-                    backgroundColor = 'red';
-                    break;
-                default:
-                    backgroundColor = 'grey';
+        async manualSchedule(taskId){
+            try { 
+                const response = await axios.post('http://localhost:8000/api/manual-schedule/', {
+                    taskId: taskId,
+                    tugBoatList: this.listOfTugBoat,
+                });
+                if (response.data.success) {
+                    if(response.data.conflict){
+                        alert('There are conflicted entries. Rescheduling...');
+                    }else{
+                        alert('Manual Scheduling Successful');
+                    }
+                    window.location.reload();
+                    this.resetNull();
+                } else {
+                    alert('Manual Schedulling Failed.');
+                }
+            } catch (error) {
+                console.error('Error during manual schedulling:', error);
+                alert('Manual Schedulling Error.');
             }
-            return{
-                backgroundColor: backgroundColor,
-                color: 'white',
-                padding: '5px',
-                'border-radius': '10px',
+        },
+        async getTugBoatStyle(tugBoatId){
+            // const tugBoat = entry.listOfTugBoats.find(tug => tug.TugBoatId === tugBoatId);
+            try { 
+                const response = await axios.post('http://localhost:8000/api/tugboat-availability', {
+                    tugboatId: tugBoatId,
+                });
+                if (response.data.success) {
+                    console.log("get tugboat availability success")
+
+                    //set color according to state
+                    let backgroundColor;
+
+                    switch (response.data.message) {
+                        case true:
+                            backgroundColor = 'green';
+                            break;
+                        default:
+                            backgroundColor = 'red';
+                    }
+                    return{
+                        backgroundColor: backgroundColor,
+                        color: 'white',
+                        padding: '5px',
+                        'border-radius': '10px',
+                    }
+                } else {
+                    console.log("failed")
+                }
+            } catch (error) {
+                console.error('Get tugboat availability error: ', error);
             }
         },
 

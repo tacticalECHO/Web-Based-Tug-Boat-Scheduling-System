@@ -268,7 +268,9 @@ class SaveNewTaskView(View):
             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-        
+
+from .Schedule import AutoSchedule, ifTugBoatAvailable, AutoSchedule_Reschedule
+
 @method_decorator(csrf_exempt, name='dispatch')
 class UpdateEntryAndTaskView(View):
     def post(self, request, *args, **kwargs):
@@ -283,13 +285,12 @@ class UpdateEntryAndTaskView(View):
             newTugBoatId = data.get('newTugBoatId')
             berthId = data.get('berthId')
             action = data.get('action')
-            tugBoatList = data.get('tugBoatList')
+            conflict = False
 
             task = Task.objects.filter(TaskId=taskId).first()
             try:
                 if startTime is not None:
                     task.startTime = startTime
-                # error (cannot edit)
                 if containerBoatId is not None:
                     containerBoat = ContainerBoat.objects.get(ContainerBoatID=containerBoatId)
                     task.ContainerBoatID = containerBoat
@@ -297,22 +298,12 @@ class UpdateEntryAndTaskView(View):
                     task.BerthId = berthId
                 if action is not None:
                     task.Action = str(action)
-                if tugBoatList is not None:
-                    tugs = TugBoat.objects.filter(TugBoatId__in=tugBoatList)
-                    scheduleEntry = ScheduleEntry.objects.create(
-                        TaskId = task,
-                        PublishTime = "2000-01-01 00:00", #????????
-                        Status = "Scheduled",
-                        )
-                    scheduleEntry.listOfTugBoats.set(tugs)
-                    task.State = "Scheduled"
                 task.save()
             except Exception as e:
                 print(e)
                 return JsonResponse({'error': e}, status=404) 
 
             if scheduleEntryId is not None:
-
                 entry = ScheduleEntry.objects.filter(ScheduleEntryId=scheduleEntryId).first()
 
                 if removeTugBoatId is not None:
@@ -325,18 +316,91 @@ class UpdateEntryAndTaskView(View):
                 if newTugBoatId is not None:
                     try:
                         if newTugBoatId != "":
+                            task.TaskManual = 1
                             newTugBoat = TugBoat.objects.get(TugBoatId=newTugBoatId)
                             entry.listOfTugBoats.add(newTugBoat)
+                            # scheduledList = ScheduleEntry.objects.filter(Status = "Scheduled").all()
+                            # conflictList = list()
+                            # find for conflicted schedule entry
+                            # if scheduledList:
+                            #     for scheduled in scheduledList:
+                            availability = ifTugBoatAvailable(newTugBoat, task)
+                            if not availability:
+                                conflict = True
+                                # conflictList.append(str(""))
+                                    
                     except TugBoat.DoesNotExist:
                         return JsonResponse({'error': f'Tugboat with id={newTugBoatId} does not exist'}, status=404)    
                 entry.save()
 
-            return JsonResponse({'success': True, 'status': 'success', 'message': 'Entries saved successfully'})
+            if not conflict:
+                response = JsonResponse({'success': True})
+            else:
+                AutoSchedule_Reschedule()
+                print("rescheduling")
+                # conflictedEntries = ",".join(conflictList)
+                # print("conflicted entries " + conflictedEntries + " rescheduling")
+                # response = JsonResponse({'success': True, 'conflict': conflict, 'conflictedEntries': conflictedEntries})
+                response = JsonResponse({'success': True, 'conflict': conflict,})
+            return response
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, status=400)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ManualScheduleView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)
+            taskId = data.get('taskId')
+            tugBoatIds = data.get('tugBoatList')
+
+            tugBoatList = TugBoat.objects.filter(TugBoatId__in=tugBoatIds)
+            scheduledList = ScheduleEntry.objects.filter(Status = "Scheduled").all()
+            conflict = False
+            # conflictList = list()
+
+            # create schedule entry for task
+            task = Task.objects.filter(TaskId=taskId).first()
+            scheduleEntry = ScheduleEntry.objects.create(
+                TaskId = task,
+                PublishTime = "2024-01-01 00:00",
+                Status = "Scheduled",
+                )
+            scheduleEntry.listOfTugBoats.set(tugBoatList)
+            task.State = "Scheduled"
+            task.TaskManual = 1
+            task.save()
+            print("New Schedule Entry Created")
+
+            # find for conflicted schedule entry
+            if scheduledList:
+                for scheduled in scheduledList:
+                    for tugboat in tugBoatList:
+                        availability = ifTugBoatAvailable(tugboat, task)
+                        if not availability and scheduled.TaskId.TaskId != taskId:
+                            conflict = True
+                            # conflictList.append(str(scheduled.ScheduleEntryId))
+                            # delete conflicted schedule entry
+                            # entries_to_delete = ScheduleEntry.objects.filter(TaskId=tasks.TaskId)
+                            # entries_to_delete.delete()
+                            # print("Entries deleted ")
+            
+            if not conflict:
+                response = JsonResponse({'success': True})
+            else:
+                AutoSchedule_Reschedule()
+                print("rescheduling")
+                # conflictedEntries = ",".join(conflictList)
+                # print("conflicted entries " + conflictedEntries + " rescheduling")
+                # response = JsonResponse({'success': True, 'conflict': conflict, 'conflictedEntries': conflictedEntries})
+                response = JsonResponse({'success': True, 'conflict': conflict,})
+            return response
         except Exception as e:
             print(e)
             return JsonResponse({'error': str(e)}, status=400)
         
-from .Schedule import AutoSchedule 
 @method_decorator(csrf_exempt, name='dispatch')
 class AutoScheduleView(View):
     def post(self, request, *args, **kwargs):
@@ -346,7 +410,23 @@ class AutoScheduleView(View):
             return JsonResponse({'success': True, 'message': message})
         else:
             return JsonResponse({'success': False, 'message': message})
-        
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TugBoatAvailablityView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)
+            tugboatId = data.get('tugboatId')
+            tugboat = TugBoat.objects.filter(TugBoatId=tugboatId).first()
+            for task in Task.objects.all():
+                message = ifTugBoatAvailable(tugboat, task)
+            print(tugboatId + " : " + str(message))
+            return JsonResponse({'success': True, 'message': message})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e), 'success': False})
+
 from django.views.decorators.http import require_http_methods
 from .ImportData import dataIntoDatabase_ContainerBoat, createTask, dataIntoDatabase_TugBoat
 from django.core.files.storage import default_storage

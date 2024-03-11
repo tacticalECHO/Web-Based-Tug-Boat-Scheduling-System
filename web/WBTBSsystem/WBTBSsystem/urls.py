@@ -38,6 +38,7 @@ from system.views import (
     UpdateScheduleEntryView,
     UpdateEntryAndTaskView,
     AutoScheduleView,
+    ManualScheduleView,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -71,5 +72,6 @@ urlpatterns = [
     path('api/update-schedule-entry', UpdateScheduleEntryView.as_view(), name='update_schedule_entry'),
     path('api/update-entry-task/', UpdateEntryAndTaskView.as_view(), name="update_entry_task"),
     path('api/auto-schedule', AutoScheduleView.as_view(), name='auto_schedule'),
+    path('api/manual-schedule/', ManualScheduleView.as_view(), name='manual_schedule'),
     path('', include(router.urls)),
 ]

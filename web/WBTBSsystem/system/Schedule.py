@@ -60,7 +60,8 @@ def ifTugBoatAvailable(tugboat, task): # Check if the tugboat is available at th
             for boat in schedule.listOfTugBoats.all():
                 if boat.TugBoatId == tugboat.TugBoatId:
                     if schedule.TaskId.startTime-datetime.timedelta(hours=1) < EndTime and schedule.TaskId.startTime+datetime.timedelta(hours=1) > StartTime:
-                        return False
+                        if schedule.TaskId.TaskId != task.TaskId:
+                            return False
     return True
 def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first serve)
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
