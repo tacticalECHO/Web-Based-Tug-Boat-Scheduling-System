@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from system.views import (
+    DeleteScheduleEntriesView,
+    DeleteTasksView,
     LoginView,
     ChangePasswordView,
     CaptainViewSet,
@@ -55,6 +57,11 @@ urlpatterns = [
     path('api/login/', LoginView.as_view(), name='login'),
     path('api/change-password/', ChangePasswordView.as_view(), name='change_password'),
     path('api/captains-delete/', DeleteCaptainsView.as_view(), name='delete_captains'),
+
+    path('api/tasks-delete/', DeleteTasksView.as_view(), name='delete_tasks'),
+    path('api/scheduleentries-delete/', DeleteScheduleEntriesView.as_view(), name='delete_scheduleentries'),
+
+
     path('api/schedulers-delete/', DeleteSchedulersView.as_view(), name='delete_schedulers'),
     path('api/create-user/', CreateUserView.as_view(), name='create_user'),
     path('api/save-newtask/', SaveNewTaskView.as_view(), name='save_newtask'),

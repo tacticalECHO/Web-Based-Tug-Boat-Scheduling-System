@@ -14,6 +14,10 @@ router.register(r'api/display_tugboat', views.TugBoatViewSet)
 urlpatterns = [
     path('api/login/', views.LoginView.as_view(), name='login'),
     path('api/change-password/', views.ChangePasswordView.as_view(), name='change_password'),
+
+    path('api/tasks-delete/', views.DeleteTasksView.as_view(), name='delete_tasks'),
+    path('api/scheduleentries-delete/', views.DeleteScheduleEntriesView.as_view(), name='delete_scheduleentries'),
+
     path('api/captains-delete/', views.DeleteCaptainsView.as_view(), name='delete_captains'),
     path('api/schedulers-delete/', views.DeleteSchedulersView.as_view(), name='delete_schedulers'),
     path('api/create-user/', views.CreateUserView.as_view(), name='create_user'),
@@ -22,7 +26,5 @@ urlpatterns = [
     path('api/upload-tug-boat-data', views.upload_tug_boat_data, name='upload_tug_boat_data'),
     path('api/publish-data', views.publish_data, name='publish_data'),
     path('api/update-schedule-entry', views.UpdateScheduleEntryView.as_view(), name='update_schedule_entry'),
-    path('api/update-entry-task/', views.UpdateEntryAndTaskView.as_view(), name="update_entry_task"),
-    path('api/auto-schedule', views.AutoScheduleView.as_view(), name='auto_schedule'),
     path('', include(router.urls)),
 ]
