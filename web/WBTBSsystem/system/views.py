@@ -298,7 +298,6 @@ class UpdateEntryAndTaskView(View):
                     task.BerthId = berthId
                 if action is not None:
                     task.Action = str(action)
-                task.save()
             except Exception as e:
                 print(e)
                 return JsonResponse({'error': e}, status=404) 
@@ -331,6 +330,7 @@ class UpdateEntryAndTaskView(View):
                                     
                     except TugBoat.DoesNotExist:
                         return JsonResponse({'error': f'Tugboat with id={newTugBoatId} does not exist'}, status=404)    
+                task.save()
                 entry.save()
 
             if not conflict:

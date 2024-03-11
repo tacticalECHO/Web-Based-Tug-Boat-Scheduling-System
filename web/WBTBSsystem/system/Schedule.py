@@ -27,6 +27,7 @@ def AutoSchedule_ScheduleEntry_Complete(): # Check if the schedule entry is comp
 
 def AutoSchedule_Reschedule(): # Reschedule the task
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
+    print("reschedule 1")
     for schedule in ScheduleEntryList:
         if schedule.TaskId.TaskManual == 1:
             continue
@@ -34,6 +35,7 @@ def AutoSchedule_Reschedule(): # Reschedule the task
             schedule.TaskId.State = 'Unscheduled'
             schedule.TaskId.save()
             schedule.delete()
+    print("reschedule 2")
     AutoSchedule()
 
 def AutoSchedule_task_Complete(): # Check if the task is completed
@@ -82,7 +84,7 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
                     n+=1
                     if(n==task.RequiredTugBoat):
                         break
-            task.State = 'Scheduled'
+            print("autooo")
             if n < task.RequiredTugBoat:
                 task.State = 'Unscheduled'
                 print('No enough tugboat available')
