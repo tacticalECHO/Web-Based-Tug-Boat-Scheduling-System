@@ -151,7 +151,7 @@
                                 </span>
                                 <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === 'add'">
                                     <select @change="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)" v-model="tugBoat">
-                                        <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
+                                        <option v-for="tugboat in  changeTugboatList()" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
                                     </select>
                                 </form>
                             </td>
@@ -162,7 +162,7 @@
                                         <option v-for="berth in $store.state.berths" :key="berth.BerthID">{{ berth.BerthId }}</option>
                                     </select>
                                 </form>
-                                <span @click="selected(entry.ScheduleEntryId, 'berthId')" v-if="berthInfo != entry.ScheduleEntryId">{{ entry.TaskId.BerthId}}</span> 
+                                <span @click="selected(entry.ScheduleEntryId, 'berthId')" v-if="berthInfo != entry.ScheduleEntryId">{{ entry.TaskId.BerthId }}</span> 
                             </td>
 
                             <td class="work-type"><span class="status-container" :style="getActionStyle(entry.TaskId.Action)">{{entry.TaskId.Action}}</span></td>
@@ -305,6 +305,7 @@ export default {
             statusInput: '',
             selectedTasks: [],
             showProgressBar: false,
+            filteredTugBoats: [],
         }
     },
     methods: {
@@ -433,17 +434,18 @@ export default {
                 return byCountry && byContainerBoatId && byTugBoatId && byBerthId && byWorkType && byStatus && unscheduled;
             });
         },
-        changeTugboatList(){
-            // return this.$store.state.tugboats
-            const tugboats = this.$store.state.tugboats
-
-            const notManual = this.entries.filter(entry => entry.TaskId.TaskManual !== 1);
-
-            const freeTugBoats = tugboats.filter(tugboat => {
-                // Check if the tugboat's id is not present in any of the entries
-                return !notManual.some(entry => entry.listOfTugBoats.some(tug => tug.TugBoatId === tugboat.TugBoatId));
-            });
-            return freeTugBoats
+        async changeTugboatList() {
+            try {
+                const response = await axios.get('http://localhost:8000/api/display_tugboat/', {
+                    params: {
+                        filter: true
+                    }
+                });
+                return response.data;
+            } catch (error) {
+                console.error(error);
+                throw error; // Re-throw the error to handle it elsewhere if needed
+            }
         },
         resetNull() {
             this.tugBoatInfo = null;

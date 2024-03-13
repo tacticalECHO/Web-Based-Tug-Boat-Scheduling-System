@@ -641,5 +641,22 @@ class ScheduleEntryViewSet(viewsets.ModelViewSet):
     serializer_class = ScheduleEntrySerializer  
 
 class TugBoatViewSet(viewsets.ModelViewSet):
-    queryset = TugBoat.objects.all()
     serializer_class = TugBoatSerializer  
+
+    def get_queryset(self):
+        queryset = TugBoat.objects.all()
+        
+        # Check if you want to filter the queryset
+        should_filter = self.request.query_params.get('filter', True)
+        
+        if should_filter:
+            filtered_tugboats = []
+            manual_tasks = Task.objects.filter(TaskManual=1)
+            all_tasks = Task.objects.all()
+            for task in all_tasks:
+                if task not in manual_tasks:
+                    filtered_tugboats.extend([tugboat for tugboat in queryset if ifTugBoatAvailable(tugboat, task)])
+            return filtered_tugboats
+        print("here:"+str(filtered_tugboats))
+        
+        return queryset
