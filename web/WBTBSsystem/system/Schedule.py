@@ -65,7 +65,43 @@ def ifTugBoatAvailable(tugboat, task): # Check if the tugboat is available at th
                         if schedule.TaskId.TaskId != task.TaskId:
                             return False
     return True
-def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first serve)
+def AutoSchedule_NextFit():
+    TaskList, TugBoatList, ScheduleEntryList = Get_Information()
+    AutoSchedule_task_Complete()
+    index = 0
+    ScheduleEntryList = Get_Information()[2]  # Assign the value of ScheduleEntryList
+    for task in TaskList:
+        if task.TaskManual == 1:
+            continue
+        if task.State == 'Unscheduled' and (task.startTime.date() == datetime.datetime.now().date() or task.startTime.date()== datetime.datetime.now().date()+datetime.timedelta(days=1))  and task.startTime > datetime.datetime.now():
+            ST=task.startTime-datetime.timedelta(hours=1)
+            ET=task.startTime+datetime.timedelta(hours=1)
+            schedule = ScheduleEntry(TaskId=task, Status='Scheduled', StartTime=ST, EndTime=ET)
+            schedule.save()
+            n=0
+            count = 0
+            for i in range(index, len(TugBoatList)):
+                if ifTugBoatAvailable(TugBoatList[i], task):
+                    print(TugBoatList[i].TugBoatId)
+                    schedule.listOfTugBoats.add(TugBoatList[i])
+                    n+=1
+                    if(n==task.RequiredTugBoat):
+                        break
+                index = (index+1)%len(TugBoatList)
+                count += 1
+                if count == len(TugBoatList):
+                    break
+            print("nextfit")
+            if n < task.RequiredTugBoat:
+                task.State = 'Unscheduled'
+                print('No enough tugboat available')
+                schedule.delete()
+                task.save()
+                return
+            schedule.save()
+            task.save()
+    return (True, "Scheduling completed successfully.")
+def AutoSchedule_FIFO(): # Auto Schedule the task--->ScheduleEntry (first come first serve)
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     AutoSchedule_task_Complete() 
     for task in TaskList:
@@ -96,7 +132,21 @@ def AutoSchedule(): # Auto Schedule the task--->ScheduleEntry (first come first 
 
     return (True, "Scheduling completed successfully.")
 
-
+def AutoSchedule():
+    tasklist = Task.objects.all()
+    totalTugBoatNeeded = 0
+    for task in tasklist:
+        if task.State == 'Unscheduled':
+            totalTugBoatNeeded += task.RequiredTugBoat
+    tugboatlist = TugBoat.objects.all()
+    totalTugBoatAvailable = 0
+    for boat in tugboatlist:
+        if boat.CurrentStatus != 'Maintenance':
+            totalTugBoatAvailable += 1
+    if totalTugBoatNeeded > totalTugBoatAvailable:
+        return AutoSchedule_NextFit()
+    else:
+        return AutoSchedule_FIFO()
 
 if __name__ == '__main__':
     AutoSchedule()
