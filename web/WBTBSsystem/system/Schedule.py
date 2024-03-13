@@ -65,11 +65,10 @@ def ifTugBoatAvailable(tugboat, task): # Check if the tugboat is available at th
                         if schedule.TaskId.TaskId != task.TaskId:
                             return False
     return True
-def AutoSchedule_NextFit():
+def AutoSchedule_NextFit():# Auto Schedule the task--->ScheduleEntry (next fit)
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     AutoSchedule_task_Complete()
     index = 0
-    ScheduleEntryList = Get_Information()[2]  # Assign the value of ScheduleEntryList
     for task in TaskList:
         if task.TaskManual == 1:
             continue
