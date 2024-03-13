@@ -16,6 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
 from system.views import (
     DeleteScheduleEntriesView,
     DeleteTasksView,
@@ -54,6 +57,7 @@ router.register(r'api/display_tugboat', TugBoatViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('', TemplateView.as_view(template_name='index.html')),
     #path("system/", include("system.urls")),
     #path("team/", include("system.urls"))
     path('api/login/', LoginView.as_view(), name='login'),
@@ -76,4 +80,4 @@ urlpatterns = [
     path('api/manual-schedule/', ManualScheduleView.as_view(), name='manual_schedule'),
     path('api/update-publish-time', PublishView.as_view(), name='update-publish-time'),
     path('', include(router.urls)),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

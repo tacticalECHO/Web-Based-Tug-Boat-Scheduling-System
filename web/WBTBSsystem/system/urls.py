@@ -1,5 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.generic import TemplateView
 from . import views
 
 router = DefaultRouter()
@@ -12,6 +15,7 @@ router.register(r'api/display_schedule_entry', views.ScheduleEntryViewSet)
 router.register(r'api/display_tugboat', views.TugBoatViewSet)
 
 urlpatterns = [
+    path('', TemplateView.as_view(template_name='index.html')),
     path('api/login/', views.LoginView.as_view(), name='login'),
     path('api/change-password/', views.ChangePasswordView.as_view(), name='change_password'),
 
@@ -29,4 +33,4 @@ urlpatterns = [
     path('api/manual-schedule/', views.ManualScheduleView.as_view(), name='manual_schedule'),
     path('api/api/update-publish-time', views.PublishView.as_view(), name='update-publish-time'),
     path('', include(router.urls)),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
