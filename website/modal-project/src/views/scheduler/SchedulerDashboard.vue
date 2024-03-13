@@ -434,17 +434,16 @@ export default {
             });
         },
         changeTugboatList(){
-            return this.$store.state.tugboats
+            // return this.$store.state.tugboats
             const tugboats = this.$store.state.tugboats
 
-            const notManual = this.entries.filter((entry) => {  
-                return entry.TaskId.TaskManual != 1
-            })
+            const notManual = this.entries.filter(entry => entry.TaskId.TaskManual !== 1);
 
-            const freeTugBoat = tugboats.filter((tugboat) => {
-                return 
-            })
-
+            const freeTugBoats = tugboats.filter(tugboat => {
+                // Check if the tugboat's id is not present in any of the entries
+                return !notManual.some(entry => entry.listOfTugBoats.some(tug => tug.TugBoatId === tugboat.TugBoatId));
+            });
+            return freeTugBoats
         },
         resetNull() {
             this.tugBoatInfo = null;
