@@ -59,7 +59,7 @@
                                 <td class="berth"> {{entry.TaskId.BerthId}} </td>
                                 <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/ ")}} </td>
                                 <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/ ")}} </td>
-                                <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join("/ ")}} </td>
+                                <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').join("/ ")}} </td>
                                 <td class="work-status"> 
                                     <span class="status-container" :style="getStatusStyle(entry.Status)">{{entry.Status}} </span>
                                 </td>
@@ -70,7 +70,7 @@
                                 <td class="berth"> {{entry.TaskId.BerthId}} </td>
                                 <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/")}} </td>
                                 <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/")}} </td>
-                                <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join("/")}} </td>
+                                <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').join("/")}} </td>
                                 <td class="work-status"> 
                                     <span class="status-container">{{entry.Status}} </span>
                                 </td>
@@ -146,21 +146,6 @@ export default {
 </script>
 
 <style scoped>
-.filter-group {
-    padding: 10px;
-}
-
-.filter{
-    font-size: var(--font-size);
-    border: 2px solid grey;
-    border-radius: 10px;
-    padding: 10px;
-    margin-right: 5px;
-}
-
-.filter select{
-    border: none;
-}
 
 button{
     border-radius: 10px;

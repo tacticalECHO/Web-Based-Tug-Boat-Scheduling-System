@@ -16,12 +16,12 @@ import AdminDashboard from '@/views/administrator/AdminDashboard.vue'
 import NewStaff from '@/views/administrator/NewStaff.vue'
 // scheduler------------------------------------------------------------------
 import SchedulerDashboard from '@/views/scheduler/SchedulerDashboard.vue'
-import WorkSchedule from '@/views/scheduler/WorkSchedule.vue'
 import NewTask from '@/views/scheduler/NewTask.vue'
-import ManualReschedule from '@/views/scheduler/ManualReschedule.vue'
-import ConflictScheduleList from '@/views/scheduler/ConflictScheduleList.vue'
+import TugBoatList from '@/views/scheduler/TugBoatList.vue'
+import NewTugBoat from '@/views/scheduler/NewTugBoat.vue'
 // captain--------------------------------------------------------------------
 import CaptainDashboard from '@/views/captain/CaptainDashboard.vue'
+import WorkSchedule from '@/views/captain/WorkSchedule.vue'
 
 
 
@@ -78,31 +78,21 @@ const routes = [
     ]
   },
   {
-    path: '/manual-reschedule',
-    name: 'ManualReschedule',
-    component: ManualReschedule,
+    path: '/tugboat-list',
+    name: 'TugBoatList',
+    component: TugBoatList,
     children: [
       {
-        path: 'notice',
-        name: 'Exit-ManualReschedule',
-        component: ExitNotice,
+        path: 'add-new-tugboat',
+        name: 'NewTugBoat',
+        component: NewTugBoat,
       },
-      {
-        path: 'notice',
-        name: 'Save-ManualReschedule',
-        component: ConflictNotice,
-      }
     ]
   },
   {
     path: '/work-schedules',
     name: 'WorkSchedule',
     component: WorkSchedule,
-  },
-  {
-    path: '/conflict-schedule-list',
-    name: 'ConflictScheduleList',
-    component: ConflictScheduleList,
   },
   {
     path: '/settings',

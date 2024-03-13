@@ -11,6 +11,10 @@
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     S-Dashboard
                 </li>
+                <li v-if="isScheduler || isAdmin" @click="redirect('TugBoatList')" id="scheduler-dashboard" class="sidebar-item">
+                <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
+                    Tug Boats
+                </li>
                 <li v-if="isCaptain || isAdmin" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item">
                     <admin-panel v-if="isCaptain" />
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>

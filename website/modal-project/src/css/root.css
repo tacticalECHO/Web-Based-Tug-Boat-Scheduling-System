@@ -170,3 +170,28 @@ button {
 #message:hover{
     background: lightgrey;
 }
+
+/* --filter input-------------------------------------------------------------------------------------- */
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+}
+.filter{
+    display: flex;
+    /* flex-direction: column; */
+    font-size: var(--font-size);
+    border: 2px solid grey;
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.filter select{
+    border: none;
+}
+
+.submit-button {
+    display: none;
+}

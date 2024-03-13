@@ -141,7 +141,7 @@
                                     <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === tugBoats">
                                         <select @change="edit(entry.TaskId.TaskId, entry.ScheduleEntryId, tugBoats)" v-model="tugBoat">
                                             <option value=""></option>
-                                            <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
+                                            <option v-for="tugboat in changeTugboatList()" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
                                         </select>
                                     </form>
                                 </span>
@@ -209,7 +209,7 @@
                                 </span>
                                 <form v-if="tugBoatInfo === 'task'+task.TaskId" @submit.prevent="manualSchedule(task.TaskId)">
                                     <select multiple v-model="listOfTugBoat">
-                                        <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">
+                                        <option v-for="tugboat in changeTugboatList()" :key="tugboat.TugBoatId">
                                             <!-- <span :style="getTugBoatStyle(tugboat.TugBoatId)"> -->
                                                 {{ tugboat.TugBoatId }}
                                             <!-- </span> -->
@@ -418,6 +418,19 @@ export default {
                 return byCountry && byContainerBoatId && byTugBoatId && byBerthId && byWorkType && byStatus && unscheduled;
             });
         },
+        changeTugboatList(){
+            return this.$store.state.tugboats
+            const tugboats = this.$store.state.tugboats
+
+            const notManual = this.entries.filter((entry) => {  
+                return entry.TaskId.TaskManual != 1
+            })
+
+            const freeTugBoat = tugboats.filter((tugboat) => {
+                return 
+            })
+
+        },
         resetNull() {
             this.tugBoatInfo = null;
             this.tugBoatIndex = null;
@@ -443,11 +456,6 @@ export default {
                 this.berthInfo = id;
             }else if (column === 'action'){
                 this.actionInfo = id;
-            }
-        },
-        toggle(event) {
-            if (!event.target.closest('form')) {
-                this.resetNull();
             }
         },
         async edit(taskId, entryId, tugBoat) {
@@ -588,31 +596,8 @@ export default {
     background: lightgrey;
 }
 
-.filter-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px;
-}
-.filter{
-    display: flex;
-    /* flex-direction: column; */
-    font-size: var(--font-size);
-    border: 2px solid grey;
-    border-radius: 5px;
-    padding: 5px;
-    margin-right: 5px;
-}
-
-.filter select{
-    border: none;
-}
-
 form {
     margin-right: none;
-}
-.submit-button {
-    display: none;
 }
 
 #containerBoatForm {
