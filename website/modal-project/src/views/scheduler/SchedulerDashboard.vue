@@ -73,7 +73,7 @@
                     </span>
                 </div>
                 <span>
-                    <button class="blue-border-button" id="delete" @click="redirect('')">Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                    <button class="blue-border-button" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
                     &nbsp;
                     <button class="blue-border-button" id="add" @click="redirect('NewTask')">Add  + </button>
                 </span>
@@ -106,7 +106,7 @@
 <!-- --Scheduled / Confirmed--------------------------------------------------------------------------------------------------------- -->
                         <tr v-for="(entry,index) in entryList('Incomplete')" :key="index">
 
-                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
+                            <td><input type="checkbox" :id="'mycheckbox' + entry.ScheduleEntryId" :name='myCheckbox' v-model="selectedScheduleEntries" :value="entry.TaskId.TaskId"></td>
 
                             <!-- <td class="number"> {{index+1}} </td> -->
                             <td class="number"> {{entry.ScheduleEntryId}} </td>
@@ -177,7 +177,7 @@
                         </tr>
 <!-- --Unscheduled--------------------------------------------------------------------------------------------------------- -->
                         <tr v-for="(task, index) in taskList()" :key="index">
-                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
+                            <td><input type="checkbox" :id="'myCheckbox' + task.TaskId" :name="myCheckbox" v-model="selectedTasks" :value="task.TaskId"></td>
 
                             <td class="number"> {{index+1}} </td>
 
@@ -250,7 +250,7 @@
                         </tr>
 <!-- --Completed---------------------------------------------------------------------------------------------------------- -->
                         <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
-                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
+                            <td><input type="checkbox" :id="'myCheckbox' + entry.TaskId" :name="myCheckbox" v-model="selectedTasks" :value="entry.TaskId.TaskId"></td>
                             <td class="number"> {{index+1}} </td>
                             <td>{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</td>
                             <td>{{entry.TaskId.ContainerBoatID.ContainerBoatID}}</td>
@@ -304,10 +304,38 @@ export default {
             workTypeInput: '',
             statusInput: '',
             selectedTasks: [],
+            selectedScheduleEntries: [],
             showProgressBar: false,
         }
     },
     methods: {
+        async deleteSelected() {
+            if (this.selectedTasks.length > 0) {
+                await fetch(`http://127.0.0.1:8000/api/tasks-delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ids: this.selectedTasks })
+                });
+            }
+
+            if (this.selectedScheduleEntries.length > 0) {
+                await fetch(`http://127.0.0.1:8000/api/scheduleentries-delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ids: this.selectedScheduleEntries })
+                });
+            }
+
+            this.$store.dispatch('fetchTasks');
+            this.$store.dispatch('fetchScheduleEntries');
+
+            this.selectedTasks = [];
+            this.selectedScheduleEntries = [];
+        },
         waiting(){
             if(this.$store.state.tasks.length === 0){
                 return true

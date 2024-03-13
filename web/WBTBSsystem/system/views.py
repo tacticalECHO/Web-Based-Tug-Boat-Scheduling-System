@@ -80,8 +80,7 @@ class DeleteTasksView(View):
            
             print(tasks)
             for task in tasks:
-                if task.ContainerBoatID:
-                    task.ContainerBoatID.delete()
+                task.delete()
 
             return JsonResponse({'message': 'Tasks deleted successfully'}, status=200)
         except Exception as e:
@@ -103,7 +102,7 @@ class DeleteScheduleEntriesView(View):
                 if task.TaskId:
                     task.TaskId.delete()
 
-            return JsonResponse({'message': 'Tasks deleted successfully'}, status=200)
+            return JsonResponse({'message': 'Schedules deleted successfully'}, status=200)
         except Exception as e:
 
             print(f"Error deleting tasks: {str(e)}")

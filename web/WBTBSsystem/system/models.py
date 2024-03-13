@@ -30,8 +30,8 @@ class TugBoat(models.Model): #TugBoat model
     CurrentStatus = models.CharField(max_length=20,choices=(('Free','Free'),('Busy','Busy'),('Maintenance','Maintenance')),default='Free')
     TugBoatId = models.CharField(max_length=200, unique=True) 
     CaptainId = models.OneToOneField(Captain, on_delete=models.CASCADE, related_name='tugboat', null=True)
-    StartWorkingTime = models.TimeField(default='T00:00:00Z')
-    EndWorkingTime = models.TimeField(default='T08:00:00Z')
+    StartWorkingTime = models.TimeField(default='00:00:00')
+    EndWorkingTime = models.TimeField(default='08:00:00')
     def __str__(self):
         return self.TugBoatId
     
