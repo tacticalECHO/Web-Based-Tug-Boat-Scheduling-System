@@ -25,10 +25,19 @@ export function getStatusStyle(state, type){
         case 'Confirmed':
         backgroundColor = 'green';
         break;
+        case 'Free':
+        backgroundColor = 'green';
+        break;
         case 'Scheduled':
         backgroundColor = 'rgb(254, 219, 46)';
         break;
+        case 'Busy':
+        backgroundColor = 'red';
+        break;
         case 'Completed':
+        backgroundColor = 'darkgrey';
+        break;
+        case 'Maintenance':
         backgroundColor = 'darkgrey';
         break;
         default:
@@ -70,4 +79,18 @@ export function getActionStyle(action, type){
     return {
         background: backgroundColor,
     };
+}
+
+export function toggle() {
+    this.resetNull();
+}
+
+export function getCaptainId(id){
+    const tugboat = this.tugboats.find((tugboat) => tugboat.TugBoatId === id);
+    return tugboat && tugboat.CaptainId ? tugboat.CaptainId.CaptainId : "-";
+}
+
+export function getCaptainName(id){
+    const tugboat = this.tugboats.find((tugboat) => tugboat.TugBoatId === id);
+    return tugboat && tugboat.CaptainId ? tugboat.CaptainId.name : "-";
 }

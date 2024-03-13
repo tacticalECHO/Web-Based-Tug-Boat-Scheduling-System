@@ -78,7 +78,8 @@
                     <button class="blue-border-button" id="add" @click="redirect('NewTask')">Add  + </button>
                 </span>
             </div>
-            <div class="table-container">
+            <div v-if="waiting()" class="waiting">No Task Available</div>
+            <div v-if="!waiting()" class="table-container">
                 <table>
                     <thead>
                         <tr>
@@ -141,7 +142,7 @@
                                     <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === tugBoats">
                                         <select @change="edit(entry.TaskId.TaskId, entry.ScheduleEntryId, tugBoats)" v-model="tugBoat">
                                             <option value=""></option>
-                                            <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
+                                            <option v-for="tugboat in changeTugboatList()" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
                                         </select>
                                     </form>
                                 </span>
@@ -209,7 +210,7 @@
                                 </span>
                                 <form v-if="tugBoatInfo === 'task'+task.TaskId" @submit.prevent="manualSchedule(task.TaskId)">
                                     <select multiple v-model="listOfTugBoat">
-                                        <option v-for="tugboat in $store.state.tugboats" :key="tugboat.TugBoatId">
+                                        <option v-for="tugboat in changeTugboatList()" :key="tugboat.TugBoatId">
                                             <!-- <span :style="getTugBoatStyle(tugboat.TugBoatId)"> -->
                                                 {{ tugboat.TugBoatId }}
                                             <!-- </span> -->
@@ -307,6 +308,12 @@ export default {
         }
     },
     methods: {
+        waiting(){
+            if(this.$store.state.tasks.length === 0){
+                return true
+            }
+            return false
+        },
         async schedule() {
             this.showProgressBar = true;
             try {
@@ -426,6 +433,19 @@ export default {
                 return byCountry && byContainerBoatId && byTugBoatId && byBerthId && byWorkType && byStatus && unscheduled;
             });
         },
+        changeTugboatList(){
+            return this.$store.state.tugboats
+            const tugboats = this.$store.state.tugboats
+
+            const notManual = this.entries.filter((entry) => {  
+                return entry.TaskId.TaskManual != 1
+            })
+
+            const freeTugBoat = tugboats.filter((tugboat) => {
+                return 
+            })
+
+        },
         resetNull() {
             this.tugBoatInfo = null;
             this.tugBoatIndex = null;
@@ -451,11 +471,6 @@ export default {
                 this.berthInfo = id;
             }else if (column === 'action'){
                 this.actionInfo = id;
-            }
-        },
-        toggle(event) {
-            if (!event.target.closest('form')) {
-                this.resetNull();
             }
         },
         async edit(taskId, entryId, tugBoat) {
@@ -639,9 +654,6 @@ export default {
 
 form {
     margin-right: none;
-}
-.submit-button {
-    display: none;
 }
 
 #containerBoatForm {

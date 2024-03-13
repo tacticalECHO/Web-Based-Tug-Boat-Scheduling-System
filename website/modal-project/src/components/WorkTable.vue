@@ -1,6 +1,7 @@
 <template>
     <div id="work-table" class="pages">
-        <table>
+        <div v-if="waiting()" class="waiting">Waiting ... </div>
+        <table v-if="!waiting()">
             <thead>
                 <tr>
                     <th>No.</th>
@@ -18,7 +19,7 @@
                     <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
                     <td class="berth"> {{entry.TaskId.BerthId}} </td>
                     <td class="time"> {{formatDate(entry.TaskId.startTime)}} &emsp;&emsp; {{formatTime(entry.TaskId.startTime)}} </td>
-                    <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join(",")}} </td>
+                    <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').join(",")}} </td>
                     <td @click.stop>
                         <form v-if="showStateForm === entry.ScheduleEntryId">
                             <select @change="edit(entry.ScheduleEntryId)" v-model="state" :id="'state' + entry.ScheduleEntryId" >
@@ -38,7 +39,7 @@
                     <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
                     <td class="berth"> {{entry.TaskId.BerthId}} </td>
                     <td class="time"> {{formatDate(entry.TaskId.startTime)}} &emsp;&emsp; {{formatTime(entry.TaskId.startTime)}} </td>
-                    <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).join(",")}} </td>
+                    <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').join(",")}} </td>
                     <td>
                         <span class="status-container" @click="selected(entry.ScheduleEntryId, 'state')" :style="getStatusStyle(entry.Status, 'Completed')">{{entry.Status}}</span> 
                     </td>
@@ -76,12 +77,18 @@ export default {
         }
     },
     methods: {
+        waiting(){
+            if(this.entryList('Incompleted').length === 0 && this.entryList('Completed').length === 0){
+                return true
+            }
+            return false
+        },
         entryList(state){
             this.entries = this.$store.state.scheduleEntries;
             const isCompleted = state === 'Completed';
 
             return this.entries.filter((entry) => {
-                const byCaptain = entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId.CaptainId).includes(this.captain);
+                const byCaptain = entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').includes(this.captain);
                 const byCompleted = entry.Status === 'Completed';
 
                 return byCaptain && (isCompleted ? byCompleted : !byCompleted);

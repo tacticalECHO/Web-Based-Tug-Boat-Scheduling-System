@@ -4,7 +4,7 @@ import './css/root.css'
 import './css/popup.css'
 import store from './store'
 import router from './router'
-import { redirect, formatTime, formatDate, getActionStyle, getStatusStyle } from './js/methods.js'
+import { redirect, formatTime, formatDate, getActionStyle, getStatusStyle, toggle, getCaptainId, getCaptainName } from './js/methods.js'
 // import VueNotifications from 'vue-notifications'
 
 //icons---------------------------------------------------------
@@ -24,6 +24,9 @@ app.config.globalProperties.formatTime = formatTime
 app.config.globalProperties.formatDate = formatDate
 app.config.globalProperties.getActionStyle = getActionStyle
 app.config.globalProperties.getStatusStyle = getStatusStyle
+app.config.globalProperties.toggle = toggle
+app.config.globalProperties.getCaptainId = getCaptainId
+app.config.globalProperties.getCaptainName = getCaptainName
 
 export default {
     components: {

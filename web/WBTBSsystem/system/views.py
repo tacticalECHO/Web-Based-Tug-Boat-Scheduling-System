@@ -290,6 +290,72 @@ class SaveNewTaskView(View):
             return JsonResponse({'success': True, 'status': 'success', 'message': 'Container Boat and Task saved successfully'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+        
+@method_decorator(csrf_exempt, name='dispatch')
+class UpdateTugBoatView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            print("Received data:", data)
+
+            tugboatId = data.get('tugboatId')
+            captainId = data.get('captainId')
+            startTime = data.get('startTime')
+            endTime = data.get('endTime')
+            status = data.get('status')
+            message = ''
+
+            if captainId is not None and captainId is not '':
+                captainId = str(captainId.split()[0])
+                # Get the Captain object
+                captain = Captain.objects.get(CaptainId=captainId)
+                
+                # Remove original relationship
+                try:
+                    tug = TugBoat.objects.get(CaptainId=captain)
+                    tug.CaptainId = None
+                    message = "Captain: " + str(captain.CaptainId) + " is removed from Tug Boat: " + tug.TugBoatId
+                    tug.save()
+                except TugBoat.DoesNotExist:
+                    message = 'success'
+
+            # Get or create TugBoat object
+                with transaction.atomic():
+                    tugboat, created = TugBoat.objects.get_or_create(
+                        TugBoatId=tugboatId,
+                        defaults={
+                            'CaptainId': captain,
+                            'StartWorkingTime': startTime,
+                            'EndWorkingTime': endTime,
+                        }
+                    )
+                if not created:
+                    tugboat.CaptainId = captain
+
+            # Update TugBoat attributes based on request data
+            else:
+                with transaction.atomic():
+                    tugboat, created = TugBoat.objects.get_or_create(
+                        TugBoatId=tugboatId,
+                        defaults={
+                            'CaptainId': None,
+                            'StartWorkingTime': startTime,
+                            'EndWorkingTime': endTime,
+                        }
+                    )
+                if not created:
+                    if startTime is not None:
+                        tugboat.StartWorkingTime = startTime
+                    if endTime is not None:
+                        tugboat.EndWorkingTime = endTime
+                    if status is not None:
+                        tugboat.CurrentStatus = status
+            tugboat.save()
+
+            return JsonResponse({'success': True, 'message': message})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, status=400)
 
 from .Schedule import AutoSchedule, ifTugBoatAvailable, AutoSchedule_Reschedule
 
@@ -340,15 +406,9 @@ class UpdateEntryAndTaskView(View):
                             task.TaskManual = 1
                             newTugBoat = TugBoat.objects.get(TugBoatId=newTugBoatId)
                             entry.listOfTugBoats.add(newTugBoat)
-                            # scheduledList = ScheduleEntry.objects.filter(Status = "Scheduled").all()
-                            # conflictList = list()
-                            # find for conflicted schedule entry
-                            # if scheduledList:
-                            #     for scheduled in scheduledList:
                             availability = ifTugBoatAvailable(newTugBoat, task)
                             if not availability:
                                 conflict = True
-                                # conflictList.append(str(""))
                                     
                     except TugBoat.DoesNotExist:
                         return JsonResponse({'error': f'Tugboat with id={newTugBoatId} does not exist'}, status=404)    
@@ -360,9 +420,6 @@ class UpdateEntryAndTaskView(View):
             else:
                 AutoSchedule_Reschedule()
                 print("rescheduling")
-                # conflictedEntries = ",".join(conflictList)
-                # print("conflicted entries " + conflictedEntries + " rescheduling")
-                # response = JsonResponse({'success': True, 'conflict': conflict, 'conflictedEntries': conflictedEntries})
                 response = JsonResponse({'success': True, 'conflict': conflict,})
             return response
         except Exception as e:
@@ -379,7 +436,6 @@ class ManualScheduleView(View):
             tugBoatIds = data.get('tugBoatList')
 
             tugBoatList = TugBoat.objects.filter(TugBoatId__in=tugBoatIds)
-            scheduledList = ScheduleEntry.objects.filter(Status = "Scheduled").all()
             conflict = False
             # conflictList = list()
 
@@ -397,17 +453,17 @@ class ManualScheduleView(View):
             print("New Schedule Entry Created")
 
             # find for conflicted schedule entry
-            if scheduledList:
-                for scheduled in scheduledList:
-                    for tugboat in tugBoatList:
-                        availability = ifTugBoatAvailable(tugboat, task)
-                        if not availability and scheduled.TaskId.TaskId != taskId:
-                            conflict = True
-                            # conflictList.append(str(scheduled.ScheduleEntryId))
-                            # delete conflicted schedule entry
-                            # entries_to_delete = ScheduleEntry.objects.filter(TaskId=tasks.TaskId)
-                            # entries_to_delete.delete()
-                            # print("Entries deleted ")
+            # if scheduledList:
+            #     for scheduled in scheduledList:
+            for tugboat in tugBoatList:
+                availability = ifTugBoatAvailable(tugboat, task)
+                if not availability:
+                    conflict = True
+                    # conflictList.append(str(scheduled.ScheduleEntryId))
+                    # delete conflicted schedule entry
+                    # entries_to_delete = ScheduleEntry.objects.filter(TaskId=tasks.TaskId)
+                    # entries_to_delete.delete()
+                    # print("Entries deleted ")
             
             if not conflict:
                 response = JsonResponse({'success': True})
@@ -422,6 +478,7 @@ class ManualScheduleView(View):
         except Exception as e:
             print(e)
             return JsonResponse({'error': str(e)}, status=400)
+            
         
 @method_decorator(csrf_exempt, name='dispatch')
 class AutoScheduleView(View):
