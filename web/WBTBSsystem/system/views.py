@@ -228,7 +228,29 @@ class UpdateScheduleEntryView(View):
                 return JsonResponse({'error': 'ScheduleEntry not found'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-            
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PublishView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            timeStampStr = data.get('timeStamp')
+            print(timeStampStr)
+            if timeStampStr:
+                timeStamp = parse_datetime(timeStampStr)
+                if timeStamp and not timeStamp.tzinfo:
+                    timeStamp = make_aware(timeStamp, get_default_timezone())
+                timeStamp = timeStamp.astimezone(get_default_timezone())
+                timeStamp = timeStamp.replace(second = 0,microsecond = 0, tzinfo=None)
+            else:
+                timeStamp = None
+            for entry in ScheduleEntry.objects.all():
+                entry.PublishTime = timeStamp
+                entry.save()
+            return JsonResponse({'success': True, 'message': 'Entries publisheded successfully.'})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e), 'success': False})
         
 @method_decorator(csrf_exempt, name='dispatch')
 class SaveNewTaskView(View):

@@ -1,5 +1,6 @@
 <template>
     <div id="TaskManager">
+        <div class="progress-bar" :class="{ 'progress-bar-active': showProgressBar }"></div>
         <SideBar />
         <div class="pages" @click="toggle">
             <router-view />
@@ -172,7 +173,7 @@
 
                             <td class="work-status"> <span class="status-container" :style="getStatusStyle(entry.Status)">{{entry.Status}} </span></td>
 
-                            <td class="publish-time">{{entry.publishTime}}</td>
+                            <td class="publish-time">{{formatTime(entry.PublishTime)}}</td>
                         </tr>
 <!-- --Unscheduled--------------------------------------------------------------------------------------------------------- -->
                         <tr v-for="(task, index) in taskList()" :key="index">
@@ -303,6 +304,7 @@ export default {
             workTypeInput: '',
             statusInput: '',
             selectedTasks: [],
+            showProgressBar: false,
         }
     },
     methods: {
@@ -312,17 +314,20 @@ export default {
             }
             return false
         },
-        schedule() {
-            //this.$router.push({name: 'AutoReschedule'})
-            axios.post('http://localhost:8000/api/auto-schedule', {})
-            .then(response => {
+        async schedule() {
+            this.showProgressBar = true;
+            try {
+                const response = await axios.post('http://localhost:8000/api/auto-schedule', {});
                 console.log(response.data);
-                alert("Schedule operation successful!");
-            })
-            .catch(error => {
+                
+            } catch (error) {
                 console.error("Error during schedule operation: ", error);
                 alert("Schedule operation failed, check logs for details.");
-            });
+            }
+            setTimeout(() => {
+                this.showProgressBar = false;
+                alert("Schedule operation successful!");
+            }, 2000);
         },
         importTaskData(){
             let input = document.getElementById('import-task-data');
@@ -380,8 +385,18 @@ export default {
                 alert("Failed to publish data, check logs for details.");
             });
         },
-        publish(){
-
+        async publish(){
+            const currentTime = new Date().toISOString();
+            try {
+                const response = await axios.post('http://localhost:8000/api/update-publish-time', { 
+                    timeStamp: currentTime
+                });
+                console.log(response.data);
+                alert('Publish Successfully');
+            } catch (error) {
+                console.error(error);
+                alert('Publish Successfully');
+            }
         },
         countryList(){
             const country = [...new Set(this.$store.state.containerBoats.map(boat => boat.Country))];
@@ -594,6 +609,47 @@ export default {
  
 .job button:hover {
     background: lightgrey;
+}
+
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+}
+.filter{
+    display: flex;
+    /* flex-direction: column; */
+    font-size: var(--font-size);
+    border: 2px solid grey;
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.filter select{
+    border: none;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background-color: #409BBF;
+  position: fixed;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+}
+
+.progress-bar-active {
+  width: 100%;
+  visibility: visible;
+  animation: progressBarAnimation 2s linear forwards;
+}
+
+@keyframes progressBarAnimation {
+  from { width: 0; }
+  to { width: 100%; }
 }
 
 form {
