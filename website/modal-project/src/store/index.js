@@ -79,49 +79,49 @@ const store = createStore({
 
     actions:{
         fetchCaptains({ commit }) {
-            axios.get('http://localhost:8000/api/display_captain/')
+            axios.get('/api/display_captain/')
               .then(response => {
                 commit('setCaptains', response.data);
               })
               .catch(error => console.error(error));
         },
         fetchTasks({ commit }) {
-            axios.get('http://localhost:8000/api/display_task/')
+            axios.get('/api/display_task/')
               .then(response => {
                 commit('setTasks', response.data);
               })
               .catch(error => console.error(error));
         },
         fetchSchedulers({ commit }) {
-            axios.get('http://localhost:8000/api/display_scheduler/')
+            axios.get('/api/display_scheduler/')
               .then(response => {
                 commit('setSchedulers', response.data);
               })
               .catch(error => console.error(error));
         },
         fetchBerths({ commit }) {
-            axios.get('http://localhost:8000/api/display_berth/')
+            axios.get('/api/display_berth/')
               .then(response => {
                 commit('setBerths', response.data);
               })
               .catch(error => console.error(error));
         },
         fetchContainerBoats({ commit }) {
-            axios.get('http://localhost:8000/api/display_container_boat/')
+            axios.get('/api/display_container_boat/')
               .then(response => {
                 commit('setContainerBoats', response.data);
               })
               .catch(error => console.error(error));
         },
         fetchScheduleEntries({ commit }) {
-          axios.get('http://localhost:8000/api/display_schedule_entry/')
+          axios.get('/api/display_schedule_entry/')
             .then(response => {
               commit('setScheduleEntries', response.data);
             })
             .catch(error => console.error(error));
         },
         fetchTugBoats({ commit }) {
-          axios.get('http://localhost:8000/api/display_tugboat/')
+          axios.get('/api/display_tugboat/')
             .then(response => {
               commit('setTugBoats', response.data);
             })

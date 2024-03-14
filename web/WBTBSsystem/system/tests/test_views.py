@@ -1,23 +1,3 @@
-# import json
-# from django.test import TestCase, Client
-# from django.urls import reverse
-# from django.contrib.auth.models import User
-
-# class LoginViewTest(TestCase):
-#     def setUp(self):
-#         self.client = Client()
-#         self.user = User.objects.create_user(username='testuser', password='scy12345')
-#         self.login_url = reverse('login')
-
-#     def test_login_valid(self):
-#         data = json.dumps({'username': 'testuser', 'password': 'scy12345'})
-#         response = self.client.post(self.login_url, data, content_type='application/json')
-#         self.assertEqual(response.status_code, 200)
-
-#     def test_login_invalid(self):
-#         data = json.dumps({'username': 'wrong', 'password': 'wrong'})
-#         response = self.client.post(self.login_url, data, content_type='application/json')
-#         self.assertEqual(response.status_code, 401)
 from django.test import TestCase, Client
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from ..models import Captain, Scheduler, TugBoat, ContainerBoat, Task, ScheduleEntry

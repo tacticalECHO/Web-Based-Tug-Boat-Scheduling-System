@@ -50,7 +50,7 @@ export default {
             this.$router.back();
         },
         async confirm() {
-            const apiUrl = 'http://127.0.0.1:8000/api/create-user/';
+            const apiUrl = '/api/create-user/';
             try {
                 const response = await axios.post(apiUrl, {
                 username: this.username,

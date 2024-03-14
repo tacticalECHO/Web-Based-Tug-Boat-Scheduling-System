@@ -40,7 +40,7 @@ export default {
     methods: {
         async add(){
             try { 
-                const response = await axios.post('http://localhost:8000/api/update-tugboat/', {
+                const response = await axios.post('/api/update-tugboat/', {
                     tugboatId: this.tugboatId,
                     captainId: this.captainId,
                     startTime: this.startTime,

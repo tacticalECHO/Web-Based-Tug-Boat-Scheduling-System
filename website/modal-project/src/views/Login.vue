@@ -2,7 +2,7 @@
     <div id = "Login">
         <div class="sidebar"> 
         <!-- Add your image here -->
-        <img src="\images\login.png" alt="Sidebar Image">
+        <img src="@/assets/login.png" alt="Sidebar Image">
         <div class="image-text">
           <div class="text-wrapper">
             <p>Ningbo Harbour</p>
@@ -45,7 +45,7 @@ data() {
 methods: {
   async login() {
     try {
-      const response = await axios.post('http://localhost:8000/api/login/', {
+      const response = await axios.post('/api/login/', {
         username: this.username,
         password: this.password,
       });
