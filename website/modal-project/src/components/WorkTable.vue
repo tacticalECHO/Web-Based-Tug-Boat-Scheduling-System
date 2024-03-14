@@ -119,7 +119,7 @@ export default {
             const newState = this.state;
             const currentTime = new Date().toISOString();
             try {
-                const response = await axios.post('http://localhost:8000/api/update-schedule-entry', { 
+                const response = await axios.post('/api/update-schedule-entry', { 
                     entryId: entryId,
                     newState: newState,
                     timeStamp: currentTime

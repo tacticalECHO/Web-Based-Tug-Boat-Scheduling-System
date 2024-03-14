@@ -67,7 +67,7 @@ export default {
     methods: {
         async save(){
             try { 
-                const response = await axios.post('http://localhost:8000/api/save-newtask/', {
+                const response = await axios.post('/api/save-newtask/', {
                 containerBoatId: this.containerBoatId,
                 time: this.time,
                 tonnage: this.tonnage,

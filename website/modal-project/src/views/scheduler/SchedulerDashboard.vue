@@ -311,7 +311,7 @@ export default {
     methods: {
         async deleteSelected() {
             if (this.selectedTasks.length > 0) {
-                await fetch(`http://127.0.0.1:8000/api/tasks-delete/`, {
+                await fetch(`/api/tasks-delete/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -321,7 +321,7 @@ export default {
             }
 
             if (this.selectedScheduleEntries.length > 0) {
-                await fetch(`http://127.0.0.1:8000/api/scheduleentries-delete/`, {
+                await fetch(`/api/scheduleentries-delete/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -345,7 +345,7 @@ export default {
         async schedule() {
             this.showProgressBar = true;
             try {
-                const response = await axios.post('http://localhost:8000/api/auto-schedule', {});
+                const response = await axios.post('/api/auto-schedule', {});
                 console.log(response.data);
                 
             } catch (error) {
@@ -366,7 +366,7 @@ export default {
                 }
                 let formData = new FormData();
                 formData.append('task_data', file);
-                axios.post('http://localhost:8000/api/upload-task-data', formData, {
+                axios.post('/api/upload-task-data', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -389,7 +389,7 @@ export default {
                 }
                 let formData = new FormData();
                 formData.append('tugboat_data', file);
-                axios.post('http://localhost:8000/api/upload-tug-boat-data', formData, {
+                axios.post('/api/upload-tug-boat-data', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -404,7 +404,7 @@ export default {
             input.click();
         },
         download(){
-            axios.post('http://localhost:8000/api/publish-data')
+            axios.post('/api/publish-data')
             .then(response => {
                 console.log(response.data.message);
                 alert("Published success!");
@@ -416,7 +416,7 @@ export default {
         async publish(){
             const currentTime = new Date().toISOString();
             try {
-                const response = await axios.post('http://localhost:8000/api/update-publish-time', { 
+                const response = await axios.post('/api/update-publish-time', { 
                     timeStamp: currentTime
                 });
                 console.log(response.data);
@@ -503,7 +503,7 @@ export default {
         },
         async edit(taskId, entryId, tugBoat) {
             try { 
-                const response = await axios.post('http://localhost:8000/api/update-entry-task/', {
+                const response = await axios.post('/api/update-entry-task/', {
                     entryId: entryId,
                     taskId: taskId,
                     plannedTime: this.plannedTime,
@@ -531,7 +531,7 @@ export default {
         },
         async manualSchedule(taskId){
             try { 
-                const response = await axios.post('http://localhost:8000/api/manual-schedule/', {
+                const response = await axios.post('/api/manual-schedule/', {
                     taskId: taskId,
                     tugBoatList: this.listOfTugBoat,
                 });
@@ -554,7 +554,7 @@ export default {
         async getTugBoatStyle(tugBoatId){
             // const tugBoat = entry.listOfTugBoats.find(tug => tug.TugBoatId === tugBoatId);
             try { 
-                const response = await axios.post('http://localhost:8000/api/tugboat-availability', {
+                const response = await axios.post('/api/tugboat-availability', {
                     tugboatId: tugBoatId,
                 });
                 if (response.data.success) {

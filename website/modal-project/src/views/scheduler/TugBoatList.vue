@@ -179,7 +179,7 @@ export default {
         },
         async edit(id){
             try { 
-                const response = await axios.post('http://localhost:8000/api/update-tugboat/', {
+                const response = await axios.post('/api/update-tugboat/', {
                     tugboatId: id,
                     captainId: this.captainId,
                     startTime: this.startTime,
