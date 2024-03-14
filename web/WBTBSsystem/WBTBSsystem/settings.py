@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    #"system",
+    "WBTBSsystem",
     "corsheaders",
     "rest_framework",
 ]
@@ -48,14 +48,26 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware", 
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HOST = ['*']
+CORS_ORIGIN_WHITELIST = ['http://10.176.*.151:8080','http://localhost:8080','http://0.0.0.0:8080']
+CORS_ALLOW_METHODS  =  [ 
+	    'DELETE',
+	    'GET' ,
+	    'OPTIONS' ,
+	    'PATCH' ,
+	    'POST' ,
+	    'PUT' ,
+	    
+	]
 ROOT_URLCONF = "WBTBSsystem.urls"
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
 

@@ -3,7 +3,7 @@ import os
 import django
 import math
 import sys
-sys.path.append('web\WBTBSsystem')
+sys.path.append('web\\WBTBSsystem')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
 from system.models import ContainerBoat, Task, Berth, ScheduleEntry
@@ -22,7 +22,7 @@ def DataTOExcel():
             tugboatlist+=ScheduleEntryList[i].listOfTugBoats.all()[j].TugBoatId+"\n"
         data.append([ScheduleEntryList[i].TaskId.TaskId,ScheduleEntryList[i].TaskId.ContainerBoatID.ContainerBoatID,ScheduleEntryList[i].TaskId.Action,ScheduleEntryList[i].TaskId.BerthId,ScheduleEntryList[i].Status,ScheduleEntryList[i].PublishTime,ScheduleEntryList[i].StartTime,ScheduleEntryList[i].EndTime,tugboatlist])
     df = pd.DataFrame(data, columns=["TaskId","ContainerBoatID","Action","BerthId","Status","PublishTime","StartTime","EndTime","listOfTugBoats"])
-    df.to_excel("system\downloads\\testOut.xlsx",index=False)
+    df.to_excel("system\\downloads\\testOut.xlsx",index=False)
     return
 
 def main():
