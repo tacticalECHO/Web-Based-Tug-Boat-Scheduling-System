@@ -80,8 +80,7 @@ class DeleteTasksView(View):
            
             print(tasks)
             for task in tasks:
-                if task.ContainerBoatID:
-                    task.ContainerBoatID.delete()
+                task.delete()
 
             return JsonResponse({'message': 'Tasks deleted successfully'}, status=200)
         except Exception as e:
@@ -103,7 +102,7 @@ class DeleteScheduleEntriesView(View):
                 if task.TaskId:
                     task.TaskId.delete()
 
-            return JsonResponse({'message': 'Tasks deleted successfully'}, status=200)
+            return JsonResponse({'message': 'Schedules deleted successfully'}, status=200)
         except Exception as e:
 
             print(f"Error deleting tasks: {str(e)}")
@@ -305,7 +304,7 @@ class UpdateTugBoatView(View):
             status = data.get('status')
             message = ''
 
-            if captainId is not None and captainId is not '':
+            if captainId is not None and captainId != '':
                 captainId = str(captainId.split()[0])
                 # Get the Captain object
                 captain = Captain.objects.get(CaptainId=captainId)
@@ -443,7 +442,6 @@ class ManualScheduleView(View):
             task = Task.objects.filter(TaskId=taskId).first()
             scheduleEntry = ScheduleEntry.objects.create(
                 TaskId = task,
-                PublishTime = "2024-01-01 00:00",
                 Status = "Scheduled",
                 )
             scheduleEntry.listOfTugBoats.set(tugBoatList)
@@ -647,16 +645,26 @@ class TugBoatViewSet(viewsets.ModelViewSet):
         queryset = TugBoat.objects.all()
         
         # Check if you want to filter the queryset
-        should_filter = self.request.query_params.get('filter', True)
+        taskId = self.request.query_params.get('taskId')
         
-        if should_filter:
-            filtered_tugboats = []
-            manual_tasks = Task.objects.filter(TaskManual=1)
-            all_tasks = Task.objects.all()
-            for task in all_tasks:
-                if task not in manual_tasks:
-                    filtered_tugboats.extend([tugboat for tugboat in queryset if ifTugBoatAvailable(tugboat, task)])
-            return filtered_tugboats
-        print("here:"+str(filtered_tugboats))
+        if taskId is not None:
+            task = Task.objects.get(TaskId=taskId)
+            disabled_tugboats = set()
+            filtered_tugboats = set()
+            all_entries = ScheduleEntry.objects.all()
+            for entry in all_entries:
+                if entry.TaskId.TaskManual == 1 and entry.Status != 'Completed':
+                    tugboatList = entry.listOfTugBoats.all()
+                    for tugboat in tugboatList:
+                        if not ifTugBoatAvailable(tugboat, task):
+                            disabled_tugboats.add(tugboat)
+                
+            # print("disabled: "+str(disabled_tugboats))
+            for tugboat in queryset:
+                if tugboat not in disabled_tugboats:
+                    filtered_tugboats.add(tugboat)
+
+            # print(str(filtered_tugboats))
+            queryset = filtered_tugboats
         
         return queryset

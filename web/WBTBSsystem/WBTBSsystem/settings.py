@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-_ml40*zi3br2(8k49a$l2pik6_mcbd%!$9@#clr8fk7-597jy@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -62,7 +62,8 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR,'system/templates')],
+        "DIRS": [os.path.join(BASE_DIR,'system/templates'),
+                 os.path.join(BASE_DIR,'dist')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -117,14 +118,17 @@ TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "dist/static"),
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

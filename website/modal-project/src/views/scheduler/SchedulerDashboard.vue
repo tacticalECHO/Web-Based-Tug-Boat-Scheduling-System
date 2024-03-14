@@ -73,7 +73,7 @@
                     </span>
                 </div>
                 <span>
-                    <button class="blue-border-button" id="delete" @click="redirect('')">Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                    <button class="blue-border-button" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
                     &nbsp;
                     <button class="blue-border-button" id="add" @click="redirect('NewTask')">Add  + </button>
                 </span>
@@ -106,7 +106,7 @@
 <!-- --Scheduled / Confirmed--------------------------------------------------------------------------------------------------------- -->
                         <tr v-for="(entry,index) in entryList('Incomplete')" :key="index">
 
-                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
+                            <td><input type="checkbox" :id="'mycheckbox' + entry.ScheduleEntryId" :name='myCheckbox' v-model="selectedScheduleEntries" :value="entry.TaskId.TaskId"></td>
 
                             <!-- <td class="number"> {{index+1}} </td> -->
                             <td class="number"> {{entry.ScheduleEntryId}} </td>
@@ -136,22 +136,22 @@
 
                             <td @click.stop>
                                 <span v-for="tugBoats in entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId)" :key="tugBoats">
-                                    <span @click="tugBoatSelected(entry.ScheduleEntryId, tugBoats)"  v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != tugBoats">
+                                    <span @click="selectAndGetTugBoat(entry.ScheduleEntryId, tugBoats, entry.TaskId.TaskId)" v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != tugBoats">
                                         <span>{{ tugBoats }} / </span>
                                     </span>
                                     <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === tugBoats">
                                         <select @change="edit(entry.TaskId.TaskId, entry.ScheduleEntryId, tugBoats)" v-model="tugBoat">
                                             <option value=""></option>
-                                            <option v-for="tugboat in changeTugboatList()" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
+                                            <option v-for="tugboat in filteredTugBoats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
                                         </select>
                                     </form>
                                 </span>
-                                <span @click="tugBoatSelected(entry.ScheduleEntryId, 'add')" v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != 'add'">
+                                <span @click="selectAndGetTugBoat(entry.ScheduleEntryId, 'add', entry.TaskId.TaskId)" v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != 'add'">
                                     <font-awesome-icon :icon="['fas', 'circle-plus']" id="add-tugboat"/>
                                 </span>
                                 <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === 'add'">
                                     <select @change="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)" v-model="tugBoat">
-                                        <option v-for="tugboat in  changeTugboatList()" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
+                                        <option v-for="tugboat in filteredTugBoats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
                                     </select>
                                 </form>
                             </td>
@@ -177,7 +177,7 @@
                         </tr>
 <!-- --Unscheduled--------------------------------------------------------------------------------------------------------- -->
                         <tr v-for="(task, index) in taskList()" :key="index">
-                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
+                            <td><input type="checkbox" :id="'myCheckbox' + task.TaskId" :name="myCheckbox" v-model="selectedTasks" :value="task.TaskId"></td>
 
                             <td class="number"> {{index+1}} </td>
 
@@ -205,12 +205,12 @@
                             </td>
 
                             <td @click.stop class="disabled-column">
-                                <span @click="selected('task'+task.TaskId, 'tugBoat')" v-if="tugBoatInfo != 'task'+task.TaskId">
+                                <span @click="addSelected('task'+task.TaskId, 'tugBoat',task.TaskId)" v-if="tugBoatInfo != 'task'+task.TaskId">
                                     <font-awesome-icon :icon="['fas', 'circle-plus']" id="add-tugboat"/>
                                 </span>
                                 <form v-if="tugBoatInfo === 'task'+task.TaskId" @submit.prevent="manualSchedule(task.TaskId)">
                                     <select multiple v-model="listOfTugBoat">
-                                        <option v-for="tugboat in changeTugboatList()" :key="tugboat.TugBoatId">
+                                        <option v-for="tugboat in filteredTugBoats" :key="tugboat.TugBoatId">
                                             <!-- <span :style="getTugBoatStyle(tugboat.TugBoatId)"> -->
                                                 {{ tugboat.TugBoatId }}
                                             <!-- </span> -->
@@ -250,7 +250,7 @@
                         </tr>
 <!-- --Completed---------------------------------------------------------------------------------------------------------- -->
                         <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
-                            <td><input type="checkbox" id="myCheckbox" name="myCheckbox"></td>
+                            <td><input type="checkbox" :id="'myCheckbox' + entry.TaskId" :name="myCheckbox" v-model="selectedTasks" :value="entry.TaskId.TaskId"></td>
                             <td class="number"> {{index+1}} </td>
                             <td>{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</td>
                             <td>{{entry.TaskId.ContainerBoatID.ContainerBoatID}}</td>
@@ -287,6 +287,7 @@ export default {
     },
     data() {
         return {
+            taskId: null,
             tugBoatIndex: null,
             tugBoatInfo: null,
             timeInfo: null,
@@ -304,11 +305,39 @@ export default {
             workTypeInput: '',
             statusInput: '',
             selectedTasks: [],
+            selectedScheduleEntries: [],
             showProgressBar: false,
             filteredTugBoats: [],
         }
     },
     methods: {
+        async deleteSelected() {
+            if (this.selectedTasks.length > 0) {
+                await fetch(`http://127.0.0.1:8000/api/tasks-delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ids: this.selectedTasks })
+                });
+            }
+
+            if (this.selectedScheduleEntries.length > 0) {
+                await fetch(`http://127.0.0.1:8000/api/scheduleentries-delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ids: this.selectedScheduleEntries })
+                });
+            }
+
+            this.$store.dispatch('fetchTasks');
+            this.$store.dispatch('fetchScheduleEntries');
+
+            this.selectedTasks = [];
+            this.selectedScheduleEntries = [];
+        },
         waiting(){
             if(this.$store.state.tasks.length === 0){
                 return true
@@ -434,17 +463,32 @@ export default {
                 return byCountry && byContainerBoatId && byTugBoatId && byBerthId && byWorkType && byStatus && unscheduled;
             });
         },
-        async changeTugboatList() {
+        changeTugboatList(taskId) {
+            this.getTugboatList(taskId)
+                .then(data => {
+                    this.filteredTugBoats = data;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            return this.filteredTugBoats
+        },
+        async getTugboatList(taskId) {
             try {
                 const response = await axios.get('http://localhost:8000/api/display_tugboat/', {
                     params: {
-                        filter: true
+                        taskId: taskId
                     }
                 });
-                return response.data;
+                if(response.data){
+                    return response.data;
+                }else{
+                    alert('Failed to Fetch Available Tug Boats');
+                    return [];
+                }
             } catch (error) {
                 console.error(error);
-                throw error; // Re-throw the error to handle it elsewhere if needed
+                alert('Error Fetching Available Tug Boats');
             }
         },
         resetNull() {
@@ -556,7 +600,14 @@ export default {
                 console.error('Get tugboat availability error: ', error);
             }
         },
-
+        selectAndGetTugBoat(entryId, tugboats, taskId){
+            this.tugBoatSelected(entryId, tugboats)
+            this.changeTugboatList(taskId)
+        },
+        addSelected(task, tugboat, taskId){
+            this.selected(task, tugboat);
+            this.changeTugboatList(taskId)
+        }
     }
 }
 </script>
