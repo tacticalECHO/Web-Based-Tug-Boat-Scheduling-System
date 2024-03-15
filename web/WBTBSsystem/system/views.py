@@ -246,7 +246,7 @@ class PublishView(View):
             for entry in ScheduleEntry.objects.all():
                 entry.PublishTime = timeStamp
                 entry.save()
-            return JsonResponse({'success': True, 'message': 'Entries publisheded successfully.'})
+            return JsonResponse({'success': True, 'message': 'Entries published successfully.'})
         except Exception as e:
             print(e)
             return JsonResponse({'error': str(e), 'success': False})
