@@ -3,14 +3,15 @@
         <SideBar />
         <div class="pages">
             <div class="header-style">
-                <div class="header-style">
+                <div class="header-style title">
                     <h2>Today Work</h2>
                     <button id="download"><font-awesome-icon :icon="['fas', 'download']" /></button>
                 </div>
                 <MessageButton />
             </div>
+            <br><br><br><br>
+            <WorkTable />
         </div>
-        <WorkTable />
     </div>
 </template>
 
@@ -30,7 +31,6 @@ export default {
 #download {
     border: none;
     margin-left: 10px;
-    margin-top: 15px;
     border-radius: 50%;
     height: 35px;
     width: 35px;
@@ -38,6 +38,6 @@ export default {
 }
 
 #download:hover {
-    border: 1px solid lightgrey;
+    border: 2px solid black;
 }
 </style>

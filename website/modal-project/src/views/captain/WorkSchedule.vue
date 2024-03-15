@@ -2,7 +2,8 @@
     <div id="WorkSchedule">
         <SideBar />
         <div class="pages">
-            <h2>Work Schedules</h2>
+            <h2 class="title">Work Schedules</h2>
+            <br><br><br>
             <div class="header-style" >
                 <div class ="filter-group">
                     <span class="filter">
@@ -37,7 +38,10 @@
                     </span>
                 </div>
             </div>
-            <div v-if="waiting()" class="waiting">Waiting ... </div>
+            <div v-if="waiting()">
+                <span>Waiting &nbsp;</span>
+                <span class="spinner-border spinner-border-sm" role="status"></span>
+            </div>
             <div v-if="!waiting()" class="display-data">
                 <div class="work-table">
                     <table>
@@ -133,7 +137,7 @@ export default {
                 const byContainerBoatId = this.containerBoatInput ? entry.TaskId.ContainerBoatID.ContainerBoatID.toString() === this.containerBoatInput : true;
                 const byTugBoatId = this.tugBoatInput ? entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).includes(this.tugBoatInput) : true;
                 const byBerthId = this.berthInput ? entry.TaskId.BerthId.toString() === this.berthInput : true;
-                const byState = this.stateInput ? entry.State === this.stateInput : true;
+                const byState = this.stateInput ? entry.Status === this.stateInput : true;
                 const byCompleted = entry.Status === 'Completed';
 
                 return byContainerBoatId && byTugBoatId && byBerthId && byState && (isCompleted ? byCompleted : !byCompleted);

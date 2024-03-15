@@ -1,5 +1,8 @@
 <template>
     <div id="Sidebar"> 
+        <div class="header">
+            <img src="../assets/header.jpg" class="header-image">
+        </div>
         <div v-if="screen() || sidebarOpened" id="sidebar">
             <h2>Ningbo Harbour</h2>
             <ul>
@@ -41,6 +44,11 @@
         </div>
         <button class="blue-border-button" @click="openSidebar()" v-if="!screen()" id="open-sidebar"><font-awesome-icon :icon="['fas', 'forward']" /></button>
         <button class="blue-border-button" @click="closeSidebar()" v-if="sidebarOpened && closeButton()" id="close-sidebar"><font-awesome-icon :icon="['fas', 'backward']" /></button>
+        <footer class="footer fixed-bottom">
+            <div class="text-center p-3">
+                NINGBO HARBOUR
+            </div>
+        </footer>
     </div>
     
 </template>
@@ -107,36 +115,63 @@ export default {
 </script>
 
 <style scoped>
-#Sidebar {
+.header {
     top: 0;
+    z-index: -9999;
+    position: absolute;
+}
+
+.header-image {
+    height: 200px;
+    width: 100vw;
+    object-fit: cover;
+    opacity: 0.8;
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent);
+        mask-image: linear-gradient(to bottom, black 60%, transparent);
+}
+
+.footer{
+    height: 45px;
+    background-color: linear-gradient(to top, transparent, black);
+}
+
+.text-center.p-3 {
+    letter-spacing: 10px;
+    color: lightgrey;
+    font-size: 0.8em;
+}
+
+#Sidebar {
     z-index: 9999;
 }
 
 #close-sidebar {
-    margin-left: 195px;
+    margin-left: 200px;
     padding: 10px;
     cursor: pointer;
     z-index: 99999;
     position: fixed;
+    top: 0;
 }
 
 #open-sidebar {
     z-index: 9998;
     position: fixed;
+    top: 0;
+    left: 0;
 }
 
 #sidebar {
+    top: 0;
+    padding-top: 2em;
     z-index: 9999;
     width: 200px;
     background-color: white;
-    border-right: 1px solid grey;
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    margin-top: 0px;
     position: fixed;
     height: 100%;
     color: black;
-    top: 0;
-    left: 0;
     overflow-x: hidden;
     overflow-y: hidden;
 }

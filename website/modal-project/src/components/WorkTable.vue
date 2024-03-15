@@ -1,6 +1,9 @@
 <template>
-    <div id="work-table" class="pages">
-        <div v-if="waiting()" class="waiting">Waiting ... </div>
+    <div id="work-table">
+        <div v-if="waiting()">
+            <span>Waiting &nbsp;</span>
+            <span class="spinner-border spinner-border-sm" role="status"></span>
+        </div>
         <table v-if="!waiting()">
             <thead>
                 <tr>

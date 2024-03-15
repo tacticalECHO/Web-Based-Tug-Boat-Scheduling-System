@@ -22,7 +22,7 @@ export default {
 }
 
 #message {
-    background-color: #8BC7DF;
+    background: white;
     border-radius: 50%;
     height: 40px;
     width: 40px;

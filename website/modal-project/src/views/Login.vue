@@ -24,7 +24,7 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" v-model="password" placeholder="Input your password">
                 </div>
-                <button class="blue-button" @click="login()">Login</button>
+                <button class="btn btn-dark" @click="login()">Login</button>
             <!-- </form> -->
         </div>
     </div>

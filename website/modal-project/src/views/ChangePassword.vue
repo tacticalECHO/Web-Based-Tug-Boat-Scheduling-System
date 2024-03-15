@@ -3,7 +3,8 @@
         <SideBar />
         <div class="pages">
             <router-view />
-            <h3>Settings</h3>
+            <h3 class="title">Settings</h3>
+            <br><br><br><br>
                 <div class = "form">
                     <b><label for="username">Username  </label></b>
                     &nbsp;  
@@ -23,8 +24,8 @@
                 </div>
             </div>
             <div class="cancel-save-buttons">
-                <button class="grey-border-button" id="cancel" @click="redirect('Exit-ChangePassword')">Cancel</button>
-                <button class="blue-button" id="save" @click="save()">Save</button>
+                <button class="btn btn-outline-dark" id="cancel" @click="redirect('Exit-ChangePassword')">Cancel</button>
+                <button class="btn btn-dark" id="save" @click="save()">Save</button>
             </div>
     </div>
 </template>

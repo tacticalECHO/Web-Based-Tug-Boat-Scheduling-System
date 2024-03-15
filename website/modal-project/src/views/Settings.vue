@@ -3,7 +3,8 @@
         <SideBar />
         <div class="pages">
             <router-view/>
-            <h2>Settings</h2>
+            <h2 class="title">Settings</h2>
+            <br><br><br><br>
             <div class = "form">
                 <b><label for="username">Username  </label></b>
                 &nbsp; 
@@ -13,9 +14,9 @@
                 <b><label for="password">Password  </label></b>
                 &nbsp; 
                 <input type="password" id="password" v-model="password" :placeholder="passwordPlaceholder" readonly>
-                <button class="grey-border-button" @click="change_password()">Change</button>
+                <button class="btn btn-dark" @click="change_password()">Change</button>
             </div>
-            <button class="blue-button" @click="redirect('Login')">Logout</button>
+            <button class="btn btn-light" @click="redirect('Login')">Logout</button>
         </div>
     </div>
 </template>

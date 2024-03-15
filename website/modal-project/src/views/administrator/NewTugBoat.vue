@@ -2,7 +2,7 @@
     <div class="backdrop">
         <div class="container-position">
             <form class="popup-container">
-                <button @click="redirect('TugBoatList')">X</button>
+                <button class="close-btn" @click="redirect('TugBoatList')">X</button>
                 <br/>
                 <div class = "form">
                     <div class="form-group">
@@ -15,7 +15,6 @@
                             <option></option>
                             <option v-for="captain in $store.state.captains" :key="captain.CaptainId">{{ captain.CaptainId }} : {{ captain.name }}</option>
                         </select>
-                        <input class="submit-button" type="submit" />
                     </div>
                     <div class="form-group">
                         <b><label for="startTime">Working Hours</label></b>
@@ -23,7 +22,7 @@
                     </div>
                 </div>
                 <br>
-                <button class="blue-button" id="confirm" @click="add()">Add</button>
+                <button class="btn btn-dark" id="confirm" @click="add()">Add</button>
                 <br/> 
             </form>
         </div>
@@ -90,19 +89,11 @@ export default {
     align-self: center;
 }
 
-button {
-    width: 30px;
-    height: 30px;
-    border: none;
-    font-size: 15px;
-}
-
-.blue-button {
+.btn {
     align-self: center;
     width: 130px;
     height: 40px;
     font-size: 13px;
-    margin-top: 20px;
 }
 
 .popup-container {

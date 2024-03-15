@@ -1,29 +1,26 @@
 <template>
     <div id="TaskManager">
+        
         <div class="progress-bar" :class="{ 'progress-bar-active': showProgressBar }"></div>
         <SideBar />
         <div class="pages" @click="toggle">
             <router-view />
-            <div class="header-style">
-                <h2>My Dashboard</h2>
-                <span class="message-container">
-                    <button id="message" @click="message()"><font-awesome-icon :icon="['fas', 'bell']" /></button>
-                </span>
-            </div>
+            <h2 class="title">Your Dashboard</h2>
+            <MessageButton />
             <div class="job buttons-container">
-                <button id="schedule" @click="schedule()">Schedule <font-awesome-icon :icon="['fas', 'calendar-day']" /></button>
+                <button class="btn btn-dark" id="schedule" @click="schedule()">Schedule <font-awesome-icon :icon="['fas', 'calendar-day']" /></button>
                 <br><br><br>
                 <input type="file" id="import-task-data"/>
-                <label for="import-task-data"><button @click="importTaskData()">Import Task Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
+                <label for="import-task-data"><button id="import-task" class="btn btn-light" @click="importTaskData()">Import Task Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
                 <br><br><br>
                 <input type="file" id="import-tugboat-data"/>
-                <label for="import-tugboat-data"><button @click="importTugboatData()">Import Tug Boat Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
+                <label for="import-tugboat-data"><button id="import-tugboat" class="btn btn-light" @click="importTugboatData()">Import Tug Boat Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
                 <br><br><br>
-                <button id="download" @click="download()">Download <font-awesome-icon :icon="['fas', 'download']" /></button>
+                <button class="btn btn-light" id="download" @click="download()">Download <font-awesome-icon :icon="['fas', 'download']" /></button>
                 <br><br><br>
-                <button class="blue-button" id="publish" @click="publish()">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
+                <button class="btn btn-outline-dark" id="publish" @click="publish()">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
             </div>
-            <div class="header-style" >
+            <div class="header-style" id="filter-section">
                 <div class ="filter-group">
                     <span class="filter">
                         <label for="containerBoatFilter">Container Boat: </label>
@@ -73,12 +70,12 @@
                     </span>
                 </div>
                 <span>
-                    <button class="blue-border-button" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                    <button class="btn btn-light" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
                     &nbsp;
-                    <button class="blue-border-button" id="add" @click="redirect('NewTask')">Add  + </button>
+                    <button class="btn btn-dark" id="add" @click="redirect('NewTask')">Add  + </button>
                 </span>
             </div>
-            <div v-if="waiting()" class="waiting">No Task Available</div>
+            <div v-if="waiting()">No Task Available</div>
             <div v-if="!waiting()" class="table-container">
                 <table>
                     <thead>
@@ -273,11 +270,12 @@
 
 <script>
 import SideBar from '@/components/SideBar.vue';
+import MessageButton from '@/components/MessageButton.vue';
 import axios from 'axios';
 
 export default {
     name: 'WorkSchedule',
-    components: {SideBar},
+    components: {SideBar, MessageButton},
     mounted() {
         this.$store.dispatch('fetchScheduleEntries');
         this.$store.dispatch('fetchTasks');
@@ -339,7 +337,7 @@ export default {
             this.selectedScheduleEntries = [];
         },
         waiting(){
-            if(this.$store.state.tasks.length === 0){
+            if(this.$store.state.scheduleEntries.length === 0 && this.$store.state.tasks.length === 0){
                 return true
             }
             return false
@@ -475,7 +473,7 @@ export default {
         },
         async getTugboatList(taskId) {
             try {
-                const response = await axios.get('http://localhost:8000/api/display_tugboat/', {
+                const response = await axios.get('/api/display_tugboat/', {
                     params: {
                         taskId: taskId
                     }
@@ -613,6 +611,49 @@ export default {
 </script>
 
 <style scoped>
+#import-task, #import-tugboat, #download{
+    border: none;
+    height: 48px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: var(--font-size);
+    margin-left: 5px;
+}
+
+#schedule{
+    height: 50px;
+    font-size: var(--font-size);
+    background: black;
+    color: white;
+    font-weight: bold;
+    width: 200px;
+    text-align: center;
+}
+
+#schedule:hover{
+    background: white;
+    color: black;
+    font-size: 1em;
+    transition: font-size 0.5s;
+}
+
+#publish {
+    width: 90px;
+    margin-left: auto;
+    background: white;
+    border-radius: 5px;
+    font-size: var(--font-size);
+}
+
+#publish:hover{
+    background: black;
+    color: white;
+}
+
+.job input {
+    display: none;
+}
+
 #add-tugboat {
     /* color: var(--main-button-color); */
     color: grey;
@@ -629,38 +670,12 @@ export default {
 #Dashboard {
     font-size: 16px;
 }
+
 .buttons-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-}
-#schedule {
-    background-color: #409BBF;
-    color: rgb(255, 255, 255);
-    font-weight: bold;
-    border-radius: 5px;
-}
-#publish {
-    background-color: #8BC7DF;
-    width: 90px;
-    margin-left: auto;
-}
-.job input {
-    display: none;
-}
-.job button:not(#publish) {
-    text-align: left;
-    box-shadow: 0 2px 3px lightgrey;
-    margin-right: 10px;
-    border: none;
-}
-.job button:not(#publish):not(#schedule) {
-    background-color: #C5E6F3;
-}
- 
-.job button:hover {
-    background: lightgrey;
 }
 
 .filter-group {
@@ -712,11 +727,6 @@ form {
     width: fit-content;
 }
 
-button{
-    color: black;
-    border-radius: 20px;
-}
-
 .header-style{
     padding: 10px;
 }
@@ -753,5 +763,9 @@ th, td {
 
 th {
     background-color: #f2f2f2;
+}
+
+#filter-section{
+    margin-top: 1em;
 }
 </style>

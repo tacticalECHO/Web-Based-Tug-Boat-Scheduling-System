@@ -3,27 +3,35 @@
         <SideBar />
         <router-view />
         <div class="pages">
-            <h2>Tug Boat List</h2>
-            <div class="header-style" >
-                <form class="search-form">
-                    <input id="search" type="text" v-model="input" placeholder="Search...">
-                    <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="search-icon" />
-                </form>
+            <h2 class="title">Tug Boat List</h2>
+            <form class="search-form">
+                <input id="search" type="text" v-model="input" placeholder="Search...">
+                <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="search-icon" />
+            </form>
+            <br><br>
+            <div class="header-style">
+                <div class="filter-group">
+                    <span>Status: </span>
+                    <span class="btn-group" role="group" aria-label="Vertical radio toggle button group">
+                        <input type="radio" class="btn-check" name="vbtn-radio" id="All" autocomplete="off" value="" v-model="allStatus" @change="handleChange('')" checked>
+                        <label class="btn btn-outline-dark" for="All">All</label>
+                        
+                        <input type="radio" class="btn-check" name="vbtn-radio" id="Free" autocomplete="off" value="Free" v-model="freeStatus" @change="handleChange('Free')">
+                        <label class="btn btn-outline-dark" for="Free">Free</label>
+                        
+                        <input type="radio" class="btn-check" name="vbtn-radio" id="Busy" autocomplete="off" value="Busy" v-model="busyStatus" @change="handleChange('Busy')" checked>
+                        <label class="btn btn-outline-dark" for="Busy">Busy</label>
+                        
+                        <input type="radio" class="btn-check" name="vbtn-radio" id="Maintenance" autocomplete="off" value="Maintenance" v-model="maintenanceStatus" @change="handleChange('Maintenance')" checked>
+                        <label class="btn btn-outline-dark" for="Maintenance">Maintenance</label>
+                    </span>
+                </div>
                 <span>
-                    <button class="grey-border-button" id="delete" @click="redirect('')">Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                    <button class="btn btn-light" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
                     &nbsp;
-                    <button class="blue-button" id="add" @click="redirect('NewTugBoat')">Add  + </button>
+                    <button class="btn btn-dark" id="add" @click="redirect('NewTugBoat')">Add  + </button>
                 </span>
             </div>
-            
-            <div class="filter-group">
-                <label for="statusFilter">Status: </label>
-                <input type="checkbox" value="" v-model="allStatus" @change="handleChange('')" selected> All
-                <input type="checkbox" value="Free" v-model="freeStatus" @change="handleChange('Free')"> Free
-                <input type="checkbox" value="Busy" v-model="busyStatus" @change="handleChange('Busy')"> Busy
-                <input type="checkbox" value="Maintenance" v-model="maintenanceStatus" @change="handleChange('Maintenance')"> Maintenance
-            </div>
-
             <div class="table-container">
                 <div class="work-table">
                     <table>
@@ -114,6 +122,8 @@ export default {
             startTimeInfo: null,
             endTimeInfo: null,
             statusInfo: null,
+            successAlert: true,
+            successMessage: 'Edit message successful !',
         }
     },
     methods: {
@@ -212,19 +222,28 @@ button{
 }
 
 #search {
-    padding: 10px;
-    border-radius: 20px;
+    padding: 5px;
+    border-radius: 5px;
     border: 1px solid lightgrey;
+    width: 20em;
 }
+
 .search-form {
     position: relative;
     display: inline-block;
 }
+
 .search-icon {
+    color: white;
+    background: black;
+    padding: 9px;
+    border-radius: 5px;
     position: absolute;
-    top: 40%;
-    right: 10px;
+    top: 50%;
+    right: 0.5px;
     transform: translateY(-50%);
 }
-
+.pageName{
+    padding-left: 50px;
+}
 </style>

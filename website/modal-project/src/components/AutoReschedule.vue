@@ -6,7 +6,7 @@
                 <span>It needs some times to schedule the task, please wait.</span>
                 <br/>
                 <span class="notice-buttons">
-                    <button class="blue-button" id="schedule" @click="schedule()">Schedule in backstage</button>
+                    <button class="btn btn-dark" id="schedule" @click="schedule()">Schedule in backstage</button>
                 </span>  
             </div>
         </div>

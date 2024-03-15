@@ -2,23 +2,23 @@
     <div class="backdrop">
         <div class="container-position">
             <div class="popup-container">
-                <button @click="close">X</button>
+                <button @click="close" class="close-btn">X</button>
                 <br/>
                 <font-awesome-icon :icon="['fas', 'user-plus']" :size="['2x']"/>
                 <br/>
                 <div class = "form">
                     <div class="form-group">
                         <b><label for="username">ID</label></b>  
-                        <input type="text" id="username" v-model="username" placeholder="Input staff ID">
+                        <input type="text" id="username" v-model="username" placeholder="Input staff ID" required/>
                     </div>
                     <div class="form-group">
                         <b><label for="name">Name</label></b>
-                        <input type="text" id="name" v-model="name" placeholder="Input staff name">
+                        <input type="text" id="name" v-model="name" placeholder="Input staff name" required/>
                     </div>
                     <div class = "form-group">
                         <b><label for="position">Position</label></b>
                         &nbsp;   
-                        <select id="position" v-model="selectedPosition">
+                        <select id="position" v-model="selectedPosition" required>
                             <option disabled value="" selected>Choose the position</option>
                             <option>Administrator</option>
                             <option>Scheduler</option>
@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <br>
-                <button class="blue-button" id="confirm" @click="confirm()">Confirm</button>
+                <button class="btn btn-dark" id="confirm" @click="confirm()">Confirm</button>
                 <br/> 
             </div>
         </div>
@@ -109,12 +109,11 @@ button {
     font-size: 15px;
 }
 
-.blue-button {
+.btn {
     align-self: center;
     width: 130px;
     height: 40px;
     font-size: 13px;
-    margin-top: 20px;
 }
 
 .popup-container {

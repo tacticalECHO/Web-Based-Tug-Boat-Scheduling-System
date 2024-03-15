@@ -3,12 +3,13 @@
         <SideBar />
         <div class="pages">
             <router-view />
+            <h2 class="title">Your Dashboard</h2>
             <div class="header-style">
-                <h2>Your Dashboard</h2>
+                <span></span>
                 <span>
-                    <button class="grey-border-button" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                    <button class="btn btn-light" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
                     &nbsp;
-                    <button class="blue-button" id="new-staff" @click="redirect('NewStaff')">New Staff  <span>+</span></button>
+                    <button class="btn btn-dark" id="new-staff" @click="redirect('NewStaff')">New Staff  <span>+</span></button>
                 </span>
             </div>
             <table id="captain-info">
