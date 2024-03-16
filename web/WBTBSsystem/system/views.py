@@ -12,8 +12,6 @@ import json
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.utils import timezone
-from datetime import date
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -192,7 +190,7 @@ class CreateUserView(View):
 #             return JsonResponse({'error': str(e)}, status=400)
 
 from django.utils.dateparse import parse_datetime
-from django.utils.timezone import make_aware, get_default_timezone
+from django.utils.timezone import make_aware, get_default_timezone, now
 @method_decorator(csrf_exempt, name='dispatch')
 class UpdateScheduleEntryView(View):
     def post(self, request, *args, **kwargs):
@@ -628,13 +626,11 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
-        today_date = timezone.localdate()
-
-        # Filter Task objects with startTime on today's date
+        today_date = now().date()
         queryset = Task.objects.filter(
             startTime__date=today_date
         ).order_by('startTime')
-        print(str(queryset))
+
         return queryset
     
 class BerthViewSet(viewsets.ModelViewSet):
@@ -649,9 +645,7 @@ class ScheduleEntryViewSet(viewsets.ModelViewSet):
     serializer_class = ScheduleEntrySerializer
 
     def get_queryset(self):
-        today_date = timezone.localdate()
-
-        # Filter ScheduleEntry objects with startTime on today's date
+        today_date = now().date()
         queryset = ScheduleEntry.objects.filter(
             TaskId__startTime__date=today_date
         ).order_by('TaskId__startTime')
