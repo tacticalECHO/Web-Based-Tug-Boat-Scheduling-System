@@ -8,15 +8,15 @@
             <h2 class="title">Your Dashboard</h2>
             <MessageButton />
             <div class="job buttons-container">
-                <button class="btn btn-dark" id="schedule" @click="schedule()">Schedule <font-awesome-icon :icon="['fas', 'calendar-day']" /></button>
+                <button class="btn btn-dark clicked" id="schedule" @click="schedule()">Schedule <font-awesome-icon :icon="['fas', 'calendar-day']" /></button>
                 <br><br><br>
                 <input type="file" id="import-task-data"/>
-                <label for="import-task-data"><button id="import-task" class="btn btn-light" @click="importTaskData()">Import Task Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
+                <label for="import-task-data"><button id="import-task" class="btn btn-light clicked" @click="importTaskData()">Import Task Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
                 <br><br><br>
                 <input type="file" id="import-tugboat-data"/>
-                <label for="import-tugboat-data"><button id="import-tugboat" class="btn btn-light" @click="importTugboatData()">Import Tug Boat Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
+                <label for="import-tugboat-data"><button id="import-tugboat" class="btn btn-light clicked" @click="importTugboatData()">Import Tug Boat Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
                 <br><br><br>
-                <button class="btn btn-light" id="download" @click="download()">Download <font-awesome-icon :icon="['fas', 'download']" /></button>
+                <button class="btn btn-light clicked" id="download" @click="download()">Download <font-awesome-icon :icon="['fas', 'download']" /></button>
                 <br><br><br>
                 <button class="btn btn-outline-dark" id="publish" @click="publish()">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
             </div>
@@ -619,6 +619,11 @@ export default {
 </script>
 
 <style scoped>
+.clicked {
+  transform: scale(0.8); /* Increase size on click */
+  transition: transform 0.2s ease; /* Smooth transition */
+}
+
 #import-task, #import-tugboat, #download{
     border: none;
     height: 48px;

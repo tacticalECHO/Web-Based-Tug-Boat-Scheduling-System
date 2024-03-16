@@ -283,7 +283,7 @@ class SaveNewTaskView(View):
             time = data.get('time')
             berthId = data.get('berthId')
             # leaveTime = data.get('leaveTime')
-            # requiredTugBoat = data.get('requiredTugBoat')
+            requiredTugBoat = data.get('requiredTugBoat')
             action = data.get('action')
 
             with transaction.atomic():
@@ -300,7 +300,8 @@ class SaveNewTaskView(View):
                 Task.objects.create(
                     # RequiredTugBoat=requiredTugBoat,
                     startTime=time,
-                    ContainerBoatID=containerBoat,  
+                    ContainerBoatID=containerBoat,
+                    RequiredTugBoat = requiredTugBoat, 
                     Action=action,
                     BerthId=int(berthId),
                     State='Unscheduled',
