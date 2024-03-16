@@ -1,6 +1,7 @@
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Captain(models.Model): # Captain model
     Account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='captain', null=True, blank=True)

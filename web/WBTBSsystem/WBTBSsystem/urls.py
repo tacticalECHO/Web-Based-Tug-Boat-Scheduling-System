@@ -49,11 +49,11 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'api/display_captain', CaptainViewSet)
-router.register(r'api/display_task', TaskViewSet)
+router.register(r'api/display_task', TaskViewSet, basename='task')
 router.register(r'api/display_scheduler', SchedulerViewSet)
 router.register(r'api/display_berth', BerthViewSet)
 router.register(r'api/display_container_boat', ContainerBoatViewSet)
-router.register(r'api/display_schedule_entry', ScheduleEntryViewSet)
+router.register(r'api/display_schedule_entry', ScheduleEntryViewSet, basename='scheduleEntry')
 router.register(r'api/display_tugboat', TugBoatViewSet, basename='tugboat')
 
 urlpatterns = [

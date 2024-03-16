@@ -433,14 +433,6 @@ export default {
         entryList(state) {
             this.entries = this.$store.state.scheduleEntries;
             const isCompleted = state === 'Completed';
-            const currentDate = new Date();
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            };
-            this.localDate = currentDate.toLocaleDateString(undefined, options);
 
             return this.entries.filter((entry) => {
                 const byCountry = !this.countryInput || entry.TaskId.ContainerBoatID.Country.toString() === this.countryInput;
@@ -575,38 +567,38 @@ export default {
                 alert('Manual Schedulling Error.');
             }
         },
-        async getTugBoatStyle(tugBoatId){
-            // const tugBoat = entry.listOfTugBoats.find(tug => tug.TugBoatId === tugBoatId);
-            try { 
-                const response = await axios.post('/api/tugboat-availability', {
-                    tugboatId: tugBoatId,
-                });
-                if (response.data.success) {
-                    console.log("get tugboat availability success")
+        // async getTugBoatStyle(tugBoatId){
+        //     // const tugBoat = entry.listOfTugBoats.find(tug => tug.TugBoatId === tugBoatId);
+        //     try { 
+        //         const response = await axios.post('/api/tugboat-availability', {
+        //             tugboatId: tugBoatId,
+        //         });
+        //         if (response.data.success) {
+        //             console.log("get tugboat availability success")
 
-                    //set color according to state
-                    let backgroundColor;
+        //             //set color according to state
+        //             let backgroundColor;
 
-                    switch (response.data.message) {
-                        case true:
-                            backgroundColor = 'green';
-                            break;
-                        default:
-                            backgroundColor = 'red';
-                    }
-                    return{
-                        backgroundColor: backgroundColor,
-                        color: 'white',
-                        padding: '5px',
-                        'border-radius': '10px',
-                    }
-                } else {
-                    console.log("failed")
-                }
-            } catch (error) {
-                console.error('Get tugboat availability error: ', error);
-            }
-        },
+        //             switch (response.data.message) {
+        //                 case true:
+        //                     backgroundColor = 'green';
+        //                     break;
+        //                 default:
+        //                     backgroundColor = 'red';
+        //             }
+        //             return{
+        //                 backgroundColor: backgroundColor,
+        //                 color: 'white',
+        //                 padding: '5px',
+        //                 'border-radius': '10px',
+        //             }
+        //         } else {
+        //             console.log("failed")
+        //         }
+        //     } catch (error) {
+        //         console.error('Get tugboat availability error: ', error);
+        //     }
+        // },
         selectAndGetTugBoat(entryId, tugboats, taskId){
             this.tugBoatSelected(entryId, tugboats)
             this.changeTugboatList(taskId)

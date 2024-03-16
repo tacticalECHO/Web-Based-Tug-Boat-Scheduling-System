@@ -12,6 +12,8 @@ import json
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.utils import timezone
+from datetime import date
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -623,9 +625,18 @@ class SchedulerViewSet(viewsets.ModelViewSet):
         new_user = User.objects.create_user()
 
 class TaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all().order_by('startTime')
-    serializer_class = TaskSerializer  
+    serializer_class = TaskSerializer
 
+    def get_queryset(self):
+        today_date = timezone.localdate()
+
+        # Filter Task objects with startTime on today's date
+        queryset = Task.objects.filter(
+            startTime__date=today_date
+        ).order_by('startTime')
+        print(str(queryset))
+        return queryset
+    
 class BerthViewSet(viewsets.ModelViewSet):
     queryset = Berth.objects.all()
     serializer_class = BerthSerializer  
@@ -635,8 +646,17 @@ class ContainerBoatViewSet(viewsets.ModelViewSet):
     serializer_class = ContainerBoatSerializer  
 
 class ScheduleEntryViewSet(viewsets.ModelViewSet):
-    queryset = ScheduleEntry.objects.all().order_by('TaskId__startTime')
-    serializer_class = ScheduleEntrySerializer  
+    serializer_class = ScheduleEntrySerializer
+
+    def get_queryset(self):
+        today_date = timezone.localdate()
+
+        # Filter ScheduleEntry objects with startTime on today's date
+        queryset = ScheduleEntry.objects.filter(
+            TaskId__startTime__date=today_date
+        ).order_by('TaskId__startTime')
+
+        return queryset
 
 class TugBoatViewSet(viewsets.ModelViewSet):
     serializer_class = TugBoatSerializer  
