@@ -27,7 +27,7 @@
                     </span>
                 </div>
                 <span>
-                    <button class="btn btn-light" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                    <button class="btn btn-light" id="delete" @click= "deleteSelected()">Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
                     &nbsp;
                     <button class="btn btn-dark" id="add" @click="redirect('NewTugBoat')">Add  + </button>
                 </span>
@@ -53,7 +53,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="(tugboat,index) in tugboatList()" :key="index">
-                                <td><input type="checkbox"/></td>
+                                <td><input type="checkbox" v-model="selectedTugboat" :value="tugboat.TugBoatId"/></td>
                                 <td class="number"> {{ index+1 }} </td>
                                 <td>{{ tugboat.TugBoatId }}</td>
                                 <td @click.stop>
@@ -83,7 +83,7 @@
                                 <td class="work-status" @click.stop> 
                                     <form v-if="statusInfo === tugboat.TugBoatId" @submit="edit(tugboat.TugBoatId)">
                                         <select @change="edit(tugboat.TugBoatId)" v-model="status">
-                                            <option>Maintenance</option>
+                                            <option>{{ tugboatStatus(tugboat.CurrentStatus) }}</option>
                                         </select>
                                         <input class="submit-button" type="submit" />
                                     </form>
@@ -122,11 +122,26 @@ export default {
             startTimeInfo: null,
             endTimeInfo: null,
             statusInfo: null,
-            successAlert: true,
-            successMessage: 'Edit message successful !',
+            tugboatStatus: null,
+            selectedTugboat: [],
         }
     },
     methods: {
+        async deleteSelected() {
+            if (this.selectedTugboat.length > 0) {
+                await fetch(`/api/tugboat-delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ids: this.selectedTugboat })
+                });
+            }
+            this.$store.dispatch('fetchTugBoats');
+            this.$store.dispatch('fetchCaptains');
+
+            this.selectedTugboat = [];
+        },
         handleChange(state) {
             this.chosenStatus = state;
             if (state === 'Free') {
@@ -198,7 +213,9 @@ export default {
                 });
                 if (response.data.success) {
                     alert('Edited Succesfully')
-                    window.location.reload();
+                    // window.location.reload();
+                    this.$store.dispatch('fetchTugBoats');
+                    this.$store.dispatch('fetchCaptains');
                     this.resetNull();
                 } else {
                     alert('Edit Failed.');
@@ -206,6 +223,13 @@ export default {
             } catch (error) {
                 console.error('Error:', error);
                 alert(error);
+            }
+        },
+        tugboatStatus(status){
+            if(status === 'Maintenance'){
+                return 'Free';
+            }else{
+                return 'Maintenance';
             }
         }
     }

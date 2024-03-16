@@ -88,6 +88,26 @@ class DeleteTasksView(View):
             print(f"Error deleting tasks: {str(e)}")
 
             return JsonResponse({'error': str(e)}, status=400)
+        
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteTugBoatView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            ids = data.get('ids', [])
+            print(ids)
+            tugboats= TugBoat.objects.filter(TugBoatId__in=ids)
+           
+            print(tugboats)
+            for tugboat in tugboats:
+                tugboat.delete()
+
+            return JsonResponse({'message': 'Tugboats deleted successfully', 'success': True}, status=200)
+        except Exception as e:
+
+            print(f"Error deleting tugboats: {str(e)}")
+
+            return JsonResponse({'error': str(e)}, status=400)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DeleteScheduleEntriesView(View):

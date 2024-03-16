@@ -44,6 +44,7 @@ from system.views import (
     ManualScheduleView,
     UpdateTugBoatView,
     PublishView,
+    DeleteTugBoatView,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -68,7 +69,7 @@ urlpatterns = [
     path('api/tasks-delete/', DeleteTasksView.as_view(), name='delete_tasks'),
     path('api/scheduleentries-delete/', DeleteScheduleEntriesView.as_view(), name='delete_scheduleentries'),
 
-
+    path('api/tugboat-delete/', DeleteTugBoatView.as_view(), name='delete_tugboats'),
     path('api/schedulers-delete/', DeleteSchedulersView.as_view(), name='delete_schedulers'),
     path('api/create-user/', CreateUserView.as_view(), name='create_user'),
     path('api/save-newtask/', SaveNewTaskView.as_view(), name='save_newtask'),
