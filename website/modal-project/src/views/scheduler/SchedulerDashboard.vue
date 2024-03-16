@@ -8,15 +8,15 @@
             <h2 class="title">Your Dashboard</h2>
             <MessageButton />
             <div class="job buttons-container">
-                <button class="btn btn-dark clicked" id="schedule" @click="schedule()">Schedule <font-awesome-icon :icon="['fas', 'calendar-day']" /></button>
+                <button class="btn btn-dark" id="schedule" @click="schedule()">Schedule <font-awesome-icon :icon="['fas', 'calendar-day']" /></button>
                 <br><br><br>
                 <input type="file" id="import-task-data"/>
-                <label for="import-task-data"><button id="import-task" class="btn btn-light clicked" @click="importTaskData()">Import Task Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
+                <label for="import-task-data"><button id="import-task" class="btn btn-light" @click="importTaskData()">Import Task Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
                 <br><br><br>
                 <input type="file" id="import-tugboat-data"/>
-                <label for="import-tugboat-data"><button id="import-tugboat" class="btn btn-light clicked" @click="importTugboatData()">Import Tug Boat Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
+                <label for="import-tugboat-data"><button id="import-tugboat" class="btn btn-light" @click="importTugboatData()">Import Tug Boat Data <font-awesome-icon :icon="['fas', 'file-import']" /></button></label>
                 <br><br><br>
-                <button class="btn btn-light clicked" id="download" @click="download()">Download <font-awesome-icon :icon="['fas', 'download']" /></button>
+                <button class="btn btn-light" id="download" @click="download()">Download <font-awesome-icon :icon="['fas', 'download']" /></button>
                 <br><br><br>
                 <button class="btn btn-outline-dark" id="publish" @click="publish()">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
             </div>
@@ -93,8 +93,8 @@
                             <th rowspan="2">Publish Time</th>
                         </tr>
                         <tr>
-                            <th>Need</th>
-                            <th>IDs</th>
+                            <th style="text-align: center">Need</th>
+                            <th style="text-align: center">IDs</th>
                             <th>Start</th>
                             <th>End</th>
                         </tr>
@@ -105,11 +105,11 @@
 
                             <td><input type="checkbox" :id="'mycheckbox' + entry.ScheduleEntryId" :name='myCheckbox' v-model="selectedScheduleEntries" :value="entry.TaskId.TaskId"></td>
 
-                            <!-- <td class="number"> {{index+1}} </td> -->
-                            <td class="number"> {{entry.ScheduleEntryId}} </td>
+                            <td class="number"> {{index+1}} </td>
+                            <!-- <td class="number"> {{entry.ScheduleEntryId}} </td> -->
 
                             <td @click.stop>
-                                <form v-if="timeInfo === entry.ScheduleEntryId" @submit="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)">
+                                <form v-if="timeInfo === entry.ScheduleEntryId" @submit.prevent="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)">
                                     <input v-model="plannedTime" type="datetime-local">
                                     <input class="submit-button" type="submit" />
                                 </form>
@@ -179,7 +179,7 @@
                             <td class="number"> {{index+1}} </td>
 
                             <td @click.stop>
-                                <form v-if="timeInfo === task.TaskId" @submit="edit(task.TaskId)">
+                                <form v-if="timeInfo === task.TaskId" @submit.prevent="edit(task.TaskId)">
                                     <input v-model="plannedTime" type="datetime-local">
                                     <input class="submit-button" type="submit" />
                                 </form>
@@ -619,11 +619,6 @@ export default {
 </script>
 
 <style scoped>
-.clicked {
-  transform: scale(0.8); /* Increase size on click */
-  transition: transform 0.2s ease; /* Smooth transition */
-}
-
 #import-task, #import-tugboat, #download{
     border: none;
     height: 48px;

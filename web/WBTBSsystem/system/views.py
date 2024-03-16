@@ -406,6 +406,8 @@ class UpdateEntryAndTaskView(View):
                     task.BerthId = berthId
                 if action is not None:
                     task.Action = str(action)
+                    print(str(action))
+                task.save()
             except Exception as e:
                 print(e)
                 return JsonResponse({'error': e}, status=404) 
