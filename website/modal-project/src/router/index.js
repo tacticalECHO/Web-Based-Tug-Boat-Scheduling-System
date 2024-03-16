@@ -32,9 +32,10 @@ const routes = [
     component: Login,
   },
   {
-    path: '/dashboard',
+    path: '/admin',
     name: 'AdminDashboard',
     component: AdminDashboard,
+    meta: { requiresAdmin: true },
     children: [
       {
         path: 'add-new-staff',
@@ -44,9 +45,11 @@ const routes = [
     ]
   },
   {
-    path: '/dashboard',
+    path: '/captain',
     name: 'CaptainDashboard',
     component: CaptainDashboard,
+    meta: { requiresRoles: ['captain'] },
+    meta: { requiresCap: true },
     children: [
       {
         path: 'message',
@@ -56,9 +59,10 @@ const routes = [
     ]
   },
   {
-    path: '/dashboard',
+    path: '/scheduler',
     name: 'SchedulerDashboard',
     component: SchedulerDashboard,
+    meta: { requiresSch: true },
     children: [
       {
         path: 'message',
@@ -81,6 +85,7 @@ const routes = [
     path: '/tugboat-list',
     name: 'TugBoatList',
     component: TugBoatList,
+    meta: { requiresSch: true },
     children: [
       {
         path: 'add-new-tugboat',
@@ -115,6 +120,7 @@ const routes = [
     path: '/add-new-task',
     name: 'NewTask',
     component: NewTask,
+    meta: { requiresSch: true },
     children: [
       {
         path: 'notice',
@@ -148,6 +154,9 @@ const router = createRouter({
 
   if (!isLoggedIn && to.name !== 'Login') {
     next({ name: 'Login' });
+  // } else if (to.meta.requiresAdmin && !roles.isAdmin || to.meta.requiresCap && !roles.isCaptain || to.meta.requiresSch && !roles.isScheduler) {
+  //   alert('You do not have permission to view this page.');
+  //   next(false);
   } else {
     next();
   }

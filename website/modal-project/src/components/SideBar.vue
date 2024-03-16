@@ -6,7 +6,7 @@
         <div v-if="screen() || sidebarOpened" id="sidebar">
             <h2>Ningbo Harbour</h2>
             <ul>
-                <li v-if="isAdmin" @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item">
+                <li v-if="isAdmin ||isScheduler" @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item">
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     A-Dashboard
                 </li>
@@ -18,12 +18,12 @@
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     Tug Boats
                 </li>
-                <li v-if="isCaptain || isAdmin" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item">
+                <li v-if="isCaptain || isScheduler || isAdmin" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item">
                     <admin-panel v-if="isCaptain" />
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     C-Dashboard
                 </li>
-                <li v-if="isScheduler || isAdmin || isCaptain" @click="redirect('WorkSchedule')" class="sidebar-item">
+                <li v-if="isScheduler || isCaptain|| isAdmin" @click="redirect('WorkSchedule')" class="sidebar-item">
                     <font-awesome-icon :icon="['fas', 'calendar-days']" class="sidebar-icon"/>
                     Work Schedules
                 </li>

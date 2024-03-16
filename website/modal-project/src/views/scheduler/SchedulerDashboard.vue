@@ -433,6 +433,14 @@ export default {
         entryList(state) {
             this.entries = this.$store.state.scheduleEntries;
             const isCompleted = state === 'Completed';
+            const currentDate = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            this.localDate = currentDate.toLocaleDateString(undefined, options);
 
             return this.entries.filter((entry) => {
                 const byCountry = !this.countryInput || entry.TaskId.ContainerBoatID.Country.toString() === this.countryInput;
@@ -442,6 +450,7 @@ export default {
                 const byWorkType = !this.workTypeInput || entry.TaskId.Action === this.workTypeInput;
                 const byStatus = !this.statusInput || entry.Status === this.statusInput;
                 const byCompleted = entry.Status === 'Completed';
+
 
                 return byCountry && byContainerBoatId && byTugBoatId && byBerthId && byWorkType && byStatus && (isCompleted ? byCompleted : !byCompleted);
             });
