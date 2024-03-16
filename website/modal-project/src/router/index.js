@@ -14,11 +14,11 @@ import ChangePassword from '@/views/ChangePassword.vue'
 // admin----------------------------------------------------------------------
 import AdminDashboard from '@/views/administrator/AdminDashboard.vue'
 import NewStaff from '@/views/administrator/NewStaff.vue'
+import TugBoatList from '@/views/administrator/TugBoatList.vue'
+import NewTugBoat from '@/views/administrator/NewTugBoat.vue'
 // scheduler------------------------------------------------------------------
 import SchedulerDashboard from '@/views/scheduler/SchedulerDashboard.vue'
 import NewTask from '@/views/scheduler/NewTask.vue'
-import TugBoatList from '@/views/scheduler/TugBoatList.vue'
-import NewTugBoat from '@/views/scheduler/NewTugBoat.vue'
 // captain--------------------------------------------------------------------
 import CaptainDashboard from '@/views/captain/CaptainDashboard.vue'
 import WorkSchedule from '@/views/captain/WorkSchedule.vue'

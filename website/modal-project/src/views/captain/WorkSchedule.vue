@@ -39,8 +39,8 @@
                 </div>
             </div>
             <div v-if="waiting()">
-                <span>Waiting &nbsp;</span>
                 <span class="spinner-border spinner-border-sm" role="status"></span>
+                &nbsp;Waiting...
             </div>
             <div v-if="!waiting()" class="display-data">
                 <div class="work-table">
