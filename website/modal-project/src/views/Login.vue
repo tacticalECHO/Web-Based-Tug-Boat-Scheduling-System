@@ -62,7 +62,15 @@ methods: {
               isAdmin: response.data.is_staff,
               isScheduler: response.data.is_scheduler
           }));
-          this.$router.push({ name: 'Settings' });
+          if (response.data.is_captain) {
+            this.$router.push({ name: 'CaptainDashboard' });
+          } else if (response.data.is_staff) {
+              this.$router.push({ name: 'AdminDashboard' });
+          } else if (response.data.is_scheduler) {
+              this.$router.push({ name: 'SchedulerDashboard' });
+          } else {
+              this.$router.push({ name: 'Settings' });
+          }
       } else {
         this.showError = true; // Show error if login failed
       }
