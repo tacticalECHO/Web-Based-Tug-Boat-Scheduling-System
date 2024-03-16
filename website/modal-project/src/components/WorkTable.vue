@@ -128,6 +128,8 @@ export default {
                     timeStamp: currentTime
                 });
                 console.log(response.data);
+                this.$store.dispatch('fetchScheduleEntries');
+                this.$store.dispatch('fetchCaptains');
                 alert('Update Successfully');
             } catch (error) {
                 console.error(error);

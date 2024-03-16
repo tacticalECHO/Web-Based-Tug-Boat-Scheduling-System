@@ -535,7 +535,7 @@ export default {
                     }else{
                         alert('Edit Successfully');
                     }
-                    window.location.reload();
+                    this.reload();
                     this.resetNull();
                 } else {
                     alert('Edit Task Failed.');
@@ -557,7 +557,7 @@ export default {
                     }else{
                         alert('Manual Scheduling Successful');
                     }
-                    window.location.reload();
+                    this.reload();
                     this.resetNull();
                 } else {
                     alert('Manual Schedulling Failed.');
@@ -606,7 +606,14 @@ export default {
         addSelected(task, tugboat, taskId){
             this.selected(task, tugboat);
             this.changeTugboatList(taskId)
-        }
+        },
+        reload(){
+            this.$store.dispatch('fetchScheduleEntries');
+            this.$store.dispatch('fetchTasks');
+            this.$store.dispatch('fetchContainerBoats');
+            this.$store.dispatch('fetchBerths');
+            this.$store.dispatch('fetchTugBoats');
+        },
     }
 }
 </script>
