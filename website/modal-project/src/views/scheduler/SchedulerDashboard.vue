@@ -132,9 +132,10 @@
                             </td>
 
                             <td @click.stop>
-                                <span v-for="tugBoats in entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId)" :key="tugBoats">
+                                <span v-for="tugBoats in entry.listOfTugBoats.map(tugBoat => tugBoat)" :key="tugBoats">
                                     <span @click="selectAndGetTugBoat(entry.ScheduleEntryId, tugBoats, entry.TaskId.TaskId)" v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != tugBoats">
-                                        <span>{{ tugBoats }} / </span>
+                                        <span class="status-container" :style="getStatusStyle(tugBoats.CurrentStatus)">{{ tugBoats.TugBoatId }}</span>
+                                        &nbsp;
                                     </span>
                                     <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === tugBoats">
                                         <select @change="edit(entry.TaskId.TaskId, entry.ScheduleEntryId, tugBoats)" v-model="tugBoat">
@@ -272,6 +273,7 @@
 import SideBar from '@/components/SideBar.vue';
 import MessageButton from '@/components/MessageButton.vue';
 import axios from 'axios';
+import { getStatusStyle } from '@/js/methods';
 
 export default {
     name: 'WorkSchedule',

@@ -15,7 +15,7 @@
                     S-Dashboard
                 </li>
                 <li v-if="isScheduler || isAdmin" @click="redirect('TugBoatList')" id="scheduler-dashboard" class="sidebar-item">
-                <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
+                    <font-awesome-icon :icon="['fas', 'ship']" class="sidebar-icon"/>
                     Tug Boats
                 </li>
                 <li v-if="isCaptain || isScheduler || isAdmin" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item">
