@@ -93,8 +93,8 @@
                             <th rowspan="2">Publish Time</th>
                         </tr>
                         <tr>
-                            <th>Need</th>
-                            <th>IDs</th>
+                            <th style="text-align: center">Need</th>
+                            <th style="text-align: center">IDs</th>
                             <th>Start</th>
                             <th>End</th>
                         </tr>
@@ -105,11 +105,11 @@
 
                             <td><input type="checkbox" :id="'mycheckbox' + entry.ScheduleEntryId" :name='myCheckbox' v-model="selectedScheduleEntries" :value="entry.TaskId.TaskId"></td>
 
-                            <!-- <td class="number"> {{index+1}} </td> -->
-                            <td class="number"> {{entry.ScheduleEntryId}} </td>
+                            <td class="number"> {{index+1}} </td>
+                            <!-- <td class="number"> {{entry.ScheduleEntryId}} </td> -->
 
                             <td @click.stop>
-                                <form v-if="timeInfo === entry.ScheduleEntryId" @submit="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)">
+                                <form v-if="timeInfo === entry.ScheduleEntryId" @submit.prevent="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)">
                                     <input v-model="plannedTime" type="datetime-local">
                                     <input class="submit-button" type="submit" />
                                 </form>
@@ -179,7 +179,7 @@
                             <td class="number"> {{index+1}} </td>
 
                             <td @click.stop>
-                                <form v-if="timeInfo === task.TaskId" @submit="edit(task.TaskId)">
+                                <form v-if="timeInfo === task.TaskId" @submit.prevent="edit(task.TaskId)">
                                     <input v-model="plannedTime" type="datetime-local">
                                     <input class="submit-button" type="submit" />
                                 </form>

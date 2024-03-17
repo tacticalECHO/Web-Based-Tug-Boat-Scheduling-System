@@ -3,12 +3,12 @@
         <div class="container-position">
             <div class="popup-container">
                 <b>Notice</b>
-                <span>Do you need to auto change this task's schedule?</span>
+                <span>Do you need to auto-schedule this task's?</span>
                 <br/>
                 <span class="notice-buttons">
-                    <button class="blue-border-button" id="no" @click="no()">No</button>
+                    <button class="btn btn-outline-dark" id="no" @click="no()">No</button>
                     &nbsp; 
-                    <button class="blue-button" id="manualReschedule" @click="change()">Change</button>
+                    <button class="btn btn-dark" id="manualReschedule" @click="change()">Change</button>
                 </span>  
             </div>
         </div>
@@ -22,9 +22,22 @@ export default {
     props: [],
     methods: {
         no(){
-            this.$router.push({name: 'ManualReschedule'});
+            this.$router.push({name: 'SchedulerDashboard'});
         },
-        change(){
+        async change(){
+            // this.showProgressBar = true;
+            try {
+                const response = await axios.post('/api/auto-schedule', {});
+                console.log(response.data);
+                
+            } catch (error) {
+                console.error("Error during schedule operation: ", error);
+                alert("Schedule operation failed, check logs for details.");
+            }
+            // setTimeout(() => {
+            //     // this.showProgressBar = false;
+            //     alert("Schedule operation successful!");
+            // }, 2000);
             this.$router.push({name: 'AutoReschedule'});
         }
     }

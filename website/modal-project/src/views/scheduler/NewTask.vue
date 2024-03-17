@@ -20,6 +20,10 @@
                             <td><input type="text" v-model="tonnage" placeholder="Input Tonnage of Ship" required></td>
                         </tr>
                         <tr>
+                            <th><label for="requiredTugBoat">Total Tugboat Required</label></th>
+                            <td><input type="text" v-model="requiredTugBoat" placeholder="Input Number of Tugboats Needed" required></td>
+                        </tr>
+                        <tr>
                             <th><label for="time">Time</label></th>
                             <td><input type="datetime-local" v-model="time" placeholder="Set time" required></td>
                         </tr>
@@ -83,11 +87,11 @@ export default {
                     alert('Added successfully');
                     this.$router.push({name: 'Save-NewTask'});
                 } else {
-                    alert('Add container boat Failed.');
+                    alert('Add new task Failed.');
                 }
             } catch (error) {
-                console.error('Add container boat error:', error);
-                alert('Add container boat Error.');
+                console.error('Add new task error:', error);
+                alert('Add new task Error.');
             }
         }
     }
@@ -124,10 +128,6 @@ th, td {
     border-radius: 10px;
     border: 1px solid grey;
     width: 300px;
-}
-
-option {
-    background: var(--main-button-color);
 }
 
 td {

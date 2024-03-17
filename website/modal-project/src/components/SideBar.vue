@@ -42,8 +42,8 @@
                 </ul>
             </div>
         </div>
-        <button class="blue-border-button" @click="openSidebar()" v-if="!screen()" id="open-sidebar"><font-awesome-icon :icon="['fas', 'forward']" /></button>
-        <button class="blue-border-button" @click="closeSidebar()" v-if="sidebarOpened && closeButton()" id="close-sidebar"><font-awesome-icon :icon="['fas', 'backward']" /></button>
+        <button class="btn btn-outline-dark" @click="openSidebar()" v-if="!screen()" id="open-sidebar"><font-awesome-icon :icon="['fas', 'forward']" /></button>
+        <button class="btn btn-outline-dark" @click="closeSidebar()" v-if="sidebarOpened && closeButton()" id="close-sidebar"><font-awesome-icon :icon="['fas', 'backward']" /></button>
         <footer class="footer fixed-bottom">
             <div class="text-center p-3">
                 NINGBO HARBOUR
