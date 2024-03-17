@@ -93,8 +93,8 @@
                             <th rowspan="2">Publish Time</th>
                         </tr>
                         <tr>
-                            <th>Need</th>
-                            <th>IDs</th>
+                            <th style="text-align: center">Need</th>
+                            <th style="text-align: center">IDs</th>
                             <th>Start</th>
                             <th>End</th>
                         </tr>
@@ -105,11 +105,11 @@
 
                             <td><input type="checkbox" :id="'mycheckbox' + entry.ScheduleEntryId" :name='myCheckbox' v-model="selectedScheduleEntries" :value="entry.TaskId.TaskId"></td>
 
-                            <!-- <td class="number"> {{index+1}} </td> -->
-                            <td class="number"> {{entry.ScheduleEntryId}} </td>
+                            <td class="number"> {{index+1}} </td>
+                            <!-- <td class="number"> {{entry.ScheduleEntryId}} </td> -->
 
                             <td @click.stop>
-                                <form v-if="timeInfo === entry.ScheduleEntryId" @submit="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)">
+                                <form v-if="timeInfo === entry.ScheduleEntryId" @submit.prevent="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)">
                                     <input v-model="plannedTime" type="datetime-local">
                                     <input class="submit-button" type="submit" />
                                 </form>
@@ -132,9 +132,10 @@
                             </td>
 
                             <td @click.stop>
-                                <span v-for="tugBoats in entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId)" :key="tugBoats">
+                                <span v-for="tugBoats in entry.listOfTugBoats.map(tugBoat => tugBoat)" :key="tugBoats">
                                     <span @click="selectAndGetTugBoat(entry.ScheduleEntryId, tugBoats, entry.TaskId.TaskId)" v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != tugBoats">
-                                        <span>{{ tugBoats }} / </span>
+                                        <span class="status-container" :style="getStatusStyle(tugBoats.CurrentStatus)">{{ tugBoats.TugBoatId }}</span>
+                                        &nbsp;
                                     </span>
                                     <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === tugBoats">
                                         <select @change="edit(entry.TaskId.TaskId, entry.ScheduleEntryId, tugBoats)" v-model="tugBoat">
@@ -179,7 +180,7 @@
                             <td class="number"> {{index+1}} </td>
 
                             <td @click.stop>
-                                <form v-if="timeInfo === task.TaskId" @submit="edit(task.TaskId)">
+                                <form v-if="timeInfo === task.TaskId" @submit.prevent="edit(task.TaskId)">
                                     <input v-model="plannedTime" type="datetime-local">
                                     <input class="submit-button" type="submit" />
                                 </form>
@@ -272,6 +273,7 @@
 import SideBar from '@/components/SideBar.vue';
 import MessageButton from '@/components/MessageButton.vue';
 import axios from 'axios';
+import { getStatusStyle } from '@/js/methods';
 
 export default {
     name: 'WorkSchedule',

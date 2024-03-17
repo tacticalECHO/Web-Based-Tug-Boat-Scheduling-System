@@ -62,7 +62,16 @@ class DeleteCaptainsView(View):
             data = json.loads(request.body)
             ids = data.get('ids', [])
             captains = Captain.objects.filter(CaptainId__in=ids)
+
             for captain in captains:
+                # Remove original relationship
+                try:
+                    tug = TugBoat.objects.get(CaptainId=captain)
+                    tug.CaptainId = None
+                    print("Captain: " + str(captain.CaptainId) + " is removed from Tug Boat: " + tug.TugBoatId)
+                    tug.save()
+                except TugBoat.DoesNotExist:
+                    print(str(captain.CaptainId)+" has not tug boat")
                 if captain.Account:
                     captain.Account.delete()
             return JsonResponse({'message': 'Captains deleted successfully'}, status=200)
@@ -283,7 +292,7 @@ class SaveNewTaskView(View):
             time = data.get('time')
             berthId = data.get('berthId')
             # leaveTime = data.get('leaveTime')
-            # requiredTugBoat = data.get('requiredTugBoat')
+            requiredTugBoat = data.get('requiredTugBoat')
             action = data.get('action')
 
             with transaction.atomic():
@@ -300,7 +309,8 @@ class SaveNewTaskView(View):
                 Task.objects.create(
                     # RequiredTugBoat=requiredTugBoat,
                     startTime=time,
-                    ContainerBoatID=containerBoat,  
+                    ContainerBoatID=containerBoat,
+                    RequiredTugBoat = requiredTugBoat, 
                     Action=action,
                     BerthId=int(berthId),
                     State='Unscheduled',
@@ -405,6 +415,8 @@ class UpdateEntryAndTaskView(View):
                     task.BerthId = berthId
                 if action is not None:
                     task.Action = str(action)
+                    print(str(action))
+                task.save()
             except Exception as e:
                 print(e)
                 return JsonResponse({'error': e}, status=404) 
