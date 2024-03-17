@@ -144,7 +144,8 @@ const router = createRouter({
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   const username = localStorage.getItem('username');
   const roles = JSON.parse(localStorage.getItem('roles'));
-
+  
+  store.dispatch('updateCurrentRoute', to.name);
   if (isLoggedIn) {
     if (store.state.username !== username) {
         store.commit('setUser', { username });

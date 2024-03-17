@@ -18,6 +18,7 @@ const store = createStore({
           tugboats: [],
           exitPath: 'Settings',
           id: 1,
+          currentRoute: null,
         };
         
     },
@@ -75,6 +76,9 @@ const store = createStore({
         setStateInfo(state, id) {
           state.stateInfo = id;
         },
+        setCurrentRoute(state, route) {
+          state.currentRoute = route;
+        },
     },
 
     actions:{
@@ -126,6 +130,9 @@ const store = createStore({
               commit('setTugBoats', response.data);
             })
             .catch(error => console.error(error));
+        },
+        updateCurrentRoute({ commit }, route) {
+          commit('setCurrentRoute', route);
         },
     },
 });
