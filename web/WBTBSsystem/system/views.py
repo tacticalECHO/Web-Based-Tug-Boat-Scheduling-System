@@ -62,7 +62,16 @@ class DeleteCaptainsView(View):
             data = json.loads(request.body)
             ids = data.get('ids', [])
             captains = Captain.objects.filter(CaptainId__in=ids)
+
             for captain in captains:
+                # Remove original relationship
+                try:
+                    tug = TugBoat.objects.get(CaptainId=captain)
+                    tug.CaptainId = None
+                    print("Captain: " + str(captain.CaptainId) + " is removed from Tug Boat: " + tug.TugBoatId)
+                    tug.save()
+                except TugBoat.DoesNotExist:
+                    print(str(captain.CaptainId)+" has not tug boat")
                 if captain.Account:
                     captain.Account.delete()
             return JsonResponse({'message': 'Captains deleted successfully'}, status=200)
