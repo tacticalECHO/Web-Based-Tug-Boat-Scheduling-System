@@ -605,6 +605,23 @@ def publish_data(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
+from .ExportData import DataToExcel_captain
+@csrf_exempt
+@require_http_methods(["POST"])
+def download_captain(request):
+    try:
+        data = json.loads(request.body)
+        print("Received data:", data)
+        captain_id = data.get('captainId')
+        if captain_id:
+            DataToExcel_captain(captain_id)
+            return JsonResponse({'message': 'Published successfully.'})
+        else:
+            return JsonResponse({'error': str(e)}, status=404)
+    except Exception as e:
+        print(e)
+        return JsonResponse({'error': str(e)}, status=500)
+
 
 from .serializers import (
     CaptainSerializer, 
