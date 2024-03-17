@@ -86,8 +86,6 @@ export default {
         window.addEventListener('resize', this.handleResize);
         this.unsubscribe = this.$store.subscribe((mutation, state) => {
             if (mutation.type === 'setCurrentRoute') {
-                console.log(state.currentRoute);
-                // Mutation to set the current route in the store
                 this.updateSidebarBackground(state.currentRoute);
             }
         });
@@ -106,8 +104,6 @@ export default {
             this.workSchedule = 'none';
         },
         updateSidebarBackground(path){
-            console.log("Path: "+path)
-            // this.resetNone();
             switch(path){
                 case 'AdminDashboard':
                 case 'NewStaff':
