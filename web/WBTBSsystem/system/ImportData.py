@@ -8,7 +8,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
 from system.models import ContainerBoat, Task, Berth, TugBoat, Captain
 import pandas as pd
-PATH="web\WBTBSsystem\\test.xlsx"
+PATH="web\WBTBSsystem\\test_container.xlsx"
 
 def IsberthAvailable(berthID):
     # Determine if the berth is available
@@ -63,6 +63,8 @@ def dataIntoDatabase_TugBoat(data):
         )
 def IfTaskRepeat(data):
     # Determine if the task is repeated
+    if ContainerBoat.objects.get(ContainerBoatID=data[0])==None:
+        return False
     try:
         Task.objects.get(ContainerBoatID=ContainerBoat.objects.get(ContainerBoatID=data[0]),BerthId=data[5],startTime=data[3],Action=data[4])
         return True
