@@ -5,7 +5,7 @@
             <div class="header-style">
                 <div class="header-style title">
                     <h2>Today Work</h2>
-                    <button id="download"><font-awesome-icon :icon="['fas', 'download']" /></button>
+                    <button id="download" @click="download()"><font-awesome-icon :icon="['fas', 'download']" /></button>
                 </div>
                 <MessageButton />
             </div>
@@ -19,11 +19,25 @@
 import SideBar from '@/components/SideBar.vue'
 import WorkTable from '@/components/WorkTable.vue'
 import MessageButton from '@/components/MessageButton.vue'
+import axios from 'axios';
 
 
 export default {
     name: 'WorkSchedule',
     components: {SideBar, WorkTable, MessageButton},
+    methods: {
+        download(){
+            const captainId = localStorage.getItem('username');
+            axios.post('/api/download-captain', { captainId })
+            .then(response => {
+                console.log(response.data.message);
+                alert("Successfully Download!");
+            }).catch(error => {
+                console.error("error: ", error);
+                alert("Failed to download data, check logs for details.");
+            });
+        },
+    }
 }
 </script>
 
