@@ -7,8 +7,8 @@
                 <br/>
                 <span class="notice-buttons">
                     <button class="btn btn-outline-dark" id="no" @click="no()">No</button>
-                    &nbsp; 
-                    <button class="btn btn-dark" id="manualReschedule" @click="change()">Change</button>
+                    &nbsp;  
+                    <button type="button" class="btn btn-dark" id="manualReschedule" @click="change()">Change</button>
                 </span>  
             </div>
         </div>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 export default {
     name: 'RescheduleNotice',
     props: [],
@@ -25,10 +25,9 @@ export default {
             this.$router.push({name: 'SchedulerDashboard'});
         },
         async change(){
-            // this.showProgressBar = true;
             try {
-                const response = await axios.post('/api/auto-schedule', {});
-                console.log(response.data);
+                const response = await axios.post('/api/auto-schedule', {"schedule":1});
+                //console.log(response.data);
                 
             } catch (error) {
                 console.error("Error during schedule operation: ", error);

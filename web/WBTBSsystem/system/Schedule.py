@@ -96,7 +96,7 @@ def AutoSchedule_NextFit():# Auto Schedule the task--->ScheduleEntry (next fit)
                 print('No enough tugboat available')
                 schedule.delete()
                 task.save()
-                return
+                return (True, "Scheduling completed successfully.")
             schedule.save()
             task.save()
     return (True, "Scheduling completed successfully.")
