@@ -32,6 +32,7 @@ urlpatterns = [
     path('api/publish-data', views.publish_data, name='publish_data'),
     path('api/download-captain', views.download_captain, name='download_captain'),
     path('api/update-schedule-entry', views.UpdateScheduleEntryView.as_view(), name='update_schedule_entry'),
+    path('api/update-entry-task/', views.UpdateEntryAndTaskView.as_view(), name="update_entry_task"),
     path('api/manual-schedule/', views.ManualScheduleView.as_view(), name='manual_schedule'),
     path('api/update-tugboat/', views.UpdateTugBoatView.as_view(), name='update_tugboat'),
     path('api/api/update-publish-time', views.PublishView.as_view(), name='update-publish-time'),
