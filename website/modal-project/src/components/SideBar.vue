@@ -117,7 +117,6 @@ export default {
                 case 'AdminDashboard':
                 case 'NewStaff':
                     this.adminDashboard = backgroundColor;
-                    console.log("Admin: "+path + this.adminDashboard)
                     break;
                 case 'CaptainDashboard':
                     this.captainDashboard = backgroundColor;
