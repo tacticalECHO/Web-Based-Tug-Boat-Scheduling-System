@@ -30,7 +30,12 @@
                             <td id="captain-name"> {{captain.name}} </td>
                             <td id="captain-id"> {{captain.CaptainId}} </td>
                             <td id="tugboat"> {{captain.tugboat ? captain.tugboat.TugBoatId : 'waiting'}} </td>
-                            <td id="captain-status"> <span  class="status-container" :style="getStatusStyle(captain.tugboat.CurrentStatus)">{{captain.tugboat ? captain.tugboat.CurrentStatus : 'waiting'}}</span> </td>
+                            <td id="captain-status">
+                                <span class="status-container" :style="captain.tugboat ? getStatusStyle(captain.tugboat.CurrentStatus) : {}">
+                                    {{ captain.tugboat ? captain.tugboat.CurrentStatus : 'waiting' }}
+                                </span>
+                            </td>
+
                         </tr>
                     </tbody>
                 </table>
