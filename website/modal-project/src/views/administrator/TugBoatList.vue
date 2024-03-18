@@ -19,10 +19,10 @@
                         <input type="radio" class="btn-check" name="vbtn-radio" id="Free" autocomplete="off" value="Free" v-model="freeStatus" @change="handleChange('Free')">
                         <label class="btn btn-outline-dark" for="Free">Free</label>
                         
-                        <input type="radio" class="btn-check" name="vbtn-radio" id="Busy" autocomplete="off" value="Busy" v-model="busyStatus" @change="handleChange('Busy')" checked>
+                        <input type="radio" class="btn-check" name="vbtn-radio" id="Busy" autocomplete="off" value="Busy" v-model="busyStatus" @change="handleChange('Busy')">
                         <label class="btn btn-outline-dark" for="Busy">Busy</label>
                         
-                        <input type="radio" class="btn-check" name="vbtn-radio" id="Maintenance" autocomplete="off" value="Maintenance" v-model="maintenanceStatus" @change="handleChange('Maintenance')" checked>
+                        <input type="radio" class="btn-check" name="vbtn-radio" id="Maintenance" autocomplete="off" value="Maintenance" v-model="maintenanceStatus" @change="handleChange('Maintenance')">
                         <label class="btn btn-outline-dark" for="Maintenance">Maintenance</label>
                     </span>
                 </div>
@@ -34,10 +34,10 @@
             </div>
             <div class="table-container">
                 <div class="work-table">
-                    <table>
+                    <table class="table">
                         <thead>
                             <tr>
-                                <th style="text-align: center" rowspan="2"><input type="checkbox"/></th>
+                                <th style="text-align: center" rowspan="2"><input type="checkbox" disabled/></th>
                                 <th rowspan="2">No.</th>
                                 <th rowspan="2">Tugboat ID</th>
                                 <th colspan="2">Captain</th>
@@ -63,7 +63,7 @@
                                         </select>
                                         <input class="submit-button" type="submit" />
                                     </form>
-                                    <span v-if="captainInfo != tugboat.TugBoatId" @click="selected(tugboat.TugBoatId, 'captain')">{{ getCaptainId(tugboat.TugBoatId) }}</span>
+                                    <span class="click-hover" v-if="captainInfo != tugboat.TugBoatId" @click="selected(tugboat.TugBoatId, 'captain')">{{ getCaptainId(tugboat.TugBoatId) }}</span>
                                 </td>
                                 <td>{{ getCaptainName(tugboat.TugBoatId) }}</td>
                                 <td @click.stop>
@@ -71,14 +71,14 @@
                                         <input v-model="startTime" type="time">
                                         <input class="submit-button" type="submit" />
                                     </form>
-                                    <span v-if="startTimeInfo != tugboat.TugBoatId" @click="selected(tugboat.TugBoatId, 'startTime')">{{ tugboat.StartWorkingTime }}</span>
+                                    <span class="click-hover" v-if="startTimeInfo != tugboat.TugBoatId" @click="selected(tugboat.TugBoatId, 'startTime')">{{ tugboat.StartWorkingTime }}</span>
                                 </td>
                                 <td @click.stop>
                                     <form v-if="endTimeInfo === tugboat.TugBoatId" @submit="edit(tugboat.TugBoatId)">
                                         <input v-model="endTime" type="time">
                                         <input class="submit-button" type="submit" />
                                     </form>
-                                    <span v-if="endTimeInfo != tugboat.TugBoatId" @click="selected(tugboat.TugBoatId, 'endTime')">{{ tugboat.EndWorkingTime }}</span>
+                                    <span class="click-hover" v-if="endTimeInfo != tugboat.TugBoatId" @click="selected(tugboat.TugBoatId, 'endTime')">{{ tugboat.EndWorkingTime }}</span>
                                 </td>
                                 <td class="work-status" @click.stop> 
                                     <form v-if="statusInfo === tugboat.TugBoatId" @submit="edit(tugboat.TugBoatId)">
@@ -87,7 +87,7 @@
                                         </select>
                                         <input class="submit-button" type="submit" />
                                     </form>
-                                    <span v-if="statusInfo != tugboat.TugBoatId" @click="selected(tugboat.TugBoatId, 'status')" class="status-container" :style="getStatusStyle(tugboat.CurrentStatus)">{{tugboat.CurrentStatus}} </span>
+                                    <span v-if="statusInfo != tugboat.TugBoatId" @click="selected(tugboat.TugBoatId, 'status')" class="status-container click-hover" :style="getStatusStyle(tugboat.CurrentStatus)">{{tugboat.CurrentStatus}} </span>
                                 </td>
                             </tr>
                         </tbody>

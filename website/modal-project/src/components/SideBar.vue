@@ -4,28 +4,33 @@
             <img src="../assets/header.jpg" class="header-image">
         </div>
         <div v-if="screen() || sidebarOpened" id="sidebar">
-            <h2>Ningbo Harbour</h2>
+            <h2>Ningbo <br> Harbour</h2>
             <ul>
                 <li v-if="isAdmin ||isScheduler" @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item" :style="{ backgroundColor: adminDashboard }">
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
-                    A-Dashboard
+                    A-Dashboard 
+                    <span v-if="adminDashboard != 'none'" class="sidebar-selected">&nbsp;</span>
                 </li>
                 <li v-if="isScheduler || isAdmin" @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item" :style="{ backgroundColor: schedulerDashboard }">
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     S-Dashboard
+                    <span v-if="schedulerDashboard != 'none'" class="sidebar-selected">&nbsp;</span>
                 </li>
                 <li v-if="isScheduler || isAdmin" @click="redirect('TugBoatList')" id="scheduler-dashboard" class="sidebar-item" :style="{ backgroundColor: tugboat}">
                     <font-awesome-icon :icon="['fas', 'ship']" class="sidebar-icon"/>
                     Tug Boats
+                    <span v-if="tugboat != 'none'" class="sidebar-selected">&nbsp;</span>
                 </li>
                 <li v-if="isCaptain || isScheduler || isAdmin" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item" :style="{ backgroundColor: captainDashboard }">
                     <admin-panel v-if="isCaptain" />
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     C-Dashboard
+                    <span v-if="captainDashboard != 'none'" class="sidebar-selected">&nbsp;</span>
                 </li>
                 <li v-if="isScheduler || isCaptain|| isAdmin" @click="redirect('WorkSchedule')" class="sidebar-item" :style="{ backgroundColor: workSchedule }">
                     <font-awesome-icon :icon="['fas', 'calendar-days']" class="sidebar-icon"/>
                     Work Schedules
+                    <span v-if="workSchedule != 'none'" class="sidebar-selected">&nbsp;</span>
                 </li>
             </ul>
 
@@ -34,8 +39,9 @@
                     <li @click="redirect('Settings')" class="sidebar-item" :style="{ backgroundColor: settings }">
                         <font-awesome-icon :icon="['fas', 'gear']" class="sidebar-icon"/>
                         Settings
+                        <span v-if="settings != 'none'" class="sidebar-selected">&nbsp;</span>
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item" id="profile">
                         <font-awesome-icon :icon="['fas', 'user']" class="sidebar-icon"/>
                         {{profile_name}}
                     </li>
@@ -46,7 +52,7 @@
         <button class="btn btn-outline-dark" @click="closeSidebar()" v-if="sidebarOpened && closeButton()" id="close-sidebar"><font-awesome-icon :icon="['fas', 'backward']" /></button>
         <footer class="footer fixed-bottom">
             <div class="text-center p-3">
-                NINGBO HARBOUR
+                WEB TUGBOAT SCHEDULING SYSTEM
             </div>
         </footer>
     </div>
@@ -102,32 +108,35 @@ export default {
             this.schedulerDashboard = 'none';
             this.captainDashboard = 'none';
             this.workSchedule = 'none';
+            this.settings = 'none';
         },
         updateSidebarBackground(path){
+            let backgroundColor =  'rgb(136, 187, 252, 0.2)';
+            this.resetNone();
             switch(path){
                 case 'AdminDashboard':
                 case 'NewStaff':
-                    this.adminDashboard = 'lightgrey';
+                    this.adminDashboard = backgroundColor;
                     console.log("Admin: "+path + this.adminDashboard)
                     break;
                 case 'CaptainDashboard':
-                    this.captainDashboard = 'lightgrey';
+                    this.captainDashboard = backgroundColor;
                     break;
                 case 'SchedulerDashboard':
                 case 'NewTask':
-                    this.schedulerDashboard = 'lightgrey';
+                    this.schedulerDashboard = backgroundColor;
                     break;
                 case 'TugBoatList':
                 case 'NewTugBoat':
-                    this.tugboat = 'lightgrey';
+                    this.tugboat = backgroundColor;
                     console.log("Tugboat: "+path + this.tugboat)
                     break;
                 case 'WorkSchedule':
-                    this.workSchedule = 'lightgrey';
+                    this.workSchedule = backgroundColor;
                     break;
                 case 'Settings':
                 case 'ChangePassword':
-                    this.settings = 'lightgrey';
+                    this.settings = backgroundColor;
                     break;
             }
             this.$forceUpdate();
@@ -244,6 +253,10 @@ export default {
     cursor: pointer;
 }
 
+#Sidebar li:hover:not(#profile){
+    background-color: lightgrey;
+}
+
 .sidebar-item {
     display: flex;
     align-items: center;
@@ -261,5 +274,11 @@ export default {
     margin-right: 10px;
     height: 30px;
     width: 50px;
+}
+
+.sidebar-selected {
+    position: absolute;
+    border-radius: 5px;
+    background-color: rgb(115, 176, 255);
 }
 </style>

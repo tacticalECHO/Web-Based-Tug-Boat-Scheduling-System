@@ -12,44 +12,48 @@
                     <button class="btn btn-dark" id="new-staff" @click="redirect('NewStaff')">New Staff  <span>+</span></button>
                 </span>
             </div>
-            <table id="captain-info">
-                <caption><b>Captain</b></caption>
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" disabled></th>
-                        <th>Captain Name</th>
-                        <th>Captain ID</th>
-                        <th>Tug Boat</th>
-                        <th>Tug Boat Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="captain in $store.state.captains" :key="captain.CaptainId">
-                        <td><input type="checkbox" :id="'checkbox' + captain.CaptainId" :name="'checkbox' + captain.name" v-model="selectedCaptains" :value="captain.CaptainId"></td>
-                        <td id="captain-name"> {{captain.name}} </td>
-                        <td id="captain-id"> {{captain.CaptainId}} </td>
-                        <td id="tugboat"> {{captain.tugboat ? captain.tugboat.TugBoatId : 'waiting'}} </td>
-                        <td id="captain-status"> <span  class="status-container">{{captain.tugboat ? captain.tugboat.CurrentStatus : 'waiting'}}</span> </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table id="scheduler-info">
-                <caption><b>Scheduler</b></caption>
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" disabled></th>
-                        <th>Scheduler Name</th>
-                        <th>Scheduler ID</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="scheduler in $store.state.schedulers" :key="scheduler.SchedulerId">
-                        <td><input type="checkbox" :id="'checkbox' + scheduler.SchedulerId" :name="'checkbox' + scheduler.name" v-model="selectedSchedulers" :value="scheduler.SchedulerId"></td>
-                        <td id="scheduler-name"> {{scheduler.name}} </td>
-                        <td id="scheduler-id"> {{scheduler.SchedulerId}} </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="caption">Captain</div>
+            <div class="table-container">
+                <table id="captain-info" class="table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" disabled></th>
+                            <th>Captain Name</th>
+                            <th>Captain ID</th>
+                            <th>Tug Boat</th>
+                            <th>Tug Boat Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="captain in $store.state.captains" :key="captain.CaptainId">
+                            <td><input type="checkbox" :id="'checkbox' + captain.CaptainId" :name="'checkbox' + captain.name" v-model="selectedCaptains" :value="captain.CaptainId"></td>
+                            <td id="captain-name"> {{captain.name}} </td>
+                            <td id="captain-id"> {{captain.CaptainId}} </td>
+                            <td id="tugboat"> {{captain.tugboat ? captain.tugboat.TugBoatId : 'waiting'}} </td>
+                            <td id="captain-status"> <span  class="status-container" :style="getStatusStyle(captain.tugboat.CurrentStatus)">{{captain.tugboat ? captain.tugboat.CurrentStatus : 'waiting'}}</span> </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="caption">Scheduler</div>
+            <div class="table-container">
+                <table id="scheduler-info" class="table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" disabled></th>
+                            <th>Scheduler Name</th>
+                            <th>Scheduler ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="scheduler in $store.state.schedulers" :key="scheduler.SchedulerId">
+                            <td><input type="checkbox" :id="'checkbox' + scheduler.SchedulerId" :name="'checkbox' + scheduler.name" v-model="selectedSchedulers" :value="scheduler.SchedulerId"></td>
+                            <td id="scheduler-name"> {{scheduler.name}} </td>
+                            <td id="scheduler-id"> {{scheduler.SchedulerId}} </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>
@@ -111,26 +115,15 @@ button{
     padding: 10px;
 }
 
-caption {
+.caption {
+    font-weight: bold;
     text-align: left;
     font-size: 16px;
     margin-bottom: 15px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    font-size: var(--font-size);
-}
-
-th, td {
-    border: 1px solid #dddddd;
+.table td {
     text-align: left;
-    padding: 10px;
 }
 
-th {
-    background-color: #f2f2f2;
-}
 </style>

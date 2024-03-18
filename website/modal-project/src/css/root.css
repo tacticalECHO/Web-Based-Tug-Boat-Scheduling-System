@@ -25,14 +25,8 @@ h1, h2, h3 {
 p {
     font-size: 14px; /* Change paragraph font size */
 }
-/* button {
-    cursor: pointer;
-    text-align: center;
-    border-radius: 5px;
-    font-size: var(--font-size);
-    padding: 10px;
-    background: white;
-} */
+
+/* --buttons-------------------------------------------------------------------------------------------------------------------------- */
 
 .btn{
     cursor: pointer;
@@ -120,14 +114,12 @@ p {
 /* --wording boxes---------------------------------------------------- */
 .status-container{
     background: rgb(254, 219, 46);
-    color: white;
     border-radius: 30px;
     padding: 8px;
 }
 
 .type-container{
     background: rgb(254, 239, 142);
-    color: rgb(154, 126, 0);
     border-radius: 30px;
     padding: 8px;
 }
@@ -137,6 +129,7 @@ p {
 .table-container{
     max-height: 30em; /* Adjust the height as needed */
     overflow-y: auto;
+    border-radius: 10px;
 }
 
 .table-container thead {
@@ -145,31 +138,30 @@ p {
     z-index: 1;
 }
 
-/* --Work table----------------------------------------------------------- */
-.work-table table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+.table-container tbody tr:hover {
+    border: 2px solid black;
+}
+
+.click-hover:hover {
+    background-color: rgb(233, 232, 232);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.table {
     font-size: var(--font-size);
+    border-top: 1px solid lightgrey;
 }
 
-.work-table th, td {
-    border: 1px solid #dddddd;
+.table th {
+    vertical-align: middle;
+    background-color: #f2f2f2;
+}
+
+.table td {
     text-align: center;
-    padding: 15px;
-}
-
-.work-table th {
-    /* background-color: #f2f2f2; */
-    background-color: #edebeb;
-    /* background-color: #242f33; */
-    /* background-color: rgba(0, 0, 0, 0.137); */
-    /* opacity: 0.8; */
-    /* color: white; */
-}
-
-.work-table td {
-    text-align: center;
+    border-left: none;
+    border-right: none;
 }
 
 .disabled-row {

@@ -42,46 +42,44 @@
                 <span class="spinner-border spinner-border-sm" role="status"></span>
                 &nbsp;Waiting...
             </div>
-            <div v-if="!waiting()" class="display-data">
-                <div class="work-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Container Boat</th>
-                                <th>Berth</th>
-                                <th>Time</th>
-                                <th>Tug Boat</th>
-                                <th>Captain</th>
-                                <th>Work Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(entry,index) in entryList('Incomplete')" :key="index">
-                                <td class="number"> {{index+1}} </td>
-                                <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
-                                <td class="berth"> {{entry.TaskId.BerthId}} </td>
-                                <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/ ")}} </td>
-                                <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/ ")}} </td>
-                                <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').join("/ ")}} </td>
-                                <td class="work-status"> 
-                                    <span class="status-container" :style="getStatusStyle(entry.Status)">{{entry.Status}} </span>
-                                </td>
-                            </tr>
-                            <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
-                                <td class="number"> {{index+1}} </td>
-                                <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
-                                <td class="berth"> {{entry.TaskId.BerthId}} </td>
-                                <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/")}} </td>
-                                <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/")}} </td>
-                                <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').join("/")}} </td>
-                                <td class="work-status"> 
-                                    <span class="status-container">{{entry.Status}} </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div v-if="!waiting()" class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Container Boat</th>
+                            <th>Berth</th>
+                            <th>Time</th>
+                            <th>Tug Boat</th>
+                            <th>Captain</th>
+                            <th>Work Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(entry,index) in entryList('Incomplete')" :key="index">
+                            <td class="number"> {{index+1}} </td>
+                            <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
+                            <td class="berth"> {{entry.TaskId.BerthId}} </td>
+                            <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/ ")}} </td>
+                            <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/ ")}} </td>
+                            <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').join("/ ")}} </td>
+                            <td class="work-status"> 
+                                <span class="status-container" :style="getStatusStyle(entry.Status)">{{entry.Status}} </span>
+                            </td>
+                        </tr>
+                        <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
+                            <td class="number"> {{index+1}} </td>
+                            <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
+                            <td class="berth"> {{entry.TaskId.BerthId}} </td>
+                            <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/")}} </td>
+                            <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/")}} </td>
+                            <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').join("/")}} </td>
+                            <td class="work-status"> 
+                                <span class="status-container">{{entry.Status}} </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
