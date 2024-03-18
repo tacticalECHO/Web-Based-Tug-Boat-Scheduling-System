@@ -153,6 +153,7 @@ class DeleteSchedulersView(View):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
+@method_decorator(csrf_exempt, name='dispatch')
 class CreateUserView(View):
     def post(self, request, *args, **kwargs):
         try:

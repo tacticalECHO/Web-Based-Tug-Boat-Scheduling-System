@@ -163,9 +163,9 @@
 
                             <td class="work-type"><span class="status-container" :style="getActionStyle(entry.TaskId.Action)">{{entry.TaskId.Action}}</span></td>
 
-                            <td class="start-time">{{ formatTime(entry.StartTime) }}</td>
+                            <td class="start-time">{{ entry.StartTime ? formatTime(entry.StartTime) : 'waiting' }}</td>
 
-                            <td class="end-time">{{ formatTime(entry.EndTime) }}</td>
+                            <td class="end-time">{{ entry.EndTime ? formatTime(entry.EndTime) : 'waiting' }}</td>
 
                             <td class="work-status"> <span class="status-container" :style="getStatusStyle(entry.Status)">{{entry.Status}} </span></td>
 

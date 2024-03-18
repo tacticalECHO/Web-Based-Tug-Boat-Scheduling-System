@@ -49,19 +49,35 @@ export default {
         close(){
             this.$router.back();
         },
-        async confirm() {
-            const apiUrl = '/api/create-user/';
-            try {
-                const response = await axios.post(apiUrl, {
+        getCSRFToken() {
+        let csrftoken = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, 10) === ('csrftoken=')) {
+                    csrftoken = decodeURIComponent(cookie.substring(10));
+                    break;
+                }
+            }
+        }
+        return csrftoken;
+    },
+    async confirm() {
+        const apiUrl = '/api/create-user/';
+        const csrftoken = this.getCSRFToken(); // 调用上面的方法获取CSRF令牌
+        try {
+            const response = await axios.post(apiUrl, {
                 username: this.username,
                 name: this.name,
                 position: this.selectedPosition,
                 password: '12345678'
             }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken, // 在请求头中包含CSRF令牌
+                }
+            });
                 alert('User created successfully');
                 this.close(); 
             } catch (error) {
