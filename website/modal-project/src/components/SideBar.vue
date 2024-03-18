@@ -6,24 +6,24 @@
         <div v-if="screen() || sidebarOpened" id="sidebar">
             <h2>Ningbo Harbour</h2>
             <ul>
-                <li v-if="isAdmin ||isScheduler" @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item">
+                <li v-if="isAdmin ||isScheduler" @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item" :style="{ backgroundColor: adminDashboard }">
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     A-Dashboard
                 </li>
-                <li v-if="isScheduler || isAdmin" @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item">
+                <li v-if="isScheduler || isAdmin" @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item" :style="{ backgroundColor: schedulerDashboard }">
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     S-Dashboard
                 </li>
-                <li v-if="isScheduler || isAdmin" @click="redirect('TugBoatList')" id="scheduler-dashboard" class="sidebar-item">
+                <li v-if="isScheduler || isAdmin" @click="redirect('TugBoatList')" id="scheduler-dashboard" class="sidebar-item" :style="{ backgroundColor: tugboat}">
                     <font-awesome-icon :icon="['fas', 'ship']" class="sidebar-icon"/>
                     Tug Boats
                 </li>
-                <li v-if="isCaptain || isScheduler || isAdmin" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item">
+                <li v-if="isCaptain || isScheduler || isAdmin" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item" :style="{ backgroundColor: captainDashboard }">
                     <admin-panel v-if="isCaptain" />
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     C-Dashboard
                 </li>
-                <li v-if="isScheduler || isCaptain|| isAdmin" @click="redirect('WorkSchedule')" class="sidebar-item">
+                <li v-if="isScheduler || isCaptain|| isAdmin" @click="redirect('WorkSchedule')" class="sidebar-item" :style="{ backgroundColor: workSchedule }">
                     <font-awesome-icon :icon="['fas', 'calendar-days']" class="sidebar-icon"/>
                     Work Schedules
                 </li>
@@ -31,7 +31,7 @@
 
             <div class="sidebar-bottom-section">
                 <ul>
-                    <li @click="redirect('Settings')" class="sidebar-item">
+                    <li @click="redirect('Settings')" class="sidebar-item" :style="{ backgroundColor: settings }">
                         <font-awesome-icon :icon="['fas', 'gear']" class="sidebar-icon"/>
                         Settings
                     </li>
@@ -70,17 +70,68 @@ export default {
             screenHeight: window.innerHeight,
             screenResized: null,
             sidebarOpened: null,
+            adminDashboard: '',
+            tugboat: '',
+            schedulerDashboard: '',
+            captainDashboard: '',
+            workSchedule: '',
+            settings: '',
         }
+    },
+    mounted(){
+        this.updateSidebarBackground(this.$store.state.currentRoute);
     },
     created() {
         // Update screen size on window resize
         window.addEventListener('resize', this.handleResize);
+        this.unsubscribe = this.$store.subscribe((mutation, state) => {
+            if (mutation.type === 'setCurrentRoute') {
+                this.updateSidebarBackground(state.currentRoute);
+            }
+        });
     },
     destroyed() {
         // Remove the event listener when the component is destroyed
         window.removeEventListener('resize', this.handleResize);
+        this.unsubscribe();
     },
     methods: {
+        resetNone(){
+            this.adminDashboard = 'none';
+            this.tugboat = 'none';
+            this.schedulerDashboard = 'none';
+            this.captainDashboard = 'none';
+            this.workSchedule = 'none';
+        },
+        updateSidebarBackground(path){
+            switch(path){
+                case 'AdminDashboard':
+                case 'NewStaff':
+                    this.adminDashboard = 'lightgrey';
+                    console.log("Admin: "+path + this.adminDashboard)
+                    break;
+                case 'CaptainDashboard':
+                    this.captainDashboard = 'lightgrey';
+                    break;
+                case 'SchedulerDashboard':
+                case 'NewTask':
+                    this.schedulerDashboard = 'lightgrey';
+                    break;
+                case 'TugBoatList':
+                case 'NewTugBoat':
+                    this.tugboat = 'lightgrey';
+                    console.log("Tugboat: "+path + this.tugboat)
+                    break;
+                case 'WorkSchedule':
+                    this.workSchedule = 'lightgrey';
+                    break;
+                case 'Settings':
+                case 'ChangePassword':
+                    this.settings = 'lightgrey';
+                    break;
+            }
+            this.$forceUpdate();
+        },
         screen(){
             if(this.screenHeight > 380 && this.screenWidth > 820){
                 this.sidebarOpened = true;

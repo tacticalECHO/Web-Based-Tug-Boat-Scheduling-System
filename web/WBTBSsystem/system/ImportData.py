@@ -63,8 +63,6 @@ def dataIntoDatabase_TugBoat(data):
         )
 def IfTaskRepeat(data):
     # Determine if the task is repeated
-    if ContainerBoat.objects.get(ContainerBoatID=data[0])==None:
-        return False
     try:
         Task.objects.get(ContainerBoatID=ContainerBoat.objects.get(ContainerBoatID=data[0]),BerthId=data[5],startTime=data[3],Action=data[4])
         return True
