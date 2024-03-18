@@ -137,6 +137,7 @@ export default {
                     body: JSON.stringify({ ids: this.selectedTugboat })
                 });
             }
+            alert('Deleted successfully');
             this.$store.dispatch('fetchTugBoats');
             this.$store.dispatch('fetchCaptains');
 

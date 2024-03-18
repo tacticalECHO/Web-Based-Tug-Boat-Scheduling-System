@@ -96,6 +96,8 @@ export default {
                 });
             }
 
+            alert('Deleted successfully');
+
             this.$store.dispatch('fetchCaptains');
             this.$store.dispatch('fetchSchedulers');
             
@@ -122,7 +124,7 @@ button{
     margin-bottom: 15px;
 }
 
-.table td {
+.table td, .table th{
     text-align: left;
 }
 

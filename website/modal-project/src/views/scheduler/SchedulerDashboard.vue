@@ -327,6 +327,8 @@ export default {
                 });
             }
 
+            
+            alert('Deleted successfully');
             this.$store.dispatch('fetchTasks');
             this.$store.dispatch('fetchScheduleEntries');
 
