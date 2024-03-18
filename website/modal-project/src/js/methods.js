@@ -20,33 +20,42 @@ export function formatDate(event){
 
 export function getStatusStyle(state, type){
     let backgroundColor;
+    let color;
 
     switch (state) {
         case 'Confirmed':
-        backgroundColor = 'green';
-        break;
+            backgroundColor = 'rgb(52, 144, 186)';
+            color = 'white';
+            break;
         case 'Free':
-        backgroundColor = 'green';
-        break;
+            backgroundColor = 'rgb(0, 255, 0, 0.2)';
+            color = 'darkgreen';
+            break;
         case 'Scheduled':
-        backgroundColor = 'rgb(254, 219, 46)';
-        break;
+            backgroundColor = 'rgb(254, 219, 46)';
+            color = 'white';
+            break;
         case 'Busy':
-        backgroundColor = 'red';
-        break;
+            backgroundColor = 'rgb(255,0,0,0.2)';
+            color = 'darkred';
+            break;
         case 'Completed':
-        backgroundColor = 'darkgrey';
-        break;
+            backgroundColor = 'darkgrey';
+            color = 'white';
+            break;
         case 'Maintenance':
-        backgroundColor = 'darkgrey';
-        break;
+            backgroundColor = 'rgb(211,211,211,0.2)';
+            color = 'darkgrey';
+            break;
         default:
-        backgroundColor = 'lightgrey';
+            backgroundColor = 'lightgrey';
+            color = 'white';
     }
 
     switch (type) {
         case 'Completed':
             backgroundColor = 'rgb(213, 212, 212)';
+            color = 'white';
             break;
         default:
             backgroundColor = backgroundColor;
@@ -54,30 +63,36 @@ export function getStatusStyle(state, type){
 
     return {
         background: backgroundColor,
+        color: color,
     };
 }
 
 export function getActionStyle(action, type){
     let backgroundColor;
+    let color;
 
     switch (action) {
         case 'INBOUND':
-            backgroundColor = '#72bedf';
+            backgroundColor = 'rgb(151, 214, 135, 0.5)';
+            color = 'darkgreen';
             break;
-        default:
-            backgroundColor = '#020071';
+        case 'OUTBOUND':
+            backgroundColor = 'rgb(237, 237, 149, 0.5)';
+            color = 'rgb(128, 114, 9)';
+            break;
     }
 
     switch (type) {
         case 'Completed':
             backgroundColor = 'rgb(213, 212, 212)';
+            color = 'white';
             break;
-        default:
+        default :
             backgroundColor = backgroundColor;
     }
-
     return {
         background: backgroundColor,
+        color : color,
     };
 }
 

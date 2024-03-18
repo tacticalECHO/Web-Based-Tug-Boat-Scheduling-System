@@ -77,10 +77,10 @@
             </div>
             <div v-if="waiting()">No Task Available</div>
             <div v-if="!waiting()" class="table-container">
-                <table>
+                <table class="table">
                     <thead>
                         <tr>
-                            <th rowspan="2"><input type="checkbox"/></th>
+                            <th rowspan="2"><input type="checkbox" disabled/></th>
                             <th rowspan="2">No.</th>
                             <th rowspan="2">Planned Time</th>
                             <th rowspan="2">Container Boat</th>
@@ -113,7 +113,7 @@
                                     <input v-model="plannedTime" type="datetime-local">
                                     <input class="submit-button" type="submit" />
                                 </form>
-                                <span @click="selected(entry.ScheduleEntryId, 'time')" v-if="timeInfo != entry.ScheduleEntryId">{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</span> 
+                                <span class="click-hover" @click="selected(entry.ScheduleEntryId, 'time')" v-if="timeInfo != entry.ScheduleEntryId">{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</span> 
                             </td>
 
                             <td @click.stop>
@@ -122,19 +122,17 @@
                                         <option v-for="containerBoat in $store.state.containerBoats" :key="containerBoat.ContainerBoatID">{{ containerBoat.ContainerBoatID }}</option>
                                     </select>
                                 </form>
-                                <span @click="selected(entry.ScheduleEntryId, 'containerBoatId')" v-if="containerBoatInfo != entry.ScheduleEntryId">{{entry.TaskId.ContainerBoatID.ContainerBoatID}}</span> 
+                                <span class="click-hover" @click="selected(entry.ScheduleEntryId, 'containerBoatId')" v-if="containerBoatInfo != entry.ScheduleEntryId">{{entry.TaskId.ContainerBoatID.ContainerBoatID}}</span> 
                             </td>
 
-                            <td @click.stop class="country">{{entry.TaskId.ContainerBoatID.Country}}</td>
+                            <td class="country">{{entry.TaskId.ContainerBoatID.Country}}</td>
                             
-                            <td @click.stop>
-                                <span>{{ entry.TaskId.RequiredTugBoat }}</span>
-                            </td>
+                            <td><span>{{ entry.TaskId.RequiredTugBoat }}</span></td>
 
                             <td @click.stop>
                                 <span v-for="tugBoats in entry.listOfTugBoats.map(tugBoat => tugBoat)" :key="tugBoats">
                                     <span @click="selectAndGetTugBoat(entry.ScheduleEntryId, tugBoats, entry.TaskId.TaskId)" v-if="tugBoatInfo != entry.ScheduleEntryId || tugBoatIndex != tugBoats">
-                                        <span class="status-container" :style="getStatusStyle(tugBoats.CurrentStatus)">{{ tugBoats.TugBoatId }}</span>
+                                        <span class="status-container click-hover" :style="getStatusStyle(tugBoats.CurrentStatus)">{{ tugBoats.TugBoatId }}</span>
                                         &nbsp;
                                     </span>
                                     <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === tugBoats">
@@ -160,7 +158,7 @@
                                         <option v-for="berth in $store.state.berths" :key="berth.BerthID">{{ berth.BerthId }}</option>
                                     </select>
                                 </form>
-                                <span @click="selected(entry.ScheduleEntryId, 'berthId')" v-if="berthInfo != entry.ScheduleEntryId">{{ entry.TaskId.BerthId }}</span> 
+                                <span class="click-hover" @click="selected(entry.ScheduleEntryId, 'berthId')" v-if="berthInfo != entry.ScheduleEntryId">{{ entry.TaskId.BerthId }}</span> 
                             </td>
 
                             <td class="work-type"><span class="status-container" :style="getActionStyle(entry.TaskId.Action)">{{entry.TaskId.Action}}</span></td>
@@ -184,7 +182,7 @@
                                     <input v-model="plannedTime" type="datetime-local">
                                     <input class="submit-button" type="submit" />
                                 </form>
-                                <span @click="selected(task.TaskId, 'time')" v-if="timeInfo != task.TaskId">{{formatDate(task.startTime)}}&emsp;&emsp;{{ formatTime(task.startTime) }}</span> 
+                                <span class="click-hover" @click="selected(task.TaskId, 'time')" v-if="timeInfo != task.TaskId">{{formatDate(task.startTime)}}&emsp;&emsp;{{ formatTime(task.startTime) }}</span> 
                             </td>
 
                             <td @click.stop>
@@ -193,14 +191,12 @@
                                         <option v-for="containerBoat in $store.state.containerBoats" :key="containerBoat.ContainerBoatID">{{ containerBoat.ContainerBoatID }}</option>
                                     </select>
                                 </form>
-                                <span @click="selected(task.TaskId, 'containerBoatId')" v-if="containerBoatInfo != task.TaskId">{{task.ContainerBoatID.ContainerBoatID}}</span> 
+                                <span class="click-hover" @click="selected(task.TaskId, 'containerBoatId')" v-if="containerBoatInfo != task.TaskId">{{task.ContainerBoatID.ContainerBoatID}}</span> 
                             </td>
 
                             <td class="country">{{task.ContainerBoatID.Country}}</td>
 
-                            <td @click.stop>
-                                <span>{{ task.RequiredTugBoat }}</span>
-                            </td>
+                            <td><span>{{ task.RequiredTugBoat }}</span></td>
 
                             <td @click.stop class="disabled-column">
                                 <span @click="addSelected('task'+task.TaskId, 'tugBoat',task.TaskId)" v-if="tugBoatInfo != 'task'+task.TaskId">
@@ -224,24 +220,24 @@
                                         <option v-for="berth in $store.state.berths" :key="berth.BerthID">{{ berth.BerthId }}</option>
                                     </select>
                                 </form>
-                                <span @click="selected(task.TaskId, 'berthId')" v-if="berthInfo != task.TaskId">{{ task.BerthId }}</span> 
+                                <span class="click-hover" @click="selected(task.TaskId, 'berthId')" v-if="berthInfo != task.TaskId">{{ task.BerthId }}</span> 
                             </td>
 
-                            <td @click.stop class="work-type">
+                            <td @click.stop>
                                 <form v-if="actionInfo === task.TaskId">
                                     <select @change="edit(task.TaskId)" v-model="action">
                                         <option>INBOUND</option>
                                         <option>OUTBOUND</option>
                                     </select>
                                 </form>
-                                <span @click="selected(task.TaskId, 'action')" v-if="actionInfo != task.TaskId" class="status-container" :style="getActionStyle(task.Action)">{{task.Action}}</span>
+                                <span class="status-container click-hover" @click="selected(task.TaskId, 'action')" v-if="actionInfo != task.TaskId" :style="getActionStyle(task.Action)">{{task.Action}}</span>
                             </td>
 
                             <td class="disabled-column">{{}}</td>
 
                             <td class="disabled-column">{{}}</td>
 
-                            <td class="work-status"> <span class="status-container" :style="getStatusStyle(task.State)">{{task.State}} </span></td>
+                            <td> <span class="status-container" :style="getStatusStyle(task.State)">{{task.State}} </span></td>
 
                             <td class="disabled-column">{{}}</td>
 
@@ -253,7 +249,7 @@
                             <td>{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</td>
                             <td>{{entry.TaskId.ContainerBoatID.ContainerBoatID}}</td>
                             <td class="country">{{entry.TaskId.ContainerBoatID.Country}}</td>
-                            <td @click.stop><span>{{ entry.TaskId.RequiredTugBoat }}</span></td>
+                            <td><span>{{ entry.TaskId.RequiredTugBoat }}</span></td>
                             <td>{{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join('/ ')}}</td>
                             <td>{{ entry.TaskId.BerthId}}</td>
                             <td class="work-type"><span class="status-container">{{entry.TaskId.Action}}</span></td>
@@ -273,7 +269,6 @@
 import SideBar from '@/components/SideBar.vue';
 import MessageButton from '@/components/MessageButton.vue';
 import axios from 'axios';
-import { getStatusStyle } from '@/js/methods';
 
 export default {
     name: 'WorkSchedule',
@@ -332,6 +327,8 @@ export default {
                 });
             }
 
+            
+            alert('Deleted successfully');
             this.$store.dispatch('fetchTasks');
             this.$store.dispatch('fetchScheduleEntries');
 
@@ -670,7 +667,7 @@ export default {
     font-size: 1.5em;
 }
 #add-tugboat:hover{
-    color: lightgrey;
+    color: rgb(233, 232, 232);
 }
 
 .disabled-column {
@@ -749,30 +746,6 @@ form {
     /* .filter {
         flex-basis: calc(50% - 20px);
     } */
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    font-size: var(--font-size);
-}
-
-th {
-    text-align: left;
-}
-
-td {
-    text-align: center;
-}
-
-th, td {
-    border: 1px solid #dddddd;
-    padding: 10px;
-}
-
-th {
-    background-color: #f2f2f2;
 }
 
 #filter-section{
