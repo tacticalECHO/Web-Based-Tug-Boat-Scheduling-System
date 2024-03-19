@@ -33,4 +33,11 @@ describe('Captain Dashboard Page Tests', () => {
       expect(str).to.equal(`Successfully Download!`)
     })
   })
+
+  it('should successfully change the status of an schedule entry', () => {
+    cy.intercept('POST', '/api/update-schedule-entry').as('updateStatus');
+    cy.get('.status-container.click-hover').first().click();
+    cy.get('select').first().select('Completed'); 
+    cy.wait('@updateStatus').its('response.statusCode').should('eq', 200);
+  });
 })

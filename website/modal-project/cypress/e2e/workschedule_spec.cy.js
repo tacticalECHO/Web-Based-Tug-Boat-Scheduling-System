@@ -13,14 +13,14 @@ describe('Work Schedule Page', () => {
   it('successfully loads', () => {
     cy.get('.title').should('contain', 'Work Schedules');
     cy.get('.filter-group').should('exist');
-    cy.get('.work-table').should('exist');
+    cy.get('.table').should('exist');
   });
 
   it('filters work schedules by container boat', () => {
     cy.contains('label', 'Container Boat:').next('select').as('containerBoatSelect');
     cy.get('@containerBoatSelect').select('UK0001');
-    cy.get('.work-table tbody').find('tr').its('length').should('be.gt', 0);
-    cy.get('.work-table tbody tr').each(($row) => {
+    cy.get('.table tbody').find('tr').its('length').should('be.gt', 0);
+    cy.get('.table tbody tr').each(($row) => {
       cy.wrap($row).find('.container-boat').should('contain', 'UK0001');
     });
   });

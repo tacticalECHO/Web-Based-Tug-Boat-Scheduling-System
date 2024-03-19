@@ -48,7 +48,6 @@ const routes = [
     path: '/captain',
     name: 'CaptainDashboard',
     component: CaptainDashboard,
-    meta: { requiresRoles: ['captain'] },
     meta: { requiresCap: true },
     children: [
       {
