@@ -425,27 +425,34 @@ class UpdateEntryAndTaskView(View):
             if scheduleEntryId is not None:
                 entry = ScheduleEntry.objects.filter(ScheduleEntryId=scheduleEntryId).first()
 
-                if removeTugBoatId is not None:
-                    try:
-                        removeTugBoat = TugBoat.objects.get(TugBoatId=removeTugBoatId)
-                        entry.listOfTugBoats.remove(removeTugBoat)
-                    except TugBoat.DoesNotExist:
-                        return JsonResponse({'error': f'Tugboat with id={removeTugBoatId} does not exist'}, status=404)
                     
                 if newTugBoatId is not None:
                     try:
                         if newTugBoatId != "":
                             task.TaskManual = 1
+                            task.save()
                             newTugBoat = TugBoat.objects.get(TugBoatId=newTugBoatId)
                             entry.listOfTugBoats.add(newTugBoat)
+                            entry.save()
                             availability = ifTugBoatAvailable(newTugBoat, task)
                             if not availability:
                                 conflict = True
                                     
                     except TugBoat.DoesNotExist:
-                        return JsonResponse({'error': f'Tugboat with id={newTugBoatId} does not exist'}, status=404)    
-                task.save()
-                entry.save()
+                        return JsonResponse({'error': f'Tugboat with id={newTugBoatId} does not exist'}, status=404)  
+                if removeTugBoatId is not None:
+                    try:
+                        removeTugBoat = TugBoat.objects.get(TugBoatId=removeTugBoatId)
+                        entry.listOfTugBoats.remove(removeTugBoat)
+                        if entry.listOfTugBoats.count() <= 0:
+                            entry.TaskId.State = 'Unscheduled'
+                            entry.TaskId.TaskManual = 0
+                            entry.TaskId.save()
+                            entry.delete()
+                            print('Entry deleted')
+                    except TugBoat.DoesNotExist:
+                        return JsonResponse({'error': f'Tugboat with id={removeTugBoatId} does not exist'}, status=404)  
+
 
             if not conflict:
                 response = JsonResponse({'success': True})
