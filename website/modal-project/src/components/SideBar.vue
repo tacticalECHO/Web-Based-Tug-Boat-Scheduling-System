@@ -1,5 +1,5 @@
 <template>
-    <div id="Sidebar"> 
+    <div id="Sidebar" @click="closeSidebar()"> 
         <div class="header">
             <img src="../assets/header.jpg" class="header-image">
         </div>
@@ -48,8 +48,8 @@
                 </ul>
             </div>
         </div>
-        <button class="btn btn-outline-dark" @click="openSidebar()" v-if="!screen()" id="open-sidebar"><font-awesome-icon :icon="['fas', 'forward']" /></button>
-        <button class="btn btn-outline-dark" @click="closeSidebar()" v-if="sidebarOpened && closeButton()" id="close-sidebar"><font-awesome-icon :icon="['fas', 'backward']" /></button>
+        <button class="btn btn-outline-dark" @click.stop="openSidebar()" v-if="!screen()" id="open-sidebar"><font-awesome-icon :icon="['fas', 'bars']" size="2x"/></button>
+        <!-- <button class="btn btn-outline-dark" @click="closeSidebar()" v-if="sidebarOpened && closeButton()" id="close-sidebar"><font-awesome-icon :icon="['fas', 'backward']" size="2x"/></button> -->
         <footer class="footer fixed-bottom">
             <div class="text-center p-3">
                 WEB TUGBOAT SCHEDULING SYSTEM
@@ -185,6 +185,7 @@ export default {
     width: 100vw;
     object-fit: cover;
     opacity: 0.8;
+    /* filter: brightness(120%) grayscale(20%); */
     -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent);
         mask-image: linear-gradient(to bottom, black 60%, transparent);
 }
@@ -211,6 +212,7 @@ export default {
     z-index: 99999;
     position: fixed;
     top: 0;
+    border: none;
 }
 
 #open-sidebar {
@@ -218,6 +220,7 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
+    border: none;
 }
 
 #sidebar {

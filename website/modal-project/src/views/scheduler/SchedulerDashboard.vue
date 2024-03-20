@@ -69,10 +69,18 @@
                         </select>
                     </span>
                 </div>
-                <span>
-                    <button class="btn btn-light" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                <span class="add-delete">
+                    <button type="button" class="delete" id="delete" @click= deleteSelected>
+                        <span class="delete__text">Delete &nbsp;</span>
+                        <span class="delete__icon"><font-awesome-icon :icon="['fas', 'delete-left']" /></span>
+                    </button>
+                    <!-- <button class="btn btn-light" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button> -->
                     &nbsp;
-                    <button class="btn btn-dark" id="add" @click="redirect('NewTask')">Add  + </button>
+                    <button type="button" class="add" id="add" @click="redirect('NewTask')">
+                        <span class="add__text">Add &nbsp;</span>
+                        <span class="add__icon"><font-awesome-icon :icon="['fas', 'plus']" /></span>
+                    </button>
+                    <!-- <button class="btn btn-dark" id="add" @click="redirect('NewTask')">Add  + </button> -->
                 </span>
             </div>
             <div v-if="waiting()">No Task Available</div>
@@ -627,21 +635,8 @@ export default {
     margin-left: 5px;
 }
 
-#schedule{
-    height: 50px;
-    font-size: var(--font-size);
-    background: black;
-    color: white;
-    font-weight: bold;
-    width: 200px;
-    text-align: center;
-}
-
-#schedule:hover{
-    background: white;
-    color: black;
-    font-size: 1em;
-    transition: font-size 0.5s;
+.job button{
+    width: 160px;
 }
 
 #publish {
@@ -691,6 +686,7 @@ export default {
     gap: 10px;
     padding: 10px;
 }
+
 .filter{
     display: flex;
     /* flex-direction: column; */
@@ -706,19 +702,19 @@ export default {
 }
 
 .progress-bar {
-  width: 100%;
-  height: 4px;
-  background-color: #409BBF;
-  position: fixed;
-  top: 0;
-  left: 0;
-  visibility: hidden;
+    width: 100%;
+    height: 4px;
+    background-color: #409BBF;
+    position: fixed;
+    top: 0;
+    left: 0;
+    visibility: hidden;
 }
 
 .progress-bar-active {
-  width: 100%;
-  visibility: visible;
-  animation: progressBarAnimation 2s linear forwards;
+    width: 100%;
+    visibility: visible;
+    animation: progressBarAnimation 2s linear forwards;
 }
 
 @keyframes progressBarAnimation {
@@ -743,6 +739,10 @@ form {
         justify-content: space-between;
     }
 
+    .job button {
+        width: fit-content;
+    }
+
     /* .filter {
         flex-basis: calc(50% - 20px);
     } */
@@ -751,4 +751,45 @@ form {
 #filter-section{
     margin-top: 1em;
 }
+
+#schedule {
+    height: 50px;
+    font-size: var(--font-size);
+    color: white;
+    width: 200px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(15, 15, 15);
+    border: none;
+    font-weight: bold;
+    font-size: 0.9em;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.103);
+    position: relative;
+    overflow: hidden;
+    transition-duration: .3s;
+}
+
+#schedule::before {
+    width: 0;
+    height: 0;
+    position: absolute;
+    content: "";
+    background-color: var(--blue-color);
+    border-radius: 50%;
+    transition-duration: .4s;
+    mix-blend-mode: hard-light;
+}
+
+#schedule:hover::before {
+    transition-duration: .4s;
+    width: 100%;
+    height: 100%;
+    /* transform: translate(100%, -50%); */
+    border-radius: 0;
+}
+
 </style>
