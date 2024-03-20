@@ -51,6 +51,21 @@ describe('Scheduler Dashboard Page Tests', () => {
     // });
   });
 
+  it('Shows "No Task Available" message when there is no task', () => {
+    cy.window().then(win => {
+      win.waiting = () => true;
+    });
+    cy.get('div').contains('No Task Available').should('be.visible');
+  });
+
+  it('Shows table when there is task', () => {
+    cy.window().then(win => {
+      win.waiting = () => false;
+    });
+
+    cy.get('.table-container').should('be.visible');
+  });
+
   it('Click add button redirect to New Task page', () => {
       cy.get('#add').click();
       cy.url().should('include', '/#/add-new-task');
