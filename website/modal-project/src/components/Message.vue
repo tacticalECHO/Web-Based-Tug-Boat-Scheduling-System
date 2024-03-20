@@ -2,30 +2,18 @@
     <div class="backdrop">
         <div class="container-position">
             <div class="popup-container">
-                <button @click="close">X</button>
-                <br/>
-                <table>
-                    <tr>
-                        <td><button >Yibai Yuan did not confirm</button></td>
-                    </tr>
-                    <tr>
-                        <td><button>Yibai Yuan did not confirm</button></td>
-                    </tr>
-                    <tr>
-                        <td><button>Yibai Yuan did not confirm</button></td>
-                    </tr>
-                    <tr>
-                        <td><button>Yibai Yuan did not confirm</button></td>
-                    </tr>
-                </table>
-                <br/> 
+                <button class="close-button" @click="close">X</button>
+                <div class="info-text">
+                    <strongg> ALL UPDATE </strongg><br>
+                    If you have any other questions, please call the Ningbo Harbour General Scheduling Office at: <br>
+                    <strong>(0574) XXXX-XXXX</strong>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-
 export default {
     name: 'Message',
     props: [],
@@ -46,42 +34,48 @@ export default {
 </script>
 
 <style scoped>
-button {
+.close-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
     width: 30px;
     height: 30px;
     border: none;
     font-size: 15px;
-}
-
-table button{
-    width: 100%;
-    height: 100%;
-    font-size: var(--font-size);
-    border-radius: none;
-}
-
-table button:hover{
-    background: rgba(140, 187, 192, 0.5);
+    cursor: pointer;
+    background: transparent;
+    z-index: 10;
 }
 
 .popup-container {
-    width: 700px;
-    height: 430px;
+    position: relative;
+    height: 330px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .container-position {
     margin-top: 120px;
 }
 
-table {
-    margin-left: 50px;
-    margin-right: 50px;
-    border-collapse: collapse;
-    border-spacing: 0;
+.info-text {
+    margin: 20px;
+    font-size: 18px;
+    line-height: 1.6;
 }
 
-tr, td {
-    border: 1px solid var(--main-button-color);
+.info-text strongg {
+    font-size: 22px;
+    color: #f0736f;
+    padding: 5px;
+    border: 2px solid #f26f6a;
+    margin-bottom: 15px; 
+    display: inline-block; 
+    border-radius: 5px; 
+    background-color: #ffd2d2; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-
 </style>

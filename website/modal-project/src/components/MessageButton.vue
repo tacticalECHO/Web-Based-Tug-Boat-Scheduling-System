@@ -10,7 +10,13 @@ export default {
     name: 'MessageButton',
     methods: {
         message(){
-            this.$router.push({name: 'Message'})
+        if (this.$store.state.isCaptain) {
+            this.$router.push({ name: 'CaptainMessage' });
+        } else if (this.$store.state.isScheduler) {
+            this.$router.push({ name: 'SchedulerMessage' });
+        } else {
+            alert('Unauthorized or undefined role');
+        }
         }
     }
 }
