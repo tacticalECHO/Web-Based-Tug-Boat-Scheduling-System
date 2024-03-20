@@ -3,10 +3,8 @@ import store from '../store'
 // components-----------------------------------------------------------------
 import ExitNotice from '@/components/ExitNotice.vue'
 import RescheduleNotice from '@/components/RescheduleNotice.vue'
-import ConflictNotice from '@/components/ConflictNotice.vue'
 import AutoReschedule from '@/components/AutoReschedule.vue'
 import Message from '@/components/Message.vue'
-import MessageDetails from '@/components/MessageDetails.vue'
 // general--------------------------------------------------------------------
 import Login from '@/views/Login.vue'
 import Settings from '@/views/Settings.vue'
@@ -68,11 +66,11 @@ const routes = [
         name: 'SchedulerMessage',
         component: Message,
       },
-      {
-        path: 'message-details', //can change to id later
-        name: 'MessageDetails',
-        component: MessageDetails,
-      },
+      // {
+      //   path: 'message-details', //can change to id later
+      //   name: 'MessageDetails',
+      //   component: MessageDetails,
+      // },
       {
         path: 'auto-reschedule',
         name: 'AutoReschedule',

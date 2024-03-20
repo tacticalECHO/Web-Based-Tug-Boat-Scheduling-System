@@ -6,7 +6,7 @@
                 <br/>
                 <table>
                     <tr>
-                        <td><button @click="details()">Yibai Yuan did not confirm</button></td>
+                        <td><button >Yibai Yuan did not confirm</button></td>
                     </tr>
                     <tr>
                         <td><button>Yibai Yuan did not confirm</button></td>
@@ -40,9 +40,6 @@ export default {
             } else {
                 this.$router.push({ name: 'Settings' });
             }
-        },
-        details(){
-            this.$router.push({name: 'MessageDetails'});
         }
     }
 }

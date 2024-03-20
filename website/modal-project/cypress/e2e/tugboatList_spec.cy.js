@@ -14,14 +14,14 @@ describe('Tug Boat List Page', () => {
   });
 
   it('allows users to search for tugboats', () => {
-    cy.get('#search').type('NB001');
-    cy.get('.table-container').should('contain', 'NB001');
+    cy.get('#search').type('NB00N');
+    cy.get('.table-container').should('contain', 'NB00N');
   });
   
 
   it('filters tugboats by status', () => {
     cy.get('input[type="radio"]').check('Busy', { force: true });
-    cy.get('.table-container').should('contain', 'NB001');
+    cy.get('.table-container').should('contain', 'NB00N');
   });
   
 });
