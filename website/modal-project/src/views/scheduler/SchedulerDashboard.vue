@@ -315,31 +315,32 @@ export default {
     },
     methods: {
         async deleteSelected() {
-            if (this.selectedTasks.length > 0) {
-                await fetch(`/api/tasks-delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids: this.selectedTasks })
-                });
+            if(this.deletionAlert()){
+                if (this.selectedTasks.length > 0) {
+                    await fetch(`/api/tasks-delete/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ ids: this.selectedTasks })
+                    });
+                }
+
+                if (this.selectedScheduleEntries.length > 0) {
+                    await fetch(`/api/scheduleentries-delete/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ ids: this.selectedScheduleEntries })
+                    });
+                }
+
+                
+                alert('Deleted successfully');
+                this.$store.dispatch('fetchTasks');
+                this.$store.dispatch('fetchScheduleEntries');
             }
-
-            if (this.selectedScheduleEntries.length > 0) {
-                await fetch(`/api/scheduleentries-delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids: this.selectedScheduleEntries })
-                });
-            }
-
-            
-            alert('Deleted successfully');
-            this.$store.dispatch('fetchTasks');
-            this.$store.dispatch('fetchScheduleEntries');
-
             this.selectedTasks = [];
             this.selectedScheduleEntries = [];
         },

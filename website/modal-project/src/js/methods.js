@@ -109,3 +109,8 @@ export function getCaptainName(id){
     const tugboat = this.tugboats.find((tugboat) => tugboat.TugBoatId === id);
     return tugboat && tugboat.CaptainId ? tugboat.CaptainId.name : "-";
 }
+
+export function deletionAlert(){
+    const deletion = confirm("Confirm to delete?");
+    return deletion
+}

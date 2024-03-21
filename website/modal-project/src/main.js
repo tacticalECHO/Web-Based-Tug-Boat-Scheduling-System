@@ -4,8 +4,7 @@ import './css/root.css'
 import './css/popup.css'
 import store from './store'
 import router from './router'
-import { redirect, formatTime, formatDate, getActionStyle, getStatusStyle, toggle, getCaptainId, getCaptainName } from './js/methods.js'
-// import VueNotifications from 'vue-notifications'
+import { redirect, formatTime, formatDate, getActionStyle, getStatusStyle, toggle, getCaptainId, getCaptainName, deletionAlert } from './js/methods.js'
 
 //icons---------------------------------------------------------
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -27,6 +26,7 @@ app.config.globalProperties.getStatusStyle = getStatusStyle
 app.config.globalProperties.toggle = toggle
 app.config.globalProperties.getCaptainId = getCaptainId
 app.config.globalProperties.getCaptainName = getCaptainName
+app.config.globalProperties.deletionAlert = deletionAlert
 
 export default {
     components: {

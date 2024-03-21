@@ -92,31 +92,32 @@ export default {
     },
     methods: {
         async deleteSelected() {
-            if (this.selectedCaptains.length > 0) {
-                await fetch(`http://127.0.0.1:8000/api/captains-delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids: this.selectedCaptains })
-                });
+            if(this.deletionAlert()){
+                if (this.selectedCaptains.length > 0) {
+                    await fetch(`http://127.0.0.1:8000/api/captains-delete/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ ids: this.selectedCaptains })
+                    });
+                }
+
+                if (this.selectedSchedulers.length > 0) {
+                    await fetch(`http://127.0.0.1:8000/api/schedulers-delete/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ ids: this.selectedSchedulers })
+                    });
+                }
+
+                alert('Deleted successfully');
+
+                this.$store.dispatch('fetchCaptains');
+                this.$store.dispatch('fetchSchedulers');
             }
-
-            if (this.selectedSchedulers.length > 0) {
-                await fetch(`http://127.0.0.1:8000/api/schedulers-delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids: this.selectedSchedulers })
-                });
-            }
-
-            alert('Deleted successfully');
-
-            this.$store.dispatch('fetchCaptains');
-            this.$store.dispatch('fetchSchedulers');
-            
             this.selectedCaptains = [];
             this.selectedSchedulers = [];
         }

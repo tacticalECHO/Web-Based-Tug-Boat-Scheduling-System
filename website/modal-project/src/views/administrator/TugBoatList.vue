@@ -155,19 +155,20 @@ export default {
     },
     methods: {
         async deleteSelected() {
-            if (this.selectedTugboat.length > 0) {
-                await fetch(`/api/tugboat-delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids: this.selectedTugboat })
-                });
+            if(this.deletionAlert()){
+                if (this.selectedTugboat.length > 0) {
+                    await fetch(`/api/tugboat-delete/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ ids: this.selectedTugboat })
+                    });
+                }
+                alert('Deleted successfully');
+                this.$store.dispatch('fetchTugBoats');
+                this.$store.dispatch('fetchCaptains');
             }
-            alert('Deleted successfully');
-            this.$store.dispatch('fetchTugBoats');
-            this.$store.dispatch('fetchCaptains');
-
             this.selectedTugboat = [];
         },
         handleChange(state) {
