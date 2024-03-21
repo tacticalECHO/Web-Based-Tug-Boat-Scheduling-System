@@ -405,6 +405,7 @@ class UpdateEntryAndTaskView(View):
             action = data.get('action')
             tugboatConflict = False
             timeConflict = False
+            totalTugboat = 0
 
             task = Task.objects.get(TaskId=taskId)
             try:
@@ -418,6 +419,7 @@ class UpdateEntryAndTaskView(View):
                         for tugboat in tugBoatList: # check for current tugboat availability
                             if not ifTugBoatAvailable(tugboat, task):
                                 timeConflict = True
+                                totalTugboat+=1
                                 list.add(tugboat.TugBoatId)
                                 entry.listOfTugBoats.remove(tugboat)
                             entry.save()
@@ -469,7 +471,7 @@ class UpdateEntryAndTaskView(View):
             
             if timeConflict: # request for
                 conflictList = ",".join(list)
-                response = JsonResponse({'success': True,'timeConflict': timeConflict, 'tugboat': conflictList})
+                response = JsonResponse({'success': True,'timeConflict': timeConflict, 'tugboat': conflictList, 'total': totalTugboat})
             elif tugboatConflict:
                 AutoSchedule_Reschedule()
                 print("rescheduling")
@@ -533,31 +535,30 @@ class ManualScheduleView(View):
             print(e)
             return JsonResponse({'error': str(e)}, status=400)
         
-# @method_decorator(csrf_exempt, name='dispatch')
-# class TugBoatRescheduleView(View):
-#     def post(self, request, *args, **kwargs):
-#         try:
-#             data = json.loads(request.body)
-#             auto = data.get('auto')
-#             list = data.get('list')
-#             entryId = data.get('entryId')
-#             # message=''
-#             if auto:
-#                 AutoSchedule_Reschedule()
-#                 print('Auto Rescheduled')
-#                 message = 'Auto Reschedulling'
-#             else:
-#                 entry = ScheduleEntry.objects.get(ScheduleEntryId=entryId)
-#                 for id in list:
-#                     tugboat = TugBoat.objects.get(TugBoatId=id)
-#                     entry.listOfTugBoats.remove(tugboat)
-#                     print('Removed '+ id)
-#                 entry.save()
+@method_decorator(csrf_exempt, name='dispatch')
+class TugBoatRescheduleView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            total = data.get('total')
+            entryId = data.get('entryId')
+            taskId = data.get('taskId')
+            
+            entry = ScheduleEntry.objects.get(ScheduleEntryId=entryId)
+            task = Task.objects.get(TaskId=taskId)
+            all_tugboats = TugBoat.objects.all()
+            while total>0:
+                for tugboat in all_tugboats:
+                    if ifTugBoatAvailable(tugboat, task):
+                        entry.listOfTugBoats.add(tugboat)
+                        entry.save()
+                        break
+                total-=1
 
-#             return JsonResponse({'success': True})
-#         except Exception as e:
-#             print(e)
-#             return JsonResponse({'error': str(e)}, status=400)         
+            return JsonResponse({'success': True})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, status=400)         
         
 @method_decorator(csrf_exempt, name='dispatch')
 class AutoScheduleView(View):

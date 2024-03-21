@@ -36,5 +36,6 @@ urlpatterns = [
     path('api/manual-schedule/', views.ManualScheduleView.as_view(), name='manual_schedule'),
     path('api/update-tugboat/', views.UpdateTugBoatView.as_view(), name='update_tugboat'),
     path('api/api/update-publish-time', views.PublishView.as_view(), name='update-publish-time'),
+    path('api/tugboat-reschedule/', views.TugBoatRescheduleView.as_view(), name='tugboat_reschedule'),
     path('', include(router.urls)),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

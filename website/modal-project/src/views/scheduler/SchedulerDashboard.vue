@@ -540,7 +540,7 @@ export default {
                     if(response.data.tugboatConflict){
                         alert('There are conflicted entries. Rescheduling...');
                     }if(response.data.timeConflict){
-                        alert('Conlict Notice: \n\nTugboats: '+response.data.tugboat+" is removed from entry.")
+                        this.autoRescheduleTugboats(response.data.tugboat, response.data.total, entryId, taskId);
                     }else{
                         alert('Edit Successfully');
                     }
@@ -552,6 +552,27 @@ export default {
             } catch (error) {
                 console.error('Edit task error:', error);
                 alert('Edit Task Error.');
+            }
+        },
+        async autoRescheduleTugboats(tugboatList, total, entryId, taskId){
+            const auto = confirm('Conlict Notice: \n\nTugboat(s): '+ tugboatList + "are not available \n\nAuto Reschedule?")
+            if(auto){
+                try{
+                    const confirmResponse = await axios.post('/api/tugboat-reschedule/',{
+                        total: total,
+                        entryId: entryId,
+                        taskId: taskId
+                    });
+                    if (confirmResponse.data.success){
+                        alert('Auto Reschedule Successful');
+                    }else {
+                        alert('Failed to Auto Reschedule');
+                    }
+                } catch (error) {
+                    alert('Auto Reschedule Error. Please add new tugboat manually.');
+                }
+            }else{
+                alert('Tugboat(s): '+ tugboatList +" is removed from entry.")
             }
         },
         async manualSchedule(taskId){
