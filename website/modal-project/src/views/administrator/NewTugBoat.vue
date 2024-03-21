@@ -47,8 +47,12 @@ export default {
                 });
                 if (response.data.success) {
                     alert(response.data.message+'\nNew Tug Boat Added Successfully');
-                    this.$store.dispatch('fetchCaptains');
-                    this.$router.back()
+                    
+                    setTimeout(() => {
+                        this.$store.dispatch('fetchCaptains');
+                        this.$router.push({ path: '/tugboat-list' })
+                    }, 1000); 
+                    // this.$router.back()
                 } else {
                     alert('Fail to add tug boat.');
                 }

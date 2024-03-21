@@ -67,13 +67,15 @@ class TestAPIViews(StaticLiveServerTestCase):
         self.assertIn('Captains deleted successfully', response.json()['message'])
 
     def test_save_new_task(self):
+        self.client = Client()
         new_task_data = {
             'containerBoatId': 'CB456',
             'tonnage': 6000,
             'country': 'Country Y',
-            'time': '2023-04-01T12:00:00',
+            'time': '2024-04-01T15:00:00+0000',
             'berthId': 1,
             'action': 'INBOUND',
+            'requiredTugBoat': 2,
         }
         response = self.client.post('/api/save-newtask/', data=new_task_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -109,5 +111,53 @@ class TestAPIViews(StaticLiveServerTestCase):
         response = self.client.post('/api/update-publish-time', data=publish_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertIn('Entries published successfully.', response.json()['message'])
+
+from django.urls import reverse
+from datetime import timedelta
+import json
+class TugBoatRescheduleViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        user_captain = User.objects.create_user(username='test_captain', password='12345')
+        user_scheduler = User.objects.create_user(username='test_scheduler', password='12345')
+        captain = Captain.objects.create(Account=user_captain, name="Jack", CaptainId="CP1001")
+        scheduler = Scheduler.objects.create(Account=user_scheduler, name="John", SchedulerId="SC1001")
+        tugboat = TugBoat.objects.create(TugBoatId="TB001", CaptainId=captain, StartWorkingTime = '00:00:00', EndWorkingTime = '23:59:59')
+        container_boat = ContainerBoat.objects.create(ContainerBoatID="CB001", Tonnage=5000, Country="Country X")
+        task = Task.objects.create(
+            ContainerBoatID=container_boat, 
+            RequiredTugBoat=1, 
+            startTime=datetime.now() + timedelta(days=1), 
+            Action='INBOUND'
+        )
+        cls.schedule_entry = ScheduleEntry.objects.create(TaskId=task)
+
+    def test_tugboat_reschedule_success(self):
+        self.client = Client()
+        url = reverse('tugboat_reschedule')  
+        post_data = {
+            'total': 1,
+            'entryId': self.schedule_entry.ScheduleEntryId,
+            'taskId': self.schedule_entry.TaskId.TaskId,
+        }
+        response = self.client.post(url, data=json.dumps(post_data), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        response_data = response.json()
+        self.assertTrue(response_data['success'])
+        self.assertFalse(response_data['insufficient']) 
+
+    def test_tugboat_reschedule_invalid_entry_or_task(self):
+        self.client = Client()
+        url = reverse('tugboat_reschedule')
+        post_data = {
+            'total': 1,
+            'entryId': 9999,
+            'taskId': 9999,
+        }
+        response = self.client.post(url, data=json.dumps(post_data), content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('error', response.json())
+
+
 
 

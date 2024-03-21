@@ -17,7 +17,7 @@ describe('New TugBoat Page Test', () => {
     cy.get('input#endTime').type('16:00');
     cy.get('button#confirm').click();
     cy.on('window:alert', (str) => {
-      expect(str).to.equal('New Tug Boat Added Successfully');
+      expect(str).to.equal('success\nNew Tug Boat Added Successfully');
     });
     tugboatId = 'NB000N'
   });

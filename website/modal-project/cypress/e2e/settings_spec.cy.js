@@ -16,7 +16,7 @@ describe('Settings Page Tests', () => {
   });
 
   it('Navigates to change password page on clicking the change password button', () => {
-      cy.get('.btn-dark').click();
+      cy.get('.change-pwd').click();
       cy.url().should('include', '/#/settings/change-password');
   });
 
