@@ -29,6 +29,7 @@ def AutoSchedule_Reschedule(): # Reschedule the task
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     print("reschedule 1")
     for schedule in ScheduleEntryList:
+        print(schedule.TaskId.TaskId, schedule.Status)
         if schedule.TaskId.TaskManual == 1:
             continue
         if schedule.Status=='Scheduled':
@@ -79,14 +80,15 @@ def AutoSchedule_NextFit():# Auto Schedule the task--->ScheduleEntry (next fit)
             schedule.save()
             n=0
             count = 0
-            for i in range(index, len(TugBoatList)):
-                if ifTugBoatAvailable(TugBoatList[i], task):
-                    print(TugBoatList[i].TugBoatId)
-                    schedule.listOfTugBoats.add(TugBoatList[i])
+            while n < task.RequiredTugBoat:
+                if ifTugBoatAvailable(TugBoatList[index], task):
+                    schedule.listOfTugBoats.add(TugBoatList[index])
                     n+=1
                     if(n==task.RequiredTugBoat):
                         break
                 index = (index+1)%len(TugBoatList)
+                if(index>=len(TugBoatList)):
+                    index = 0
                 count += 1
                 if count == len(TugBoatList):
                     break
@@ -97,6 +99,7 @@ def AutoSchedule_NextFit():# Auto Schedule the task--->ScheduleEntry (next fit)
                 schedule.delete()
                 task.save()
                 return (True, "Scheduling completed successfully.")
+            task.State = 'Scheduled'
             schedule.save()
             task.save()
     return (True, "Scheduling completed successfully.")
