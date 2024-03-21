@@ -128,7 +128,6 @@ export default {
                 case 'TugBoatList':
                 case 'NewTugBoat':
                     this.tugboat = backgroundColor;
-                    console.log("Tugboat: "+path + this.tugboat)
                     break;
                 case 'WorkSchedule':
                     this.workSchedule = backgroundColor;

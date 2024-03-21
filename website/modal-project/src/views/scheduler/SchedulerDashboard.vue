@@ -144,7 +144,7 @@
                                         &nbsp;
                                     </span>
                                     <form v-if="tugBoatInfo === entry.ScheduleEntryId && tugBoatIndex === tugBoats">
-                                        <select @change="edit(entry.TaskId.TaskId, entry.ScheduleEntryId, tugBoats)" v-model="tugBoat">
+                                        <select @change="edit(entry.TaskId.TaskId, entry.ScheduleEntryId, tugBoats.TugBoatId)" v-model="tugBoat">
                                             <option value=""></option>
                                             <option v-for="tugboat in filteredTugBoats" :key="tugboat.TugBoatId">{{ tugboat.TugBoatId }}</option>
                                         </select>
