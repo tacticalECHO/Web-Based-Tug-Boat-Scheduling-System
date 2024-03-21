@@ -555,7 +555,7 @@ export default {
             }
         },
         async autoRescheduleTugboats(tugboatList, total, entryId, taskId){
-            const auto = confirm('Conlict Notice: \n\nTugboat(s): '+ tugboatList + "are not available \n\nAuto Reschedule?")
+            const auto = confirm('Conlict Notice: \n\nTugboat(s): '+ tugboatList + " are not available \n\nAuto Reschedule?")
             if(auto){
                 try{
                     const confirmResponse = await axios.post('/api/tugboat-reschedule/',{
@@ -564,7 +564,11 @@ export default {
                         taskId: taskId
                     });
                     if (confirmResponse.data.success){
-                        alert('Auto Reschedule Successful');
+                        if(confirmResponse.data.insufficient){
+                            alert('Insufficient tugboat');
+                        }else{
+                            alert('Auto Reschedule Successful');
+                        }
                     }else {
                         alert('Failed to Auto Reschedule');
                     }

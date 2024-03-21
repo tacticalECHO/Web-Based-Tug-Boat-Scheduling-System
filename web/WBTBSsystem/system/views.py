@@ -470,7 +470,7 @@ class UpdateEntryAndTaskView(View):
                         return JsonResponse({'error': f'Tugboat with id={removeTugBoatId} does not exist'}, status=404)  
             
             if timeConflict: # request for
-                conflictList = ",".join(list)
+                conflictList = ", ".join(list)
                 response = JsonResponse({'success': True,'timeConflict': timeConflict, 'tugboat': conflictList, 'total': totalTugboat})
             elif tugboatConflict:
                 AutoSchedule_Reschedule()
@@ -547,15 +547,21 @@ class TugBoatRescheduleView(View):
             entry = ScheduleEntry.objects.get(ScheduleEntryId=entryId)
             task = Task.objects.get(TaskId=taskId)
             all_tugboats = TugBoat.objects.all()
-            while total>0:
+
+            index = total
+            added = 0
+            insufficient = False
+            while index>0:
                 for tugboat in all_tugboats:
                     if ifTugBoatAvailable(tugboat, task):
                         entry.listOfTugBoats.add(tugboat)
                         entry.save()
+                        added+=1
                         break
-                total-=1
-
-            return JsonResponse({'success': True})
+                index-=1
+            if added < total:
+                insufficient = True
+            return JsonResponse({'success': True, 'insufficient': insufficient})
         except Exception as e:
             print(e)
             return JsonResponse({'error': str(e)}, status=400)         
