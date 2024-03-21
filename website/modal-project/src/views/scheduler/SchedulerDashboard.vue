@@ -537,12 +537,14 @@ export default {
                     action: this.action,
                 });
                 if (response.data.success) {
-                    if(response.data.conflict){
+                    if(response.data.tugboatConflict){
                         alert('There are conflicted entries. Rescheduling...');
+                    }if(response.data.timeConflict){
+                        alert('Conlict Notice: \n\nTugboats: '+response.data.tugboat+" is removed from entry.")
                     }else{
                         alert('Edit Successfully');
                     }
-                    this.reload();
+                    window.location.reload();
                     this.resetNull();
                 } else {
                     alert('Edit Task Failed.');
@@ -564,7 +566,7 @@ export default {
                     }else{
                         alert('Manual Scheduling Successful');
                     }
-                    this.reload();
+                    window.location.reload();
                     this.resetNull();
                 } else {
                     alert('Manual Schedulling Failed.');
@@ -613,13 +615,6 @@ export default {
         addSelected(task, tugboat, taskId){
             this.selected(task, tugboat);
             this.changeTugboatList(taskId)
-        },
-        reload(){
-            this.$store.dispatch('fetchScheduleEntries');
-            this.$store.dispatch('fetchTasks');
-            this.$store.dispatch('fetchContainerBoats');
-            this.$store.dispatch('fetchBerths');
-            this.$store.dispatch('fetchTugBoats');
         },
     }
 }

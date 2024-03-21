@@ -241,9 +241,7 @@ export default {
                 });
                 if (response.data.success) {
                     alert('Edited Succesfully')
-                    // window.location.reload();
-                    this.$store.dispatch('fetchTugBoats');
-                    this.$store.dispatch('fetchCaptains');
+                    window.location.reload();
                     this.resetNull();
                 } else {
                     alert('Edit Failed.');
