@@ -8,42 +8,49 @@
 }
 
 body {
-    font-family: Arial, sans-serif; /* Change to desired font family */
+    font-family: Arial, sans-serif;
+    /* Change to desired font family */
 }
 
 /* Override Bootstrap's default font size */
 body {
-    font-size: 16px; /* Change to desired font size */
+    font-size: 16px;
+    /* Change to desired font size */
 }
 
 /* Optionally, override font size for specific elements */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     font-weight: bold;
-    font-size: 24px; /* Change heading font size */
+    font-size: 24px;
+    /* Change heading font size */
 }
 
 p {
-    font-size: 14px; /* Change paragraph font size */
+    font-size: 14px;
+    /* Change paragraph font size */
 }
 
 /* --buttons-------------------------------------------------------------------------------------------------------------------------- */
 
-.btn{
+.btn {
     cursor: pointer;
     text-align: center;
     font-size: var(--font-size);
     padding: 10px;
 }
 
-#delete{
+#delete {
     border: 1px solid black;
 }
 
-#delete, #add{
+#delete,
+#add {
     border-radius: 20px;
 }
 
-.close-btn{
+.close-btn {
     background: none;
     border: none;
     width: 30px;
@@ -75,6 +82,92 @@ p {
     padding: 10px;
 }
 
+.add-delete {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add,
+.delete {
+    border: none;
+    font-size: var(--font-size);
+    width: 85px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add {
+    border-radius: 20px;
+    background-color: var(--main-button-color);
+}
+
+.delete {
+    background-color: white;
+}
+
+.add,
+.add__icon,
+.add__text,
+.delete,
+.delete__icon,
+.delete__text {
+    transition: all 0.3s;
+}
+
+.add .add__text {
+    color: #fff;
+}
+
+.delete .delete__text {
+    color: black;
+}
+
+.add .add__icon,
+.delete .delete__icon {
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.add .add__icon {
+    color: white;
+}
+
+.delete .delete__icon {
+    color: black;
+}
+
+.add__icon,
+.add .font-awesome-icon {
+    stroke: #fff;
+}
+
+.add:hover {
+    background: green;
+}
+
+.delete:hover {
+    background: red;
+}
+
+.add:hover .add__text,
+.delete:hover .delete__text {
+    color: transparent;
+}
+
+.delete:hover .delete__icon {
+    color: white;
+    transform: translateX(-22px);
+}
+
+.add:hover .add__icon {
+    transform: translateX(-15px);
+}
+
 /* --pages--------------------------------------------------------- */
 .pages {
     /* margin-top: 150px; */
@@ -93,7 +186,7 @@ p {
     background-color: rgba(255, 255, 255, 0.5);
     z-index: 1;
     /* border-radius: 10px; */
-    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.5); 
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.5);
 }
 
 .header-style {
@@ -104,21 +197,23 @@ p {
 /* Media query for screens with a minimum width of 1200px */
 @media (min-width: 820px) and (min-height: 360px) {
     .pages {
-        margin-left: 190px; /* Adjusted margin for larger screens */
+        margin-left: 190px;
+        /* Adjusted margin for larger screens */
     }
+
     .pageName {
         margin-left: 360px;
     }
 }
 
 /* --wording boxes---------------------------------------------------- */
-.status-container{
+.status-container {
     background: rgb(254, 219, 46);
     border-radius: 30px;
     padding: 8px;
 }
 
-.type-container{
+.type-container {
     background: rgb(254, 239, 142);
     border-radius: 30px;
     padding: 8px;
@@ -126,8 +221,9 @@ p {
 
 
 /* --table container------------------------------------------------------ */
-.table-container{
-    max-height: 30em; /* Adjust the height as needed */
+.table-container {
+    max-height: 30em;
+    /* Adjust the height as needed */
     overflow-y: auto;
     border-radius: 10px;
 }
@@ -142,10 +238,14 @@ p {
     border: 2px solid black;
 }
 
+.click-hover {
+    background-color: none;
+    padding: 10px;
+}
+
 .click-hover:hover {
     background-color: rgb(233, 232, 232);
     border-radius: 5px;
-    padding: 10px;
 }
 
 .table {
@@ -193,7 +293,7 @@ p {
     border: 1px solid lightgrey;
 }
 
-#message:hover{
+#message:hover {
     background: lightgrey;
 }
 
@@ -204,7 +304,8 @@ p {
     gap: 10px;
     padding: 10px;
 }
-.filter{
+
+.filter {
     display: flex;
     /* flex-direction: column; */
     font-size: var(--font-size);
@@ -214,7 +315,7 @@ p {
     margin-right: 5px;
 }
 
-.filter select{
+.filter select {
     border: none;
 }
 

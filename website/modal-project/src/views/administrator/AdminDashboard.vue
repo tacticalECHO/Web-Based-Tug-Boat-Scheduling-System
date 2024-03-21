@@ -6,11 +6,22 @@
             <h2 class="title">Your Dashboard</h2>
             <div class="header-style">
                 <span></span>
-                <span>
-                    <button class="btn btn-light" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                <span class="add-delete">
+                    <button type="button" class="delete" id="delete" @click= deleteSelected>
+                        <span class="delete__text">Delete &nbsp;</span>
+                        <span class="delete__icon"><font-awesome-icon :icon="['fas', 'delete-left']" /></span>
+                    </button>
                     &nbsp;
-                    <button class="btn btn-dark" id="new-staff" @click="redirect('NewStaff')">New Staff  <span>+</span></button>
+                    <button type="button" class="add" id="new-staff" @click="redirect('NewStaff')">
+                        <span class="add__text">New &nbsp;</span>
+                        <span class="add__icon"><font-awesome-icon :icon="['fas', 'plus']" /></span>
+                    </button>
                 </span>
+                <!-- <span> -->
+                    <!-- <button class="btn btn-light" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button> -->
+                    <!-- &nbsp; -->
+                    <!-- <button class="btn btn-dark" id="new-staff" @click="redirect('NewStaff')">New Staff  <span>+</span></button> -->
+                <!-- </span> -->
             </div>
             <div class="caption">Captain</div>
             <div class="table-container">
@@ -81,31 +92,32 @@ export default {
     },
     methods: {
         async deleteSelected() {
-            if (this.selectedCaptains.length > 0) {
-                await fetch(`http://127.0.0.1:8000/api/captains-delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids: this.selectedCaptains })
-                });
+            if(this.deletionAlert()){
+                if (this.selectedCaptains.length > 0) {
+                    await fetch(`http://127.0.0.1:8000/api/captains-delete/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ ids: this.selectedCaptains })
+                    });
+                }
+
+                if (this.selectedSchedulers.length > 0) {
+                    await fetch(`http://127.0.0.1:8000/api/schedulers-delete/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ ids: this.selectedSchedulers })
+                    });
+                }
+
+                alert('Deleted successfully');
+
+                this.$store.dispatch('fetchCaptains');
+                this.$store.dispatch('fetchSchedulers');
             }
-
-            if (this.selectedSchedulers.length > 0) {
-                await fetch(`http://127.0.0.1:8000/api/schedulers-delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids: this.selectedSchedulers })
-                });
-            }
-
-            alert('Deleted successfully');
-
-            this.$store.dispatch('fetchCaptains');
-            this.$store.dispatch('fetchSchedulers');
-            
             this.selectedCaptains = [];
             this.selectedSchedulers = [];
         }
@@ -114,9 +126,9 @@ export default {
 </script>
 
 <style scoped>
-button{
+/* button{
     border-radius: 20px;
-}
+} */
 
 .header-style{
     padding: 10px;

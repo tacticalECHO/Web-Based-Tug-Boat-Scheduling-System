@@ -4,33 +4,60 @@
         <router-view />
         <div class="pages">
             <h2 class="title">Tug Boat List</h2>
-            <form class="search-form">
+            <div class="search-form">
+                <label for="search">
+                    <input required="" autocomplete="off" placeholder="Search ... " id="search"  v-model="input" type="text">
+                    <div class="icon">
+                        <svg stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="swap-on">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linejoin="round" stroke-linecap="round"></path>
+                        </svg>
+                        <svg stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="swap-off">
+                            <path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linejoin="round" stroke-linecap="round"></path>
+                        </svg>
+                    </div>
+                    <button type="reset" class="close-btn" @click="input=''">
+                        <svg viewBox="0 0 20 20" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" fill-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </label>
+            </div>
+            <!-- <form class="search-form">
                 <input id="search" type="text" v-model="input" placeholder="Search...">
                 <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="search-icon" />
-            </form>
+            </form> -->
             <br><br>
             <div class="header-style">
                 <div class="filter-group">
                     <span>Status: </span>
                     <span class="btn-group" role="group" aria-label="Vertical radio toggle button group">
                         <input type="radio" class="btn-check" name="vbtn-radio" id="All" autocomplete="off" value="" v-model="allStatus" @change="handleChange('')" checked>
-                        <label class="btn btn-outline-dark" for="All">All</label>
+                        <label class="btn btn-outline-dark filter-btn" for="All">All</label>
                         
                         <input type="radio" class="btn-check" name="vbtn-radio" id="Free" autocomplete="off" value="Free" v-model="freeStatus" @change="handleChange('Free')">
-                        <label class="btn btn-outline-dark" for="Free">Free</label>
+                        <label class="btn btn-outline-dark filter-btn" for="Free">Free</label>
                         
                         <input type="radio" class="btn-check" name="vbtn-radio" id="Busy" autocomplete="off" value="Busy" v-model="busyStatus" @change="handleChange('Busy')">
-                        <label class="btn btn-outline-dark" for="Busy">Busy</label>
+                        <label class="btn btn-outline-dark filter-btn" for="Busy">Busy</label>
                         
                         <input type="radio" class="btn-check" name="vbtn-radio" id="Maintenance" autocomplete="off" value="Maintenance" v-model="maintenanceStatus" @change="handleChange('Maintenance')">
-                        <label class="btn btn-outline-dark" for="Maintenance">Maintenance</label>
+                        <label class="btn btn-outline-dark filter-btn" for="Maintenance">Maintenance</label>
                     </span>
                 </div>
-                <span>
-                    <button class="btn btn-light" id="delete" @click= "deleteSelected()">Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                <span class="add-delete">
+                    <button type="button" class="delete" id="delete" @click= deleteSelected>
+                        <span class="delete__text">Delete &nbsp;</span>
+                        <span class="delete__icon"><font-awesome-icon :icon="['fas', 'delete-left']" /></span>
+                    </button>
                     &nbsp;
-                    <button class="btn btn-dark" id="add" @click="redirect('NewTugBoat')">Add  + </button>
+                    <button type="button" class="add" id="add" @click="redirect('NewTugBoat')">
+                        <span class="add__text">Add &nbsp;</span>
+                        <span class="add__icon"><font-awesome-icon :icon="['fas', 'plus']" /></span>
+                    </button>
                 </span>
+                    <!-- <button class="btn btn-light" id="delete" @click= "deleteSelected()">Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button>
+                    &nbsp;
+                    <button class="btn btn-dark" id="add" @click="redirect('NewTugBoat')">Add  + </button> -->
             </div>
             <div class="table-container">
                 <div class="work-table">
@@ -128,19 +155,20 @@ export default {
     },
     methods: {
         async deleteSelected() {
-            if (this.selectedTugboat.length > 0) {
-                await fetch(`/api/tugboat-delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids: this.selectedTugboat })
-                });
+            if(this.deletionAlert()){
+                if (this.selectedTugboat.length > 0) {
+                    await fetch(`/api/tugboat-delete/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ ids: this.selectedTugboat })
+                    });
+                }
+                alert('Deleted successfully');
+                this.$store.dispatch('fetchTugBoats');
+                this.$store.dispatch('fetchCaptains');
             }
-            alert('Deleted successfully');
-            this.$store.dispatch('fetchTugBoats');
-            this.$store.dispatch('fetchCaptains');
-
             this.selectedTugboat = [];
         },
         handleChange(state) {
@@ -214,9 +242,7 @@ export default {
                 });
                 if (response.data.success) {
                     alert('Edited Succesfully')
-                    // window.location.reload();
-                    this.$store.dispatch('fetchTugBoats');
-                    this.$store.dispatch('fetchCaptains');
+                    window.location.reload();
                     this.resetNull();
                 } else {
                     alert('Edit Failed.');
@@ -238,36 +264,125 @@ export default {
 </script>
 
 <style scoped>
-button{
-    border-radius: 10px;
-}
-
 .header-style{
     padding: 10px;
 }
 
-#search {
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid lightgrey;
-    width: 20em;
+.filter-btn {
+    width: 90px;
 }
 
 .search-form {
     position: relative;
     display: inline-block;
+    font-size: var(--font-size);
+    --input-bg: #FFf;
+    --padding: 1.5em;
+    --rotate: 80deg;
+    --gap: 2em;
+    --icon-change-color: #15A986;
+    --height: 40px;
+    width: 250px;
+    padding-inline-end: 1em;
+    background: var(--input-bg);
+    position: relative;
+    border-radius: 20px;
 }
 
-.search-icon {
-    color: white;
-    background: black;
-    padding: 9px;
-    border-radius: 5px;
-    position: absolute;
-    top: 50%;
-    right: 0.5px;
-    transform: translateY(-50%);
+.search-form label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--height);
 }
+
+.search-form input {
+    width: 100%;
+    padding-inline-start: calc(var(--padding) + var(--gap));
+    outline: none;
+    background: none;
+    border: 0;
+}
+
+.search-form svg {
+    color: #111;
+    transition: 0.3s cubic-bezier(.4,0,.2,1);
+    position: absolute;
+    height: 15px;
+    }
+
+.icon {
+    position: absolute;
+    left: var(--padding);
+    transition: 0.3s cubic-bezier(.4,0,.2,1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swap-off {
+    transform: rotate(-80deg);
+    opacity: 0;
+    visibility: hidden;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    right: calc(var(--padding) - var(--gap));
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    padding: 0.1em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    transition: 0.3s;
+    opacity: 0;
+    transform: scale(0);
+    visibility: hidden;
+}
+
+.search-form input:focus ~ .icon {
+    transform: rotate(var(--rotate)) scale(1.3);
+}
+
+.search-form input:focus ~ .icon .swap-off {
+    opacity: 1;
+    transform: rotate(-80deg);
+    visibility: visible;
+    color: var(--icon-change-color);
+}
+
+.search-form input:focus ~ .icon .swap-on {
+    opacity: 0;
+    visibility: visible;
+}
+
+.search-form input:valid ~ .icon {
+    transform: scale(1.3) rotate(var(--rotate))
+}
+
+.search-form input:valid ~ .icon .swap-off {
+    opacity: 1;
+    visibility: visible;
+    color: var(--icon-change-color);
+}
+
+.search-form input:valid ~ .icon .swap-on {
+    opacity: 0;
+    visibility: visible;
+}
+
+.search-form input:valid ~ .close-btn {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    transition: 0s;
+}
+
 .pageName{
     padding-left: 50px;
 }
