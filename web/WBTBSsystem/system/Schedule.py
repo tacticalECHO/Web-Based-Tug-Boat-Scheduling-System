@@ -74,9 +74,7 @@ def AutoSchedule_NextFit():# Auto Schedule the task--->ScheduleEntry (next fit)
         if task.TaskManual == 1:
             continue
         if task.State == 'Unscheduled' and (task.startTime.date() == datetime.datetime.now().date() or task.startTime.date()== datetime.datetime.now().date()+datetime.timedelta(days=1))  and task.startTime > datetime.datetime.now():
-            ST=task.startTime-datetime.timedelta(hours=1)
-            ET=task.startTime+datetime.timedelta(hours=1)
-            schedule = ScheduleEntry(TaskId=task, Status='Scheduled', StartTime=ST, EndTime=ET)
+            schedule = ScheduleEntry(TaskId=task, Status='Scheduled', StartTime=None, EndTime=None)
             schedule.save()
             n=0
             count = 0
@@ -110,9 +108,7 @@ def AutoSchedule_FIFO(): # Auto Schedule the task--->ScheduleEntry (first come f
         if task.TaskManual == 1:
             continue
         if task.State == 'Unscheduled' and (task.startTime.date() == datetime.datetime.now().date() or task.startTime.date()== datetime.datetime.now().date()+datetime.timedelta(days=1))  and task.startTime > datetime.datetime.now():
-            ST=task.startTime-datetime.timedelta(hours=1)
-            ET=task.startTime+datetime.timedelta(hours=1)
-            schedule = ScheduleEntry(TaskId=task, Status='Scheduled', StartTime=ST, EndTime=ET)
+            schedule = ScheduleEntry(TaskId=task, Status='Scheduled', StartTime=None, EndTime=None)
             schedule.save()
             n=0
             for tugboat in TugBoatList:
@@ -129,6 +125,7 @@ def AutoSchedule_FIFO(): # Auto Schedule the task--->ScheduleEntry (first come f
                 schedule.delete()
                 task.save()
                 return
+            task.State = 'Scheduled'
             schedule.save()
             task.save()
 
