@@ -81,7 +81,7 @@
                             <td class="number"> {{index+1}} </td>
                             <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
                             <td class="berth"> {{entry.TaskId.BerthId}} </td>
-                            <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/")}} </td>
+                            <td class="time"> {{formatDate(entry.TaskId.startTime)}} &nbsp; {{formatTime(entry.TaskId.startTime)}} </td>
                             <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/")}} </td>
                             <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').join("/")}} </td>
                             <td class="work-status"> 
