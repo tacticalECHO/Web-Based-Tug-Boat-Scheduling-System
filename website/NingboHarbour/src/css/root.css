@@ -379,7 +379,7 @@ p {
     height: 13px;
     left: 1px;
     position: absolute;
-    top: 1px;
+    top: 3px;
     -webkit-transition: -webkit-transform 0.125s ease-out;
     transition: -webkit-transform 0.125s ease-out;
     transition: transform 0.125s ease-out;
@@ -394,7 +394,7 @@ p {
   
   .sorting .switch + label .switch-x-toggletext {
     display: block;
-    height: 15px;
+    height: 20px;
     overflow: hidden;
     position: relative;
     width: 40px;

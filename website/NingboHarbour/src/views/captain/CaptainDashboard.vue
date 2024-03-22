@@ -77,7 +77,7 @@ export default {
     name: 'CaptainDashboard',
     components: {SideBar, MessageButton},
     mounted(){
-        this.$store.dispatch('fetchScheduleEntries');
+        this.$store.dispatch('fetchScheduleEntries', true);
         this.$store.dispatch('fetchCaptains');
     },
     data() {

@@ -49,7 +49,17 @@
                             <th>No.</th>
                             <th>Container Boat</th>
                             <th>Berth</th>
-                            <th>Time</th>
+                            <th>Time
+                                <div class="sorting">
+                                    <input value="private" name="switch" id="switch" type="checkbox" class="switch" :checked="sort" @change="sorting()">
+                                    <label for="switch">
+                                        <span class="switch-x-toggletext">
+                                            <span class="switch-x-unchecked">Default</span>
+                                            <span class="switch-x-checked">Sorted</span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </th>
                             <th>Tug Boat</th>
                             <th>Captain</th>
                             <th>Work Status</th>
@@ -60,7 +70,7 @@
                             <td class="number"> {{index+1}} </td>
                             <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
                             <td class="berth"> {{entry.TaskId.BerthId}} </td>
-                            <td class="time"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.EndWorkingTime).join("/ ")}} </td>
+                            <td class="time"> {{formatDate(entry.TaskId.startTime)}} &nbsp; {{formatTime(entry.TaskId.startTime)}} </td>
                             <td class="tugboat"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.TugBoatId).join("/ ")}} </td>
                             <td class="captain"> {{entry.listOfTugBoats.map(tugBoat => tugBoat.CaptainId ? tugBoat.CaptainId.CaptainId : 'waiting ').join("/ ")}} </td>
                             <td class="work-status"> 
@@ -93,8 +103,8 @@ export default {
     name: 'WorkSchedule',
     components: {SideBar},
     mounted(){
-        this.$store.dispatch('fetchScheduleEntries');
-        this.$store.dispatch('fetchTasks');
+        this.$store.dispatch('fetchScheduleEntries', this.sort);
+        this.$store.dispatch('fetchTasks', this.sort);
         this.$store.dispatch('fetchContainerBoats');
         this.$store.dispatch('fetchBerths');
         this.$store.dispatch('fetchTugBoats');
@@ -106,9 +116,15 @@ export default {
             tugBoatInput: '',
             berthInput: '',
             stateInput: '',
+            sort: false,
         }
     },
     methods: {
+        sorting(){
+            this.sort = !this.sort;
+            this.$store.dispatch('fetchScheduleEntries', this.sort);
+            this.$store.dispatch('fetchTasks', this.sort);
+        },
         waiting(){
             if(this.$store.state.scheduleEntries.length === 0){
                 return true

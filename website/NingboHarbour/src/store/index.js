@@ -89,8 +89,8 @@ const store = createStore({
               })
               .catch(error => console.error(error));
         },
-        fetchTasks({ commit }) {
-            axios.get('/api/display_task/')
+        fetchTasks({ commit }, sort) {
+            axios.get('/api/display_task/', { params: { sort: sort }})
               .then(response => {
                 commit('setTasks', response.data);
               })
@@ -117,8 +117,8 @@ const store = createStore({
               })
               .catch(error => console.error(error));
         },
-        fetchScheduleEntries({ commit }, params) {
-          axios.get('/api/display_schedule_entry/', { params: params })
+        fetchScheduleEntries({ commit }, sort) {
+          axios.get('/api/display_schedule_entry/', { params: { sort: sort }})
             .then(response => {
               commit('setScheduleEntries', response.data);
             })

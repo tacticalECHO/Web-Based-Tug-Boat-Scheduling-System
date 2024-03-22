@@ -731,10 +731,17 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
+        sort = self.request.query_params.get('sort')
         today_date = now().date()
+
         queryset = Task.objects.filter(
-            startTime__date=today_date
-        ).order_by('startTime')
+                startTime__date=today_date
+            ).order_by('TaskId')
+        
+        if sort == 'true':
+            queryset = Task.objects.filter(
+                startTime__date=today_date
+            ).order_by('startTime')
 
         return queryset
     
@@ -751,15 +758,17 @@ class ScheduleEntryViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         sort = self.request.query_params.get('sort')
+        today_date = now().date()
 
-        queryset =  queryset = ScheduleEntry.objects.all()
-
-        if sort is not None and sort:
-            today_date = now().date()
+        queryset = ScheduleEntry.objects.filter(
+                TaskId__startTime__date=today_date
+            ).order_by('ScheduleEntryId')
+        
+        if sort == 'true':
             queryset = ScheduleEntry.objects.filter(
                 TaskId__startTime__date=today_date
             ).order_by('TaskId__startTime')
-
+            
         return queryset
 
 class TugBoatViewSet(viewsets.ModelViewSet):

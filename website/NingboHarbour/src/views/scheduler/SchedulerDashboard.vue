@@ -105,7 +105,7 @@
                         <tr>
                             <th>
                                 <div class="sorting">
-                                    <input value="private" name="switch" id="switch" type="checkbox" class="switch" @change="!sort">
+                                    <input value="private" name="switch" id="switch" type="checkbox" class="switch" :checked="sort" @change="sorting()">
                                     <label for="switch">
                                         <span class="switch-x-toggletext">
                                             <span class="switch-x-unchecked">Default</span>
@@ -296,7 +296,7 @@ export default {
     components: {SideBar, MessageButton},
     mounted() {
         this.$store.dispatch('fetchScheduleEntries', this.sort);
-        this.$store.dispatch('fetchTasks');
+        this.$store.dispatch('fetchTasks', this.sort);
         this.$store.dispatch('fetchContainerBoats');
         this.$store.dispatch('fetchBerths');
         this.$store.dispatch('fetchTugBoats');
@@ -328,6 +328,11 @@ export default {
         }
     },
     methods: {
+        sorting(){
+            this.sort = !this.sort;
+            this.$store.dispatch('fetchScheduleEntries', this.sort);
+            this.$store.dispatch('fetchTasks', this.sort);
+        },
         async deleteSelected() {
             if(this.deletionAlert()){
                 if (this.selectedTasks.length > 0) {
@@ -352,8 +357,8 @@ export default {
 
                 
                 alert('Deleted successfully');
-                this.$store.dispatch('fetchTasks');
-                this.$store.dispatch('fetchScheduleEntries');
+                this.$store.dispatch('fetchTasks', this.sort);
+                this.$store.dispatch('fetchScheduleEntries', this.sort);
             }
             this.selectedTasks = [];
             this.selectedScheduleEntries = [];
