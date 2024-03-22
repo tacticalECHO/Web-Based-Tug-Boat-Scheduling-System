@@ -84,13 +84,15 @@
                 </span>
             </div>
             <div v-if="waiting()">No Task Available</div>
+
+
             <div v-if="!waiting()" class="table-container">
                 <table class="table">
                     <thead>
                         <tr>
                             <th rowspan="2"><input type="checkbox" disabled/></th>
                             <th rowspan="2">No.</th>
-                            <th rowspan="2">Planned Time</th>
+                            <th>Planned Time</th>
                             <th rowspan="2">Container Boat</th>
                             <th rowspan="2">Country</th>
                             <th style="text-align: center" colspan="2">Tug Boat</th>
@@ -101,6 +103,17 @@
                             <th rowspan="2">Publish Time</th>
                         </tr>
                         <tr>
+                            <th>
+                                <div class="sorting">
+                                    <input value="private" name="switch" id="switch" type="checkbox" class="switch" @change="!sort">
+                                    <label for="switch">
+                                        <span class="switch-x-toggletext">
+                                            <span class="switch-x-unchecked">Default</span>
+                                            <span class="switch-x-checked">Sorted</span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </th>
                             <th style="text-align: center">Need</th>
                             <th style="text-align: center">IDs</th>
                             <th>Start</th>
@@ -282,7 +295,7 @@ export default {
     name: 'WorkSchedule',
     components: {SideBar, MessageButton},
     mounted() {
-        this.$store.dispatch('fetchScheduleEntries');
+        this.$store.dispatch('fetchScheduleEntries', this.sort);
         this.$store.dispatch('fetchTasks');
         this.$store.dispatch('fetchContainerBoats');
         this.$store.dispatch('fetchBerths');
@@ -311,6 +324,7 @@ export default {
             selectedScheduleEntries: [],
             showProgressBar: false,
             filteredTugBoats: [],
+            sort: false,
         }
     },
     methods: {

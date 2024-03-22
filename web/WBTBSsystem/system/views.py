@@ -750,10 +750,15 @@ class ScheduleEntryViewSet(viewsets.ModelViewSet):
     serializer_class = ScheduleEntrySerializer
 
     def get_queryset(self):
-        today_date = now().date()
-        queryset = ScheduleEntry.objects.filter(
-            TaskId__startTime__date=today_date
-        ).order_by('TaskId__startTime')
+        sort = self.request.query_params.get('sort')
+
+        queryset =  queryset = ScheduleEntry.objects.all()
+
+        if sort is not None and sort:
+            today_date = now().date()
+            queryset = ScheduleEntry.objects.filter(
+                TaskId__startTime__date=today_date
+            ).order_by('TaskId__startTime')
 
         return queryset
 

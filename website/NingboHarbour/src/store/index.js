@@ -117,8 +117,8 @@ const store = createStore({
               })
               .catch(error => console.error(error));
         },
-        fetchScheduleEntries({ commit }) {
-          axios.get('/api/display_schedule_entry/')
+        fetchScheduleEntries({ commit }, params) {
+          axios.get('/api/display_schedule_entry/', { params: params })
             .then(response => {
               commit('setScheduleEntries', response.data);
             })
