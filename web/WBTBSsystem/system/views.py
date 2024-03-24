@@ -575,6 +575,16 @@ class AutoScheduleView(View):
             return JsonResponse({'success': True, 'message': message})
         else:
             return JsonResponse({'success': False, 'message': message})
+        
+@method_decorator(csrf_exempt, name='dispatch')
+class AutoRescheduleView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            AutoSchedule_Reschedule()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False})
+            
 
 # @method_decorator(csrf_exempt, name='dispatch')
 # class TugBoatAvailablityView(View):
@@ -746,11 +756,11 @@ class TaskViewSet(viewsets.ModelViewSet):
         return queryset
     
 class BerthViewSet(viewsets.ModelViewSet):
-    queryset = Berth.objects.all()
+    queryset = Berth.objects.all().order_by('BerthId')
     serializer_class = BerthSerializer  
 
 class ContainerBoatViewSet(viewsets.ModelViewSet):
-    queryset = ContainerBoat.objects.all()
+    queryset = ContainerBoat.objects.all().order_by('ContainerBoatID')
     serializer_class = ContainerBoatSerializer  
 
 class ScheduleEntryViewSet(viewsets.ModelViewSet):
@@ -775,7 +785,7 @@ class TugBoatViewSet(viewsets.ModelViewSet):
     serializer_class = TugBoatSerializer  
 
     def get_queryset(self):
-        queryset = TugBoat.objects.all()
+        queryset = TugBoat.objects.all().order_by('TugBoatId')
         
         # Check if you want to filter the queryset
         taskId = self.request.query_params.get('taskId')

@@ -47,6 +47,7 @@ from system.views import (
     PublishView,
     DeleteTugBoatView,
     TugBoatRescheduleView,
+    AutoRescheduleView,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -86,5 +87,6 @@ urlpatterns = [
     path('api/update-tugboat/', UpdateTugBoatView.as_view(), name='update_tugboat'),
     path('api/update-publish-time', PublishView.as_view(), name='update-publish-time'),
     path('api/tugboat-reschedule/', TugBoatRescheduleView.as_view(), name='tugboat_reschedule'),
+    path('api/auto-reschedule/', AutoRescheduleView.as_view(), name='auto_reschedule'),
     path('', include(router.urls)),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

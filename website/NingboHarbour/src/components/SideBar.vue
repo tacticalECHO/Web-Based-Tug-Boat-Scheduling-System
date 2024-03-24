@@ -52,7 +52,7 @@
         <!-- <button class="btn btn-outline-dark" @click="closeSidebar()" v-if="sidebarOpened && closeButton()" id="close-sidebar"><font-awesome-icon :icon="['fas', 'backward']" size="2x"/></button> -->
         <footer class="footer fixed-bottom">
             <div class="text-center p-3">
-                WEB TUGBOAT SCHEDULING SYSTEM
+                WEB BASED TUGBOAT SCHEDULING SYSTEM
             </div>
         </footer>
     </div>

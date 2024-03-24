@@ -335,6 +335,7 @@ export default {
         },
         async deleteSelected() {
             if(this.deletionAlert()){
+                let isScheduleEntry = false;
                 if (this.selectedTasks.length > 0) {
                     await fetch(`/api/tasks-delete/`, {
                         method: 'POST',
@@ -346,6 +347,8 @@ export default {
                 }
 
                 if (this.selectedScheduleEntries.length > 0) {
+                    isScheduleEntry = true;
+                    console.log("schedule entry");
                     await fetch(`/api/scheduleentries-delete/`, {
                         method: 'POST',
                         headers: {
@@ -355,8 +358,31 @@ export default {
                     });
                 }
 
-                
-                alert('Deleted successfully');
+                if(isScheduleEntry){
+                    console.log("reschedule");
+                    if (confirm('Deleted successfully. \nReschedule remaning schedule?')){
+                        try {
+                            const response = await axios.post('/api/auto-reschedule/', {});
+                            if(response.data.success){
+                                
+                                this.showProgressBar = true;
+                                setTimeout(() => {
+                                    this.showProgressBar = false;
+                                    alert("Reschedule operation successful!");
+                                }, 2000);
+                            }else {
+                                alert('Failed to reschedule');
+                            }
+                            
+                        } catch (error) {
+                            console.error("Error during schedule operation: ", error);
+                            alert("Schedule operation failed, check logs for details.");
+                        }
+                    }
+                }else{
+                    alert('Deleted successfully');
+                }
+
                 this.$store.dispatch('fetchTasks', this.sort);
                 this.$store.dispatch('fetchScheduleEntries', this.sort);
             }
