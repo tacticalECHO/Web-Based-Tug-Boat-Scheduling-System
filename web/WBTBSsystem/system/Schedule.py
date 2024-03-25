@@ -94,7 +94,8 @@ def AutoSchedule_NextFit():# Auto Schedule the task--->ScheduleEntry (next fit)
             n=0
             count = 0
             while n < task.RequiredTugBoat:
-                if ifTugBoatAvailable(TugBoatList[index], task):
+                Result=ifTugBoatAvailable(TugBoatList[index], task)
+                if Result[0] == True:
                     schedule.listOfTugBoats.add(TugBoatList[index])
                     n+=1
                     if(n==task.RequiredTugBoat):
@@ -129,7 +130,8 @@ def AutoSchedule_FIFO(): # Auto Schedule the task--->ScheduleEntry (first come f
             schedule.save()
             n=0
             for tugboat in TugBoatList:
-                if ifTugBoatAvailable(tugboat, task):
+                Result=ifTugBoatAvailable(tugboat, task)
+                if Result[0] == True:
                     print(tugboat.TugBoatId)
                     schedule.listOfTugBoats.add(tugboat)
                     n+=1
