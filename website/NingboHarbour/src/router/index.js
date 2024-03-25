@@ -82,7 +82,7 @@ const routes = [
     path: '/tugboat-list',
     name: 'TugBoatList',
     component: TugBoatList,
-    meta: { requiresSch: true },
+    meta: { requiresAdmin: true },
     children: [
       {
         path: 'add-new-tugboat',
@@ -95,6 +95,7 @@ const routes = [
     path: '/work-schedules',
     name: 'WorkSchedule',
     component: WorkSchedule,
+    meta: { requiresCap: true },
   },
   {
     path: '/settings',
@@ -152,9 +153,9 @@ const router = createRouter({
 
   if (!isLoggedIn && to.name !== 'Login') {
     next({ name: 'Login' });
-  // } else if (to.meta.requiresAdmin && !roles.isAdmin || to.meta.requiresCap && !roles.isCaptain || to.meta.requiresSch && !roles.isScheduler) {
-  //   alert('You do not have permission to view this page.');
-  //   next(false);
+  } else if (to.meta.requiresAdmin && !roles.isAdmin || to.meta.requiresCap && !roles.isCaptain || to.meta.requiresSch && !roles.isScheduler) {
+    alert('You do not have permission to view this page.');
+    next(false);
   } else {
     next();
   }
