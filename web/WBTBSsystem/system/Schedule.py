@@ -112,7 +112,7 @@ def AutoSchedule_NextFit():# Auto Schedule the task--->ScheduleEntry (next fit)
                 print('No enough tugboat available')
                 schedule.delete()
                 task.save()
-                return (True, "Scheduling completed successfully.")
+                continue
             task.State = 'Scheduled'
             schedule.save()
             task.save()
@@ -143,7 +143,7 @@ def AutoSchedule_FIFO(): # Auto Schedule the task--->ScheduleEntry (first come f
                 print('No enough tugboat available')
                 schedule.delete()
                 task.save()
-                return
+                continue
             task.State = 'Scheduled'
             schedule.save()
             task.save()
