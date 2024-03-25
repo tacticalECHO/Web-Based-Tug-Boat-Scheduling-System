@@ -586,19 +586,11 @@ export default {
                     action: this.action,
                 });
                 if (response.data.success) {
-                    if(response.data.tugboatConflict || response.data.maintenance || response.data.notWork){
-                        if(response.data.tugboatConflict){
-                            if (confirm('Tug Boat '+ this.tugBoat + ' is conflicted.\n Confirm Auto Reschedule?')){
-                                this.reschedule();
-                            }else{
-                                alert('Please Edit Manually');
-                            }
-                        }
-                        if(response.data.maintenance){
-                            alert('Tug Boat '+ this.tugBoat + ' is in Maintenance. Please change another tugboat');
-                        }
-                        if(response.data.notWork){
-                            alert('Tug Boat '+ this.tugBoat + ' is not in Working Time. Please change another tugboat')
+                    if(response.data.tugboatConflict){
+                        if (confirm('Tug Boat '+ this.tugBoat + ' is conflicted.\n Confirm Auto Reschedule?')){
+                            this.reschedule();
+                        }else{
+                            alert('Please Edit Manually');
                         }
                     }else if(response.data.timeConflict){
                         this.autoRescheduleTugboats(response.data.tugboat, response.data.total, entryId, taskId);
@@ -647,20 +639,8 @@ export default {
                     tugBoatList: this.listOfTugBoat,
                 });
                 if (response.data.success) {
-                    if(response.data.conflict || response.data.maintenance || response.data.notWork){
-                        let conflict = '-';
-                        let maintenance = '-';
-                        let notWork = '-';
-                        if(response.data.conflict){
-                            conflict = response.data.conflictList
-                        }
-                        if(response.data.maintenance){
-                            maintenance = response.data.maintenanceList
-                        }
-                        if(response.data.notWork){
-                            notWork = response.data.NotWorkList
-                        }
-                        alert("Conflicted (Tugboat : Entry):\n" + conflict+ "\nIn Maintenance:\n" + maintenance +"\nNot in Working Hours:\n"+ notWork +'\nRescheduling...');
+                    if(response.data.conflict){
+                        alert("Conflicted (Tugboat : Entry):\n" + response.data.conflictList + '\nRescheduling...');
                     }else{
                         alert('Manual Scheduling Successful');
                     }

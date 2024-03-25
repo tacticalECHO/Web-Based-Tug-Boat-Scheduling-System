@@ -404,8 +404,6 @@ class UpdateEntryAndTaskView(View):
             action = data.get('action')
             #tugboat conflict value
             tugboatConflict = False
-            tugboatMaintenance = False
-            tugboatNotWork = False
             tugConflictList = set()
             #time conflict value
             timeConflict = False
@@ -465,11 +463,7 @@ class UpdateEntryAndTaskView(View):
                             newTugBoat = TugBoat.objects.get(TugBoatId=newTugBoatId)
                             available, type = ifTugBoatAvailable(newTugBoat, task)
                             if not available:
-                                if type == "Maintenance":
-                                    tugboatMaintenance = True
-                                elif type == "NotWork":
-                                    tugboatNotWork = True
-                                else:
+                                if type != "Maintenance" and type != "NotWork":
                                     tugboatConflict = True
                                     tugConflictList.add(type)
                             else:
@@ -484,11 +478,11 @@ class UpdateEntryAndTaskView(View):
             if timeConflict: # request for
                 conflictList = ", ".join(list)
                 response = JsonResponse({'success': True,'timeConflict': timeConflict, 'tugboat': conflictList, 'total': totalTugboat})
-            elif tugboatConflict or tugboatMaintenance or tugboatNotWork:
+            elif tugboatConflict:
                 # AutoSchedule_Reschedule()
                 # print("rescheduling")
                 conflictedEntries  = ", ".join(tugConflictList)
-                response = JsonResponse({'success': True, 'tugboatConflict': tugboatConflict, 'conflictList':  conflictedEntries, 'maintenance': tugboatMaintenance, 'notWork': tugboatNotWork})
+                response = JsonResponse({'success': True, 'tugboatConflict': tugboatConflict, 'conflictList':  conflictedEntries})
             else:
                 response = JsonResponse({'success': True})
             return response
@@ -532,13 +526,7 @@ class ManualScheduleView(View):
             for tugboat in tugBoatList:
                 availability, type = ifTugBoatAvailable(tugboat, task)
                 if not availability:
-                    if type == "Maintenance":
-                        tugboatMaintenance = True
-                        maintenanceList.add(str(tugboat.TugBoatId))
-                    elif type == "NotWork":
-                        tugboatNotWork = True
-                        notWorkList.add(str(tugboat.TugBoatId))
-                    else:
+                    if type != "Maintenance" and type != "NotWork":
                         tugboatConflict = True
                         conflictList.add(str(tugboat.TugBoatId))
                         conflictEntry.add(type)
@@ -548,14 +536,12 @@ class ManualScheduleView(View):
             if tugboatMaintenance or tugboatNotWork or tugboatConflict:
                 AutoSchedule_Reschedule()
                 print("rescheduling")
-                maintenance = ', '.join(maintenanceList)
-                notWork = ', '.join(notWorkList)
                 conflict = ''
                 for boat in conflictList:
                     for entry in conflictEntry:
                         conflict =conflict + boat + ' : ' + entry + '\n'
                 # print("conflicted entries " + conflictedEntries + " rescheduling")
-                response = JsonResponse({'success': True, 'conflict': tugboatConflict, 'conflictList':  conflict, 'maintenance': tugboatMaintenance, 'maintenanceList': maintenance, 'notWork': tugboatNotWork, 'notWorkList': notWork})
+                response = JsonResponse({'success': True, 'conflict': tugboatConflict, 'conflictList':  conflict})
             return response
         except Exception as e:
             print(e)
@@ -826,25 +812,25 @@ class TugBoatViewSet(viewsets.ModelViewSet):
         
         if taskId is not None:
             task = Task.objects.get(TaskId=taskId)
-            disabled_tugboats = set()
             filtered_tugboats = set()
+            for tugboat in queryset:
+                    filtered_tugboats.add(tugboat)
+                    print(tugboat)
+                    status, type = ifTugBoatAvailable(tugboat, task)
+                    if not status:
+                        if type == 'Maintenance' or type == 'NotWork':
+                            filtered_tugboats.discard(tugboat)
+
             all_entries = ScheduleEntry.objects.all()
             for entry in all_entries:
                 if entry.TaskId.TaskManual == 1 and entry.Status != 'Completed':
                     tugboatList = entry.listOfTugBoats.all()
                     for tugboat in tugboatList:
                         status, type = ifTugBoatAvailable(tugboat, task)
-                        print(status)
                         if not status:
-                            disabled_tugboats.add(tugboat)
+                            filtered_tugboats.discard(tugboat)
                             # print(str(entry.ScheduleEntryId)+" : "+str(tugboat))
-                
-            # print("disabled: "+str(disabled_tugboats))
-            for tugboat in queryset:
-                if tugboat not in disabled_tugboats:
-                    filtered_tugboats.add(tugboat)
-
-            # print(str(filtered_tugboats))
-            queryset = filtered_tugboats
+            print(str(filtered_tugboats))
+            queryset = sorted(filtered_tugboats, key=lambda x: x.TugBoatId)
         
         return queryset
