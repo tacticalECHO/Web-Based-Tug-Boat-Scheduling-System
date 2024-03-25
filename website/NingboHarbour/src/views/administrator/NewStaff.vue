@@ -79,6 +79,8 @@ export default {
                 }
             });
                 alert('User created successfully');
+                this.$store.dispatch('fetchCaptains');
+                this.$store.dispatch('fetchSchedulers');
                 this.close(); 
             } catch (error) {
                 console.error('Failed to create user:', error);

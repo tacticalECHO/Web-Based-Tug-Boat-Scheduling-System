@@ -191,7 +191,7 @@ export default {
 
 .footer{
     height: 45px;
-    background-color: linear-gradient(to top, transparent, black);
+    background-color: white;
 }
 
 .text-center.p-3 {

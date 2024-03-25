@@ -55,17 +55,20 @@ def ifTugBoatAvailable(tugboat, task): # Check if the tugboat is available at th
     StartTime = task.startTime-datetime.timedelta(hours=1)
     EndTime = task.startTime+datetime.timedelta(hours=1)
     if tugboat.CurrentStatus =='Maintenance':
-        return False
+        # print("busy " + tugboat.TugBoatId)
+        return (False, "Maintenance")
     if StartTime.time()< tugboat.StartWorkingTime or EndTime.time() > tugboat.EndWorkingTime:
-        return False
+        # print("busy " + tugboat.TugBoatId)
+        return (False, "NotWork")
     for schedule in ScheduleEntry.objects.all():
         if schedule.Status == 'Scheduled':
             for boat in schedule.listOfTugBoats.all():
                 if boat.TugBoatId == tugboat.TugBoatId:
                     if schedule.TaskId.startTime-datetime.timedelta(hours=1) < EndTime and schedule.TaskId.startTime+datetime.timedelta(hours=1) > StartTime:
                         if schedule.TaskId.TaskId != task.TaskId:
-                            return False
-    return True
+                            # print("busy " + tugboat.TugBoatId +" : "+ boat.TugBoatId + " entry: " + str(schedule.ScheduleEntryId))
+                            return (False, str(schedule.ScheduleEntryId))
+    return (True, '')
 def AutoSchedule_NextFit():# Auto Schedule the task--->ScheduleEntry (next fit)
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     AutoSchedule_task_Complete()

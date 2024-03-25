@@ -126,8 +126,8 @@
 
                             <td><input type="checkbox" :id="'mycheckbox' + entry.ScheduleEntryId" :name='myCheckbox' v-model="selectedScheduleEntries" :value="entry.TaskId.TaskId"></td>
 
-                            <td class="number"> {{index+1}} </td>
-                            <!-- <td class="number"> {{entry.ScheduleEntryId}} </td> -->
+                            <!-- <td class="number"> {{index+1}} </td> -->
+                            <td class="number"> {{entry.ScheduleEntryId}} </td>
 
                             <td @click.stop>
                                 <form v-if="timeInfo === entry.ScheduleEntryId" @submit.prevent="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)">
@@ -148,7 +148,7 @@
 
                             <td class="country">{{entry.TaskId.ContainerBoatID.Country}}</td>
                             
-                            <td><span>{{ entry.TaskId.RequiredTugBoat }}</span></td>
+                            <td class="tugboat"><span>{{ entry.TaskId.RequiredTugBoat }}</span></td>
 
                             <td @click.stop>
                                 <span v-for="tugBoats in entry.listOfTugBoats.map(tugBoat => tugBoat)" :key="tugBoats">
@@ -217,7 +217,7 @@
 
                             <td class="country">{{task.ContainerBoatID.Country}}</td>
 
-                            <td><span>{{ task.RequiredTugBoat }}</span></td>
+                            <td class="tugboat"><span>{{ task.RequiredTugBoat }}</span></td>
 
                             <td @click.stop class="disabled-column">
                                 <span @click="addSelected('task'+task.TaskId, 'tugBoat',task.TaskId)" v-if="tugBoatInfo != 'task'+task.TaskId">
@@ -333,6 +333,25 @@ export default {
             this.$store.dispatch('fetchScheduleEntries', this.sort);
             this.$store.dispatch('fetchTasks', this.sort);
         },
+        async reschedule(){
+            try {
+                const response = await axios.post('/api/auto-reschedule/', {});
+                if(response.data.success){
+                    
+                    this.showProgressBar = true;
+                    setTimeout(() => {
+                        this.showProgressBar = false;
+                        alert("Reschedule operation successful!");
+                    }, 2000);
+                }else {
+                    alert('Failed to reschedule');
+                }
+                
+            } catch (error) {
+                console.error("Error during schedule operation: ", error);
+                alert("Schedule operation failed, check logs for details.");
+            }
+        },
         async deleteSelected() {
             if(this.deletionAlert()){
                 let isScheduleEntry = false;
@@ -361,23 +380,7 @@ export default {
                 if(isScheduleEntry){
                     console.log("reschedule");
                     if (confirm('Deleted successfully. \nReschedule remaning schedule?')){
-                        try {
-                            const response = await axios.post('/api/auto-reschedule/', {});
-                            if(response.data.success){
-                                
-                                this.showProgressBar = true;
-                                setTimeout(() => {
-                                    this.showProgressBar = false;
-                                    alert("Reschedule operation successful!");
-                                }, 2000);
-                            }else {
-                                alert('Failed to reschedule');
-                            }
-                            
-                        } catch (error) {
-                            console.error("Error during schedule operation: ", error);
-                            alert("Schedule operation failed, check logs for details.");
-                        }
+                        this.reschedule();
                     }
                 }else{
                     alert('Deleted successfully');
@@ -583,9 +586,21 @@ export default {
                     action: this.action,
                 });
                 if (response.data.success) {
-                    if(response.data.tugboatConflict){
-                        alert('There are conflicted entries. Rescheduling...');
-                    }if(response.data.timeConflict){
+                    if(response.data.tugboatConflict || response.data.maintenance || response.data.notWork){
+                        if(response.data.tugboatConflict){
+                            if (confirm('Tug Boat '+ this.tugBoat + ' is conflicted.\n Confirm Auto Reschedule?')){
+                                this.reschedule();
+                            }else{
+                                alert('Please Edit Manually');
+                            }
+                        }
+                        if(response.data.maintenance){
+                            alert('Tug Boat '+ this.tugBoat + ' is in Maintenance. Please change another tugboat');
+                        }
+                        if(response.data.notWork){
+                            alert('Tug Boat '+ this.tugBoat + ' is not in Working Time. Please change another tugboat')
+                        }
+                    }else if(response.data.timeConflict){
                         this.autoRescheduleTugboats(response.data.tugboat, response.data.total, entryId, taskId);
                     }else{
                         alert('Edit Successfully');
@@ -632,8 +647,20 @@ export default {
                     tugBoatList: this.listOfTugBoat,
                 });
                 if (response.data.success) {
-                    if(response.data.conflict){
-                        alert('There are conflicted entries. Rescheduling...');
+                    if(response.data.conflict || response.data.maintenance || response.data.notWork){
+                        let conflict = '-';
+                        let maintenance = '-';
+                        let notWork = '-';
+                        if(response.data.conflict){
+                            conflict = response.data.conflictList
+                        }
+                        if(response.data.maintenance){
+                            maintenance = response.data.maintenanceList
+                        }
+                        if(response.data.notWork){
+                            notWork = response.data.NotWorkList
+                        }
+                        alert("Conflicted (Tugboat : Entry):\n" + conflict+ "\nIn Maintenance:\n" + maintenance +"\nNot in Working Hours:\n"+ notWork +'\nRescheduling...');
                     }else{
                         alert('Manual Scheduling Successful');
                     }

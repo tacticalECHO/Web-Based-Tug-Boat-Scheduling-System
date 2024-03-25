@@ -21,7 +21,7 @@ describe('Scheduler Dashboard Page Tests', () => {
     cy.contains('button', 'Download').should('exist');
     cy.contains('button', 'Publish').should('exist');
     cy.contains('button', 'Delete').should('exist');
-    cy.contains('button', 'Add +').should('exist');
+    cy.contains('button', 'Add').should('exist');
   });
 
   it('Filter function available', () => {
@@ -80,12 +80,21 @@ describe('Scheduler Dashboard Page Tests', () => {
     });
   });
 
-  it('filters work schedules and tasks by container boat', () => {
+  it('filters work schedules and tasks by country', () => {
     cy.contains('label', 'Country:').next('select').as('countrySelect');
     cy.get('@countrySelect').select('China');
     cy.get('.table tbody').find('tr').its('length').should('be.gt', 0);
     cy.get('.table tbody tr').each(($row) => {
       cy.wrap($row).find('.country').should('contain', 'China');
+    });
+  });  
+
+  it('filters work schedules and tasks by tug boat', () => {
+    cy.contains('label', 'Tug Boat:').next('select').as('tugboatSelect');
+    cy.get('@tugboatSelect').select('NB002');
+    cy.get('.table tbody').find('tr').its('length').should('be.gt', 0);
+    cy.get('.table tbody tr').each(($row) => {
+      cy.wrap($row).find('.tugboat').should('contain', 'NB002');
     });
   });
 
