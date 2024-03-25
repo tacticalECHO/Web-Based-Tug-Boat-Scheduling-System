@@ -829,8 +829,7 @@ class TugBoatViewSet(viewsets.ModelViewSet):
                         status, type = ifTugBoatAvailable(tugboat, task)
                         if not status:
                             filtered_tugboats.discard(tugboat)
-                            # print(str(entry.ScheduleEntryId)+" : "+str(tugboat))
-            print(str(filtered_tugboats))
+            # print(str(filtered_tugboats))
             queryset = sorted(filtered_tugboats, key=lambda x: x.TugBoatId)
         
         return queryset

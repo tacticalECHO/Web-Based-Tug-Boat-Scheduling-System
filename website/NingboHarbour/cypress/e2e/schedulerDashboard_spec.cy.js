@@ -1,8 +1,8 @@
 describe('Scheduler Dashboard Page Tests', () => {
   beforeEach(() => {
     cy.visit('http://127.0.0.1:8000/#/')
-    cy.get('input[type=text]').type('scyqd1')
-    cy.get('input[type=password]').type('dqr12345')
+    cy.get('input[type=text]').type('hfyeq2')
+    cy.get('input[type=password]').type('hfyeq2')
     cy.get('.btn').click();
 
     cy.url().should('not.eq', 'http://127.0.0.1:8000/#/').then(() => {
@@ -33,24 +33,6 @@ describe('Scheduler Dashboard Page Tests', () => {
     cy.contains('label', 'Status:').should('exist');
   });
 
-  // it('Successfully visit apis', () => {
-  //   cy.intercept('GET', '/api/display_schedule_entry/').as('displayScheduleEntry');
-  //   cy.intercept('GET', '/api/display_task/').as('displayTask');
-  //   cy.intercept('GET', '/api/display_berth/').as('displayBerth');
-  //   cy.intercept('GET', '/api/display_container_boat/').as('displayContainerBoat');
-  //   cy.intercept('GET', '/api/display_tugboat/').as('displayTugBoat');
-    
-    // Perform actions that trigger API requests here...
-
-    // cy.wait('@scheduleEntry').should(({ request }) => {
-    //   expect(request.url).to.include('/api/display_schedule_entry/');
-    // });
-
-    // cy.wait('@displayTask').should(({ request }) => {
-    //   expect(request.url).to.include('/api/display_task/');
-    // });
-  // });
-
   it('Shows "No Task Available" message when there is no task', () => {
     cy.window().then(win => {
       win.waiting = () => true;
@@ -73,10 +55,10 @@ describe('Scheduler Dashboard Page Tests', () => {
 
   it('filters work schedules and tasks by container boat', () => {
     cy.contains('label', 'Container Boat:').next('select').as('containerBoatSelect');
-    cy.get('@containerBoatSelect').select('CN0001');
+    cy.get('@containerBoatSelect').select('CN0020');
     cy.get('.table tbody').find('tr').its('length').should('be.gt', 0);
     cy.get('.table tbody tr').each(($row) => {
-      cy.wrap($row).find('.container-boat').should('contain', 'CN0001');
+      cy.wrap($row).find('.container-boat').should('contain', 'CN0020');
     });
   });
 
@@ -97,5 +79,33 @@ describe('Scheduler Dashboard Page Tests', () => {
       cy.wrap($row).find('.tugboat').should('contain', 'NB002');
     });
   });
+
+  it('filters work schedules and tasks by berth', () => {
+    cy.contains('label', 'Berth:').next('select').as('berthSelect');
+    cy.get('@berthSelect').select('1');
+    cy.get('.table tbody').find('tr').its('length').should('be.gt', 0);
+    cy.get('.table tbody tr').each(($row) => {
+      cy.wrap($row).find('.berth').should('contain', '1');
+    });
+  });
+
+  it('filters work schedules and tasks by work type', () => {
+    cy.contains('label', 'Work Type:').next('select').as('work-typeSelect');
+    cy.get('@work-typeSelect').select('INBOUND');
+    cy.get('.table tbody').find('tr').its('length').should('be.gt', 0);
+    cy.get('.table tbody tr').each(($row) => {
+      cy.wrap($row).find('.work-type').should('contain', 'INBOUND');
+    });
+  });
+
+  it('filters work schedules and tasks by status', () => {
+    cy.contains('label', 'Status:').next('select').as('statusSelect');
+    cy.get('@statusSelect').select('Unscheduled');
+    cy.get('.table tbody').find('tr').its('length').should('be.gt', 0);
+    cy.get('.table tbody tr').each(($row) => {
+      cy.wrap($row).find('.status').should('contain', 'Unscheduled');
+    });
+  });
+
 
 });

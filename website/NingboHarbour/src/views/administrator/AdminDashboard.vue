@@ -145,4 +145,8 @@ export default {
     text-align: left;
 }
 
+.table-container {
+    max-height: 20em;
+}
+
 </style>

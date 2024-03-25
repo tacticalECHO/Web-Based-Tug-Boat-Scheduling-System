@@ -178,6 +178,7 @@ p {
     z-index: 0;
     transition: margin-left 0.5s;
     height: 100vh;
+    margin-bottom: 45px;
 }
 
 .title {
@@ -223,7 +224,7 @@ p {
 
 /* --table container------------------------------------------------------ */
 .table-container {
-    max-height: 30em;
+    max-height: 29em;
     /* Adjust the height as needed */
     overflow-y: auto;
     border-radius: 10px;
