@@ -705,18 +705,18 @@ class CaptainViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         self.update_tugboatStatus()
         return super(CaptainViewSet, self).list(request, *args, **kwargs)
-    def update_tugboatStatus(self):
-        current_time = datetime.now().time()
-        TugBoatList=TugBoat.objects.all()
-        for boat in TugBoatList:
-            if boat.StartWorkingTime<=current_time and boat.EndWorkingTime>=current_time:
-                #for tugboat in schedule.listOfTugBoats.all():
-                boat.CurrentStatus='Busy'
-                boat.save()
-            elif boat.EndWorkingTime<current_time:
-                #for tugboat in schedule.listOfTugBoats.all():
-                    boat.CurrentStatus='Free'
-                    boat.save()
+#    def update_tugboatStatus(self):
+#        current_time = datetime.now().time()
+#        TugBoatList=TugBoat.objects.all()
+#        for boat in TugBoatList:
+#            if boat.StartWorkingTime<=current_time and boat.EndWorkingTime>=current_time:
+#                #for tugboat in schedule.listOfTugBoats.all():
+#                boat.CurrentStatus='Busy'
+#                boat.save()
+#            elif boat.EndWorkingTime<current_time:
+#                #for tugboat in schedule.listOfTugBoats.all():
+#                    boat.CurrentStatus='Free'
+#                    boat.save()
     def update_tugboatStatus(self):
         ScheduleEntryList=ScheduleEntry.objects.all()
         if ScheduleEntryList!=None:
