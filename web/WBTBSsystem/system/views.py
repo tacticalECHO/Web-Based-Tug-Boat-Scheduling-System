@@ -193,7 +193,6 @@ class CreateUserView(View):
 #             action = data.get('action')
 #             berthId = data.get('berthId')
 #             state = data.get('state')
-
 #             try:
 #                 task = Task.objects.get(TaskId=taskId)
 #             except Task.DoesNotExist:
@@ -719,18 +718,40 @@ class CaptainViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         self.update_tugboatStatus()
         return super(CaptainViewSet, self).list(request, *args, **kwargs)
+#    def update_tugboatStatus(self):
+#        current_time = datetime.now().time()
+#        TugBoatList=TugBoat.objects.all()
+#        for boat in TugBoatList:
+#            if boat.StartWorkingTime<=current_time and boat.EndWorkingTime>=current_time:
+#                #for tugboat in schedule.listOfTugBoats.all():
+#                boat.CurrentStatus='Busy'
+#                boat.save()
+#            elif boat.EndWorkingTime<current_time:
+#                #for tugboat in schedule.listOfTugBoats.all():
+#                    boat.CurrentStatus='Free'
+#                    boat.save()
     def update_tugboatStatus(self):
-        current_time = datetime.now().time()
-        TugBoatList=TugBoat.objects.all()
-        for boat in TugBoatList:
-            if boat.StartWorkingTime<=current_time and boat.EndWorkingTime>=current_time:
-                #for tugboat in schedule.listOfTugBoats.all():
-                boat.CurrentStatus='Busy'
-                boat.save()
-            elif boat.EndWorkingTime<current_time:
-                #for tugboat in schedule.listOfTugBoats.all():
+        ScheduleEntryList=ScheduleEntry.objects.all()
+        if ScheduleEntryList!=None:
+            for schedule in ScheduleEntryList:
+                if schedule.StartTime!=None and schedule.StartTime.time()<=datetime.now().time() and schedule.EndTime==None:
+                    for tugboat in schedule.listOfTugBoats.all():
+                        for tugboat in schedule.listOfTugBoats.all():
+                            tugboat.CurrentStatus='Busy'
+                            tugboat.save()
+                elif schedule.EndTime!=None and schedule.EndTime.time()<datetime.now().time():
+                    for tugboat in schedule.listOfTugBoats.all():
+                        for tugboat in schedule.listOfTugBoats.all():
+                            tugboat.CurrentStatus='Free'
+                            tugboat.save()
+        else:
+            TugBoatList=TugBoat.objects.all()
+            for boat in TugBoatList:
+                if boat.CurrentStatus=='Busy':
                     boat.CurrentStatus='Free'
-                    boat.save()
+                    boat.save()              
+                
+
     # def update_tugboatStatus(self):
     #     ScheduleEntryList=ScheduleEntry.objects.all()
     #     for schedule in ScheduleEntryList:

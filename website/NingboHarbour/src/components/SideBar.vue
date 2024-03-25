@@ -6,28 +6,28 @@
         <div v-if="screen() || sidebarOpened" id="sidebar">
             <h2>Ningbo <br> Harbour</h2>
             <ul>
-                <li v-if="isAdmin ||isScheduler" @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item" :style="{ backgroundColor: adminDashboard }">
+                <li v-if="isAdmin" @click="redirect('AdminDashboard')" id="admin-dashboard" class="sidebar-item" :style="{ backgroundColor: adminDashboard }">
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     A-Dashboard 
                     <span v-if="adminDashboard != 'none'" class="sidebar-selected">&nbsp;</span>
                 </li>
-                <li v-if="isScheduler || isAdmin" @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item" :style="{ backgroundColor: schedulerDashboard }">
+                <li v-if="isScheduler" @click="redirect('SchedulerDashboard')" id="scheduler-dashboard" class="sidebar-item" :style="{ backgroundColor: schedulerDashboard }">
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     S-Dashboard
                     <span v-if="schedulerDashboard != 'none'" class="sidebar-selected">&nbsp;</span>
                 </li>
-                <li v-if="isScheduler || isAdmin" @click="redirect('TugBoatList')" id="scheduler-dashboard" class="sidebar-item" :style="{ backgroundColor: tugboat}">
+                <li v-if="isAdmin" @click="redirect('TugBoatList')" id="scheduler-dashboard" class="sidebar-item" :style="{ backgroundColor: tugboat}">
                     <font-awesome-icon :icon="['fas', 'ship']" class="sidebar-icon"/>
                     Tug Boats
                     <span v-if="tugboat != 'none'" class="sidebar-selected">&nbsp;</span>
                 </li>
-                <li v-if="isCaptain || isScheduler || isAdmin" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item" :style="{ backgroundColor: captainDashboard }">
+                <li v-if="isCaptain" @click="redirect('CaptainDashboard')" id="captain-dashboard" class="sidebar-item" :style="{ backgroundColor: captainDashboard }">
                     <admin-panel v-if="isCaptain" />
                 <font-awesome-icon :icon="['fas', 'display']" class="sidebar-icon"/>
                     C-Dashboard
                     <span v-if="captainDashboard != 'none'" class="sidebar-selected">&nbsp;</span>
                 </li>
-                <li v-if="isScheduler || isCaptain|| isAdmin" @click="redirect('WorkSchedule')" class="sidebar-item" :style="{ backgroundColor: workSchedule }">
+                <li v-if="isCaptain" @click="redirect('WorkSchedule')" class="sidebar-item" :style="{ backgroundColor: workSchedule }">
                     <font-awesome-icon :icon="['fas', 'calendar-days']" class="sidebar-icon"/>
                     Work Schedules
                     <span v-if="workSchedule != 'none'" class="sidebar-selected">&nbsp;</span>

@@ -10,16 +10,6 @@ from system.models import ContainerBoat, Task, Berth, TugBoat, Captain
 import pandas as pd
 PATH="web\WBTBSsystem\\test_container.xlsx"
 
-def IsberthAvailable(berthID):
-    # Determine if the berth is available
-    try:
-        berth=Berth.objects.get(BerthId=berthID)
-    except:
-        return False
-    if berth.ContainerBoat==None:
-        return True
-    else:
-        return False
 def requieredTugBoat(Tonnage):
     return math.ceil(Tonnage/1000)
 def importData(path):
@@ -72,7 +62,7 @@ def createTask(data):
     # Create task
     data.sort_values(by='ScheduleTime',ascending=True)
     for i in range(len(data)):
-        if IsberthAvailable(data.iloc[i,5]) and IfTaskRepeat(data.iloc[i,:])==False:
+        if  IfTaskRepeat(data.iloc[i,:])==False:
             ScheduleTime=data.iloc[i,3]
             Task.objects.create(ContainerBoatID=ContainerBoat.objects.get(ContainerBoatID=data.iloc[i,0]),BerthId=data.iloc[i,5],startTime=ScheduleTime,Action=data.iloc[i,4],RequiredTugBoat=requieredTugBoat(data.iloc[i,1]))
 

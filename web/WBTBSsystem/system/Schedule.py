@@ -8,7 +8,7 @@ import sys
 sys.path.append('web\WBTBSsystem')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
-from system.models import Captain, TugBoat, ContainerBoat, Task, ScheduleEntry, User
+from system.models import Captain, TugBoat, ContainerBoat, Task, ScheduleEntry, User, Berth
 
 def Get_Information(): # Get all the information from the database
     TaskList=Task.objects.all().order_by('startTime')
@@ -69,11 +69,23 @@ def ifTugBoatAvailable(tugboat, task): # Check if the tugboat is available at th
                             # print("busy " + tugboat.TugBoatId +" : "+ boat.TugBoatId + " entry: " + str(schedule.ScheduleEntryId))
                             return (False, str(schedule.ScheduleEntryId))
     return (True, '')
+def IsberthAvailable(berthID):
+    # Determine if the berth is available
+    try:
+        berth=Berth.objects.get(BerthId=berthID)
+    except:
+        return False
+    if berth.ContainerBoat==None:
+        return True
+    else:
+        return False
 def AutoSchedule_NextFit():# Auto Schedule the task--->ScheduleEntry (next fit)
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     AutoSchedule_task_Complete()
     index = 0
     for task in TaskList:
+        if IsberthAvailable(task.BerthId) == False:
+            continue
         if task.TaskManual == 1:
             continue
         if task.State == 'Unscheduled' and (task.startTime.date() == datetime.datetime.now().date() or task.startTime.date()== datetime.datetime.now().date()+datetime.timedelta(days=1))  and task.startTime > datetime.datetime.now():
@@ -108,6 +120,8 @@ def AutoSchedule_FIFO(): # Auto Schedule the task--->ScheduleEntry (first come f
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
     AutoSchedule_task_Complete() 
     for task in TaskList:
+        if IsberthAvailable(task.BerthId) == False:
+            continue
         if task.TaskManual == 1:
             continue
         if task.State == 'Unscheduled' and (task.startTime.date() == datetime.datetime.now().date() or task.startTime.date()== datetime.datetime.now().date()+datetime.timedelta(days=1))  and task.startTime > datetime.datetime.now():
