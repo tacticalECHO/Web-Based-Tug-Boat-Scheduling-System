@@ -1,7 +1,7 @@
 from datetime import *
-import pytest
 import os
 import time
+import pytest
 import django
 import sys
 sys.path.append('web\\WBTBSsystem')
@@ -9,6 +9,26 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
 from system.models import ContainerBoat, Task, Berth, TugBoat, Captain
 from system.Schedule import *
+
+def test_IsberthAvailable():
+    assert IsberthAvailable(1) == True
+    assert IsberthAvailable(2) == True
+    assert IsberthAvailable(3) == True
+    assert IsberthAvailable(4) == True
+    assert IsberthAvailable(5) == True
+    assert IsberthAvailable(6) == True
+    assert IsberthAvailable(7) == True
+    assert IsberthAvailable(8) == True
+    assert IsberthAvailable(9) == True
+    assert IsberthAvailable(10) == True
+    Berth.objects.create(BerthId=11)
+    assert IsberthAvailable(11) == True
+    ContainerBoat.objects.create(ContainerBoatID="CB123", Tonnage=1000, Country="Country X")
+    Berth.objects.create(BerthId=12, ContainerBoat=ContainerBoat.objects.get(ContainerBoatID="CB123"))
+    assert IsberthAvailable(12) == False
+    Berth.delete(Berth.objects.get(BerthId=11))
+    Berth.delete(Berth.objects.get(BerthId=12))
+    ContainerBoat.delete(ContainerBoat.objects.get(ContainerBoatID="CB123"))
 
 def test_Get_Information():
     Task.objects.all().delete()
