@@ -79,7 +79,7 @@ $ npm list vue
 - Install `vue-cli`
 Open the folder `website\NingboHarbour` and run command in command prompt:
 ```
-npm install
+$ npm install
 ``` 
 
 ### Start Server
@@ -90,7 +90,7 @@ Open folder `web\WBTBSsystem` and run command in command prompt:
 ```
 $ py manage.py runserver
 ```
-Default run at [http://127.0.0.1:8000](http://127.0.0.1:8000/).
+Default run at [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 
 Successfully run example:
 ```
