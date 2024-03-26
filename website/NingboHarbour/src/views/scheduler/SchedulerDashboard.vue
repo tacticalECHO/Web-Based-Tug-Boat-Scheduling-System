@@ -129,12 +129,12 @@
                             <!-- <td class="number"> {{index+1}} </td> -->
                             <td class="number"> {{entry.ScheduleEntryId}} </td>
 
-                            <td @click.stop>
+                            <td @click.stop class="planTime">
                                 <form v-if="timeInfo === entry.ScheduleEntryId" @submit.prevent="edit(entry.TaskId.TaskId, entry.ScheduleEntryId)">
                                     <input v-model="plannedTime" type="datetime-local">
                                     <input class="submit-button" type="submit" />
                                 </form>
-                                <span class="click-hover" @click="selected(entry.ScheduleEntryId, 'time')" v-if="timeInfo != entry.ScheduleEntryId">{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</span> 
+                                <span class="click-hover time" @click="selected(entry.ScheduleEntryId, 'time')" v-if="timeInfo != entry.ScheduleEntryId">{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</span> 
                             </td>
 
                             <td @click.stop class="container-boat">
@@ -198,12 +198,12 @@
 
                             <td class="number"> {{index+1}} </td>
 
-                            <td @click.stop>
+                            <td @click.stop class="planTime">
                                 <form v-if="timeInfo === task.TaskId" @submit.prevent="edit(task.TaskId)">
                                     <input v-model="plannedTime" type="datetime-local">
                                     <input class="submit-button" type="submit" />
                                 </form>
-                                <span class="click-hover" @click="selected(task.TaskId, 'time')" v-if="timeInfo != task.TaskId">{{formatDate(task.startTime)}}&emsp;&emsp;{{ formatTime(task.startTime) }}</span> 
+                                <span class="click-hover time" @click="selected(task.TaskId, 'time')" v-if="timeInfo != task.TaskId">{{formatDate(task.startTime)}}&emsp;&emsp;{{ formatTime(task.startTime) }}</span> 
                             </td>
 
                             <td @click.stop class="container-boat">
@@ -244,7 +244,7 @@
                                 <span class="click-hover" @click="selected(task.TaskId, 'berthId')" v-if="berthInfo != task.TaskId">{{ task.BerthId }}</span> 
                             </td>
 
-                            <td @click.stop class="work-type">
+                            <td @click.stop class="work-type task-type">
                                 <form v-if="actionInfo === task.TaskId">
                                     <select @change="edit(task.TaskId)" v-model="action">
                                         <option>INBOUND</option>
@@ -267,7 +267,7 @@
                         <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
                             <td><input type="checkbox" :id="'myCheckbox' + entry.TaskId" :name="myCheckbox" v-model="selectedTasks" :value="entry.TaskId.TaskId"></td>
                             <td class="number"> {{index+1}} </td>
-                            <td>{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</td>
+                            <td class="planTime">{{formatDate(entry.TaskId.startTime)}}&emsp;&emsp;{{ formatTime(entry.TaskId.startTime) }}</td>
                             <td class="container-boat">{{entry.TaskId.ContainerBoatID.ContainerBoatID}}</td>
                             <td class="country">{{entry.TaskId.ContainerBoatID.Country}}</td>
                             <td><span>{{ entry.TaskId.RequiredTugBoat }}</span></td>
@@ -463,7 +463,7 @@ export default {
             axios.post('/api/publish-data')
             .then(response => {
                 console.log(response.data.message);
-                alert("Published success!");
+                alert("Successfully Download!");
             }).catch(error => {
                 console.error("error: ", error);
                 alert("Failed to publish data, check logs for details.");
