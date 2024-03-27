@@ -403,7 +403,6 @@ export default {
             try {
                 const response = await axios.post('/api/auto-schedule', {});
                 console.log(response.data);
-                
             } catch (error) {
                 console.error("Error during schedule operation: ", error);
                 alert("Schedule operation failed, check logs for details.");
@@ -411,6 +410,11 @@ export default {
             setTimeout(() => {
                 this.showProgressBar = false;
                 alert("Schedule operation successful!");
+                this.$store.dispatch('fetchScheduleEntries', this.sort);
+                this.$store.dispatch('fetchTasks', this.sort);
+                this.$store.dispatch('fetchContainerBoats');
+                this.$store.dispatch('fetchBerths');
+                this.$store.dispatch('fetchTugBoats');
             }, 2000);
         },
         importTaskData(){
