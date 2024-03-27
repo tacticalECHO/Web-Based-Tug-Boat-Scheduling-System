@@ -3,12 +3,12 @@ import os
 import django
 import math
 import sys
-sys.path.append('web\WBTBSsystem')
+sys.path.append('web\\WBTBSsystem')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WBTBSsystem.settings')
 django.setup()
 from system.models import ContainerBoat, Task, Berth, TugBoat, Captain
 import pandas as pd
-PATH="web\WBTBSsystem\\test_container.xlsx"
+PATH="web\\WBTBSsystem\\test_container.xlsx"
 
 def requieredTugBoat(Tonnage):
     return math.ceil(Tonnage/1000)
