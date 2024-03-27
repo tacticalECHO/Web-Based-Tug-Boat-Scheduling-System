@@ -482,7 +482,7 @@ class UpdateEntryAndTaskView(View):
                 # AutoSchedule_Reschedule()
                 # print("rescheduling")
                 conflictedEntries  = ", ".join(tugConflictList)
-                response = JsonResponse({'success': True, 'tugboatConflict': tugboatConflict, 'conflictList':  conflictedEntries})
+                response = JsonResponse({'success': True, 'tugboat': newTugBoatId, 'tugboatConflict': tugboatConflict, 'conflictList':  conflictedEntries})
             else:
                 response = JsonResponse({'success': True})
             return response
@@ -593,6 +593,15 @@ class AutoScheduleView(View):
 class AutoRescheduleView(View):
     def post(self, request, *args, **kwargs):
         try:
+            data = json.loads(request.body)
+            tugboatId = data.get('tugboatId')
+            entryId = data.get('entryId')
+            if entryId is not None:
+                if tugboatId is not None:
+                    entry = ScheduleEntry.objects.get(ScheduleEntryId=entryId)
+                    tugboat = TugBoat.objects.get(TugBoatId=tugboatId)
+                    entry.listOfTugBoats.add(tugboat)
+
             AutoSchedule_Reschedule()
             return JsonResponse({'success': True})
         except Exception as e:

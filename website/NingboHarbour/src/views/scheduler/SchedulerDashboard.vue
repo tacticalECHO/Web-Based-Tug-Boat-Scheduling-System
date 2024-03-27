@@ -333,9 +333,12 @@ export default {
             this.$store.dispatch('fetchScheduleEntries', this.sort);
             this.$store.dispatch('fetchTasks', this.sort);
         },
-        async reschedule(){
+        async reschedule(entryId, tugboatId){
             try {
-                const response = await axios.post('/api/auto-reschedule/', {});
+                const response = await axios.post('/api/auto-reschedule/', {
+                    entryId: entryId,
+                    tugboatId: tugboatId,
+                });
                 if(response.data.success){
                     
                     this.showProgressBar = true;
@@ -592,7 +595,7 @@ export default {
                 if (response.data.success) {
                     if(response.data.tugboatConflict){
                         if (confirm('Tug Boat '+ this.tugBoat + ' is conflicted.\n Confirm Auto Reschedule?')){
-                            this.reschedule();
+                            this.reschedule(entryId, this.tugboat);
                         }else{
                             alert('Please Edit Manually');
                         }
