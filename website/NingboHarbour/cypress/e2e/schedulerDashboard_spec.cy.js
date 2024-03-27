@@ -153,11 +153,76 @@ describe('Scheduler Dashboard Page Tests', () => {
   });
 
   it('should successfully add new tug boat of an schedule entry', () => {
-    cy.intercept('POST', '/api/update-entry-task/').as('updateStatus');
+    cy.intercept('POST', '/api/auto-schedule').as('updateStatus');
     cy.get('#add-tugboat').first().click();
     cy.get('.tugboat select').first().select('NB002'); 
     cy.wait('@updateStatus').its('response.statusCode').should('eq', 200);
   });
 
+  it('should successfully schedule on click', () => {
+    cy.intercept('POST', '/api/auto-schedule').as('updateStatus');
+    cy.get('#schedule').first().click();
+    cy.wait('@updateStatus').its('response.statusCode').should('eq', 200);
+  });
+
+  it('should successfully import task on click', () => {
+    cy.intercept('POST', '/api/upload-task-data').as('uploadTaskData');
+
+    cy.get('#import-task').click();
+    
+    cy.get('#import-task-data').then(input => {
+      const fileName = '../../../../web/WBTBSsystem/test_container.xlsx';
+      const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      cy.fixture(fileName, 'binary').then(fileContent => {
+        const blob = Cypress.Blob.binaryStringToBlob(fileContent, fileType);
+        const testFile = new File([blob], fileName, { type: fileType });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(testFile);
+        input[0].files = dataTransfer.files;
+        cy.get('#import-task-data').trigger('change', { force: true });
+      });
+    });
+
+    cy.wait('@uploadTaskData').then(interception => {
+      expect(interception.response.statusCode).to.eq(200);
+    });
+
+    cy.on('window:alert', (str) => {
+      expect(str).to.equal(`Imported success!`)
+    })
+  });
+
+
+  it('should successfully import tugboat on click', () => {
+    cy.intercept('POST', '/api/upload-tug-boat-data').as('uploadTugboatData');
+
+    cy.get('#import-tugboat').click();
+    
+    cy.get('#import-tugboat-data').then(input => {
+      const fileName = '../../../../web/WBTBSsystem/test_tug.xlsx';
+      const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      cy.fixture(fileName, 'binary').then(fileContent => {
+        const blob = Cypress.Blob.binaryStringToBlob(fileContent, fileType);
+        const testFile = new File([blob], fileName, { type: fileType });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(testFile);
+        input[0].files = dataTransfer.files;
+        cy.get('#import-tugboat-data').trigger('change', { force: true });
+      });
+    });
+
+    cy.wait('@uploadTugboatData').then(interception => {
+      expect(interception.response.statusCode).to.eq(200);
+    });
+    cy.on('window:alert', (str) => {
+      expect(str).to.equal(`Imported success!`)
+    })
+  });
+
+  it('should successfully publish on click', () => {
+    cy.intercept('POST', '/api/update-publish-time').as('updateStatus');
+    cy.get('#publish').first().click();
+    cy.wait('@updateStatus').its('response.statusCode').should('eq', 200);
+  });
 
 });

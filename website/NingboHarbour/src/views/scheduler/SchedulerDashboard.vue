@@ -328,20 +328,28 @@ export default {
         }
     },
     methods: {
+        reload(){
+            this.$store.dispatch('fetchScheduleEntries', this.sort);
+            this.$store.dispatch('fetchTasks', this.sort);
+            this.$store.dispatch('fetchContainerBoats');
+            this.$store.dispatch('fetchBerths');
+            this.$store.dispatch('fetchTugBoats');
+        },
         sorting(){
             this.sort = !this.sort;
             this.$store.dispatch('fetchScheduleEntries', this.sort);
             this.$store.dispatch('fetchTasks', this.sort);
         },
         async reschedule(entryId, tugboatId){
+            this.showProgressBar = true;
             try {
                 const response = await axios.post('/api/auto-reschedule/', {
                     entryId: entryId,
                     tugboatId: tugboatId,
                 });
+                console.log(response.data.success)
                 if(response.data.success){
                     console.log('success')
-                    this.showProgressBar = true;
                     setTimeout(() => {
                         this.showProgressBar = false;
                         window.location.reload();
@@ -350,7 +358,6 @@ export default {
                 }else {
                     alert('Failed to reschedule');
                 }
-                
             } catch (error) {
                 console.error("Error during schedule operation: ", error);
                 alert("Schedule operation failed, check logs for details.");
@@ -390,8 +397,7 @@ export default {
                     alert('Deleted successfully');
                 }
 
-                this.$store.dispatch('fetchTasks', this.sort);
-                this.$store.dispatch('fetchScheduleEntries', this.sort);
+                this.reload();
             }
             this.selectedTasks = [];
             this.selectedScheduleEntries = [];
@@ -414,11 +420,7 @@ export default {
             setTimeout(() => {
                 this.showProgressBar = false;
                 alert("Schedule operation successful!");
-                this.$store.dispatch('fetchScheduleEntries', this.sort);
-                this.$store.dispatch('fetchTasks', this.sort);
-                this.$store.dispatch('fetchContainerBoats');
-                this.$store.dispatch('fetchBerths');
-                this.$store.dispatch('fetchTugBoats');
+                window.location.reload();
             }, 2000);
         },
         importTaskData(){
@@ -486,11 +488,7 @@ export default {
                 console.log(response.data);
                 
                 alert('Publish Successfully');
-                this.$store.dispatch('fetchScheduleEntries', this.sort);
-                this.$store.dispatch('fetchTasks', this.sort);
-                this.$store.dispatch('fetchContainerBoats');
-                this.$store.dispatch('fetchBerths');
-                this.$store.dispatch('fetchTugBoats');
+                this.reload();
             } catch (error) {
                 console.error(error);
                 alert('Publish Successfully');
@@ -567,9 +565,14 @@ export default {
             this.containerBoatInfo = null;
             this.berthInfo = null;
             this.actionInfo = null;
+            this.plannedTime = null;
+            this.containerBoatId = null;
+            this.tugBoat = null;
+            this.berthId = null;
+            this.action = null;
         },
         tugBoatSelected(id, index){
-            this.resetNull;
+            this.resetNull();
             this.tugBoatInfo = id;
             this.tugBoatIndex = index;
         },
@@ -602,7 +605,7 @@ export default {
                 if (response.data.success) {
                     if(response.data.tugboatConflict){
                         if (confirm('Tug Boat '+ this.tugBoat + ' is conflicted.\n Confirm Auto Reschedule?')){
-                            this.reschedule(entryId, this.tugboat);
+                            this.reschedule(entryId, this.tugBoat);
                         }else{
                             alert('Please Edit Manually');
                         }
@@ -611,7 +614,7 @@ export default {
                     }else{
                         alert('Edit Successfully');
                     }
-                    window.location.reload();
+                    this.reload();
                     this.resetNull();
                 } else {
                     alert('Edit Task Failed.');
@@ -658,7 +661,7 @@ export default {
                     }else{
                         alert('Manual Scheduling Successful');
                     }
-                    window.location.reload();
+                    this.reload();
                     this.resetNull();
                 } else {
                     alert('Manual Schedulling Failed.');
@@ -668,38 +671,6 @@ export default {
                 alert('Manual Schedulling Error.');
             }
         },
-        // async getTugBoatStyle(tugBoatId){
-        //     // const tugBoat = entry.listOfTugBoats.find(tug => tug.TugBoatId === tugBoatId);
-        //     try { 
-        //         const response = await axios.post('/api/tugboat-availability', {
-        //             tugboatId: tugBoatId,
-        //         });
-        //         if (response.data.success) {
-        //             console.log("get tugboat availability success")
-
-        //             //set color according to state
-        //             let backgroundColor;
-
-        //             switch (response.data.message) {
-        //                 case true:
-        //                     backgroundColor = 'green';
-        //                     break;
-        //                 default:
-        //                     backgroundColor = 'red';
-        //             }
-        //             return{
-        //                 backgroundColor: backgroundColor,
-        //                 color: 'white',
-        //                 padding: '5px',
-        //                 'border-radius': '10px',
-        //             }
-        //         } else {
-        //             console.log("failed")
-        //         }
-        //     } catch (error) {
-        //         console.error('Get tugboat availability error: ', error);
-        //     }
-        // },
         selectAndGetTugBoat(entryId, tugboats, taskId){
             this.tugBoatSelected(entryId, tugboats)
             this.changeTugboatList(taskId)

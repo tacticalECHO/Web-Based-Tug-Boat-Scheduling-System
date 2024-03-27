@@ -37,7 +37,7 @@ def AutoSchedule_Reschedule(): # Reschedule the task
             schedule.TaskId.save()
             schedule.delete()
     print("reschedule 2")
-    AutoSchedule()
+    return AutoSchedule()
 
 def AutoSchedule_task_Complete(): # Check if the task is completed
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()
@@ -116,6 +116,7 @@ def AutoSchedule_NextFit():# Auto Schedule the task--->ScheduleEntry (next fit)
             task.State = 'Scheduled'
             schedule.save()
             task.save()
+    print('returned')
     return (True, "Scheduling completed successfully.")
 def AutoSchedule_FIFO(): # Auto Schedule the task--->ScheduleEntry (first come first serve)
     TaskList, TugBoatList, ScheduleEntryList = Get_Information()

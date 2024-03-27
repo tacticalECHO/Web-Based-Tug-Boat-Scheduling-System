@@ -530,8 +530,8 @@ class ManualScheduleView(View):
             if not tugboatMaintenance and not tugboatNotWork and not tugboatConflict:
                 response = JsonResponse({'success': True})
             if tugboatMaintenance or tugboatNotWork or tugboatConflict:
-                success, message = AutoSchedule_Reschedule()
-                print("rescheduling "+success)
+                AutoSchedule_Reschedule()
+                print('rescheduled complete')
                 conflict = ''
                 for boat in conflictList:
                     for entry in conflictEntry:
@@ -548,6 +548,7 @@ class TugBoatRescheduleView(View):
     def post(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
+            print("Received data:", data)
             total = data.get('total')
             entryId = data.get('entryId')
             taskId = data.get('taskId')
@@ -590,20 +591,27 @@ class AutoRescheduleView(View):
     def post(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
+            print("Received data:", data)
             tugboatId = data.get('tugboatId')
             entryId = data.get('entryId')
+            print('auto-reschedule')
             if entryId is not None:
+                print('entryId available')
                 if tugboatId is not None:
+                    print('tugboatId available')
                     entry = ScheduleEntry.objects.get(ScheduleEntryId=entryId)
-                    entry.TaskId.TaskManual = 1
-                    entry.TaskId.save()
+                    task = Task.objects.get(TaskId=entry.TaskId.TaskId)
+                    task.TaskManual = 1
+                    task.save()
                     tugboat = TugBoat.objects.get(TugBoatId=tugboatId)
                     entry.listOfTugBoats.add(tugboat)
                     entry.save()
+                    print('entry saved')
             success, message = AutoSchedule_Reschedule()
             print(success)
             return JsonResponse({'success': success})
         except Exception as e:
+            print(e)
             return JsonResponse({'success': False})
 
 from django.views.decorators.http import require_http_methods
