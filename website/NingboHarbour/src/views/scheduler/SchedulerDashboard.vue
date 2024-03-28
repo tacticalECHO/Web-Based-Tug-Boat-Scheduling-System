@@ -190,7 +190,7 @@
 
                             <td class="work-status"> <span class="status-container" :style="getStatusStyle(entry.Status)">{{entry.Status}} </span></td>
 
-                            <td class="publish-time">{{formatTime(entry.PublishTime)}}</td>
+                            <td class="publish-time">{{ entry.PublishTime ? formatTime(entry.PublishTime) : '-' }}</td>
                         </tr>
 <!-- --Unscheduled--------------------------------------------------------------------------------------------------------- -->
                         <tr v-for="(task, index) in taskList()" :key="index">
@@ -277,7 +277,7 @@
                             <td class="start-time">{{entry.startTime}}</td>
                             <td class="end-time">{{entry.endTime}}</td>
                             <td class="work-status"> <span class="status-container">{{entry.Status}} </span></td>
-                            <td class="publish-time">{{entry.publishTime}}</td>
+                            <td class="publish-time">{{ entry.PublishTime ? formatTime(entry.PublishTime) : '-' }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -340,10 +340,11 @@ export default {
                     tugboatId: tugboatId,
                 });
                 if(response.data.success){
-                    
+                    console.log('success')
                     this.showProgressBar = true;
                     setTimeout(() => {
                         this.showProgressBar = false;
+                        window.location.reload();
                         alert("Reschedule operation successful!");
                     }, 2000);
                 }else {
@@ -483,7 +484,13 @@ export default {
                     timeStamp: currentTime
                 });
                 console.log(response.data);
+                
                 alert('Publish Successfully');
+                this.$store.dispatch('fetchScheduleEntries', this.sort);
+                this.$store.dispatch('fetchTasks', this.sort);
+                this.$store.dispatch('fetchContainerBoats');
+                this.$store.dispatch('fetchBerths');
+                this.$store.dispatch('fetchTugBoats');
             } catch (error) {
                 console.error(error);
                 alert('Publish Successfully');
@@ -630,7 +637,7 @@ export default {
                             alert('Auto Reschedule Successful');
                         }
                     }else {
-                        alert('Failed to Auto Reschedule');
+                        alert('Failed to Auto Reschedule. Please add new tugboat manually.');
                     }
                 } catch (error) {
                     alert('Auto Reschedule Error. Please add new tugboat manually.');

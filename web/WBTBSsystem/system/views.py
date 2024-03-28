@@ -479,8 +479,6 @@ class UpdateEntryAndTaskView(View):
                 conflictList = ", ".join(list)
                 response = JsonResponse({'success': True,'timeConflict': timeConflict, 'tugboat': conflictList, 'total': totalTugboat})
             elif tugboatConflict:
-                # AutoSchedule_Reschedule()
-                # print("rescheduling")
                 conflictedEntries  = ", ".join(tugConflictList)
                 response = JsonResponse({'success': True, 'tugboat': newTugBoatId, 'tugboatConflict': tugboatConflict, 'conflictList':  conflictedEntries})
             else:
@@ -505,8 +503,6 @@ class ManualScheduleView(View):
             tugboatNotWork = False
             conflictEntry = set()
             conflictList = set()
-            maintenanceList = set()
-            notWorkList = set()
 
             # create schedule entry for task
             task = Task.objects.filter(TaskId=taskId).first()
@@ -534,12 +530,12 @@ class ManualScheduleView(View):
             if not tugboatMaintenance and not tugboatNotWork and not tugboatConflict:
                 response = JsonResponse({'success': True})
             if tugboatMaintenance or tugboatNotWork or tugboatConflict:
-                AutoSchedule_Reschedule()
-                print("rescheduling")
+                success, message = AutoSchedule_Reschedule()
+                print("rescheduling "+success)
                 conflict = ''
                 for boat in conflictList:
                     for entry in conflictEntry:
-                        conflict =conflict + boat + ' : ' + entry + '\n'
+                        conflict = conflict + boat + ' : ' + entry + '\n'
                 # print("conflicted entries " + conflictedEntries + " rescheduling")
                 response = JsonResponse({'success': True, 'conflict': tugboatConflict, 'conflictList':  conflict})
             return response
@@ -599,11 +595,14 @@ class AutoRescheduleView(View):
             if entryId is not None:
                 if tugboatId is not None:
                     entry = ScheduleEntry.objects.get(ScheduleEntryId=entryId)
+                    entry.TaskId.TaskManual = 1
+                    entry.TaskId.save()
                     tugboat = TugBoat.objects.get(TugBoatId=tugboatId)
                     entry.listOfTugBoats.add(tugboat)
-
-            AutoSchedule_Reschedule()
-            return JsonResponse({'success': True})
+                    entry.save()
+            success, message = AutoSchedule_Reschedule()
+            print(success)
+            return JsonResponse({'success': success})
         except Exception as e:
             return JsonResponse({'success': False})
 
@@ -824,7 +823,7 @@ class TugBoatViewSet(viewsets.ModelViewSet):
             filtered_tugboats = set()
             for tugboat in queryset:
                     filtered_tugboats.add(tugboat)
-                    print(tugboat)
+                    # print(tugboat)
                     status, type = ifTugBoatAvailable(tugboat, task)
                     if not status:
                         if type == 'Maintenance' or type == 'NotWork':
