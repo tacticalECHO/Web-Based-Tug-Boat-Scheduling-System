@@ -1,3 +1,4 @@
+/** JS file created by Team 10, ©2024  */
 import { createStore } from 'vuex';
 import axios from 'axios';
 

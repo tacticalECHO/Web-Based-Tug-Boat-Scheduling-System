@@ -1,3 +1,4 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <span class="message-container">
         <button id="message" @click="message()"><font-awesome-icon :icon="['fas', 'bell']" /></button>

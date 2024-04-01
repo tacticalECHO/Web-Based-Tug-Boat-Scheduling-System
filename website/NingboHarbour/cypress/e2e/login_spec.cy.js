@@ -1,8 +1,8 @@
 describe('Login Test with Different Users', () => {
   const users = [
     { role: 'Admin', username: 'scyqd1', password: 'dqr12345', redirectUrl: '/admin' },
-    { role: 'Captain', username: 'CP0001', password: 'dqr12345', redirectUrl: '/captain' },
-    { role: 'Scheduler', username: 'SC0001', password: 'dqr12345', redirectUrl: '/scheduler' },
+    { role: 'Captain', username: 'CP0001', password: '12345678', redirectUrl: '/captain' },
+    { role: 'Scheduler', username: 'SC0001', password: '12345678', redirectUrl: '/scheduler' },
   ];
   beforeEach(() => {
     cy.visit('http://127.0.0.1:8000/#/');

@@ -1,8 +1,9 @@
+/** Cypress Test created by Team 10, ©2024  */
 describe('Captain Dashboard Page Tests', () => {
   beforeEach(() => {
     cy.visit('http://127.0.0.1:8000/#/')
     cy.get('input[type=text]').type('CP0001')
-    cy.get('input[type=password]').type('dqr12345')
+    cy.get('input[type=password]').type('12345678')
     cy.get('.btn').click();
   });
 

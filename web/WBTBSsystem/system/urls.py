@@ -1,3 +1,4 @@
+"""created by Team 10, ©2024"""
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from django.conf import settings

@@ -1,3 +1,4 @@
+/** Cypress Test created by Team 10, ©2024  */
 describe('Change Password Test', () => {
   it('Successful password change', () => {
     cy.visit('http://127.0.0.1:8000/#/')

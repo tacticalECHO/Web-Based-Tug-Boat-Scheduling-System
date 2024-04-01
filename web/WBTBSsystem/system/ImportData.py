@@ -1,3 +1,4 @@
+"""created by Team 10, ©2024"""
 import datetime
 import os
 import django

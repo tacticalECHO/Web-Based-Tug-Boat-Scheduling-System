@@ -1,3 +1,4 @@
+/** JS file created by Team 10, ©2024  */
 import { createRouter, createWebHashHistory } from 'vue-router'
 import store from '../store'
 // components-----------------------------------------------------------------

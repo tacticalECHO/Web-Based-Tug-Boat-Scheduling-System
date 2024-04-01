@@ -3,7 +3,7 @@ describe('New Task Page Test', () => {
   beforeEach(() => {
     cy.visit('http://127.0.0.1:8000/#/')
     cy.get('input[type=text]').type('SC0001')
-    cy.get('input[type=password]').type('dqr12345')
+    cy.get('input[type=password]').type('12345678')
     cy.get('.btn').click();
     cy.url().should('not.eq', 'http://127.0.0.1:8000/#/').then(() => {
       cy.visit('http://127.0.0.1:8000/#/settings');

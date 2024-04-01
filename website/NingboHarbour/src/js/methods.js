@@ -1,3 +1,4 @@
+/** JS file created by Team 10, ©2024  */
 export function redirect(event){
     this.$router.push({name: event});
 }

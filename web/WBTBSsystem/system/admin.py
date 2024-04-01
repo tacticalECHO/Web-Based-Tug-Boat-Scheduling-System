@@ -1,3 +1,4 @@
+"""created by Team 10, ©2024"""
 from django.contrib import admin
 
 

@@ -1,3 +1,4 @@
+<!-- Main Vue file created by Team 10, ©2024 -->
 <template>
   <router-view />
 </template>

@@ -1,3 +1,4 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <div id="Sidebar" @click="closeSidebar()"> 
         <div class="header">
