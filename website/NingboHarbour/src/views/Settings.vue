@@ -1,3 +1,4 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <div id="Settings">
         <SideBar />
@@ -20,7 +21,6 @@
                         <div class="change-text">Change</div>
                     </button>
                 </span>
-                <!-- <button class="btn btn-dark" @click="change_password()">Change</button> -->
             </div>
             <button class="btn btn-light" @click="redirect('Login')">Logout</button>
         </div>
@@ -66,6 +66,7 @@ input {
     border: none;
 }
 
+/* This section of CSS for change-pwd includes styles referenced from [https://uiverse.io/buttons] All credit for the referenced styles goes to the original authors.  */
 .change-pwd {
     font-size: var(--font-size);
     display: flex;

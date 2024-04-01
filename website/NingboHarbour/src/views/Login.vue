@@ -1,7 +1,8 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <div id = "Login">
         <div class="sidebar"> 
-        <!-- Add your image here -->
+        <!-- image for header background -->
         <img src="@/assets/login.png" alt="Sidebar Image">
         <div class="image-text">
           <div class="text-wrapper">
@@ -15,7 +16,7 @@
             <div v-if = "showError" class = "invalid-login">
                 <p>Invalid username or password, please log in again</p>
             </div>
-            <!-- <form> -->
+            <form @submit.prevent="login">
                 <div class = "form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" v-model="username" placeholder="Input your ID">
@@ -24,8 +25,8 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" v-model="password" placeholder="Input your password">
                 </div>
-                <button class="btn btn-dark" @click="login()">Login</button>
-            <!-- </form> -->
+                <input type="submit" class="btn btn-dark" @click="login()" value="Login" />
+            </form>
         </div>
     </div>
 </template>
@@ -43,7 +44,7 @@ data() {
   };
 },
 methods: {
-  async login() {
+  async login() { // proceed to authenticate log in information
     try {
       const response = await axios.post('/api/login/', {
         username: this.username,

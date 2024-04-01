@@ -1,3 +1,4 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <div id="TugBoatList" @click="toggle()">
         <SideBar />
@@ -22,10 +23,6 @@
                     </button>
                 </label>
             </div>
-            <!-- <form class="search-form">
-                <input id="search" type="text" v-model="input" placeholder="Search...">
-                <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="search-icon" />
-            </form> -->
             <br><br>
             <div class="header-style">
                 <div class="filter-group">
@@ -277,7 +274,7 @@ export default {
 .filter-btn {
     width: 90px;
 }
-
+/* This section of CSS for search includes styles referenced from [https://uiverse.io/satyamchaudharydev/slippery-parrot-22] All credit for the referenced styles goes to the original authors.  */
 .search-form {
     position: relative;
     display: inline-block;

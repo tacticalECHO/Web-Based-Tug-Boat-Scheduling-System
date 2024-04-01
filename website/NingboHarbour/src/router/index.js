@@ -138,6 +138,7 @@ const router = createRouter({
   routes,
 });
 
+// ensure account is logged in before access
  router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   const username = localStorage.getItem('username');

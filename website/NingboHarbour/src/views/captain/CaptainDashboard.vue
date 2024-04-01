@@ -1,3 +1,4 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <div id="CaptainDashboard">
         <SideBar />
@@ -10,10 +11,12 @@
                 <MessageButton />
             </div>
             <br><br><br><br>
+            <!-- Display waiting -->
             <div v-if="waiting()">
             <span class="spinner-border spinner-border-sm" role="status"></span>
             &nbsp;Waiting...
         </div>
+        <!-- display individual jobs -->
         <div class="table-container">
             <table v-if="!waiting()" class="table"> 
                 <thead>
@@ -27,6 +30,7 @@
                         <th>Work Type</th>
                     </tr>
                 </thead>
+                <!-- Incompleted jobs  -->
                 <tbody>
                     <tr v-for="(entry,index) in entryList('Incompleted')" :key="index">
                         <td class="number">  <span :id="'entryId' + entry.ScheduleEntryId">{{index+1}}</span> </td>
@@ -47,7 +51,7 @@
                         <td class="work-type"> <span class="type-container" :style="getActionStyle(entry.TaskId.Action, 'Incomplete')">{{entry.TaskId.Action}}</span></td>
                     </tr>
 
-                    <!-- --completed---------------------------------------------------------------------------------------------- -->
+                    <!-- --completed jobs---------------------------------------------------------------------------------------------- -->
                     <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
                         <td class="number">  <span :id="'taskId' + entry.ScheduleEntryId">{{index+1}}</span> </td>
                         <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
@@ -95,7 +99,7 @@ export default {
         }
     },
     methods: {
-        download(){
+        download(){ // download individual work
             const captainId = localStorage.getItem('username');
             axios.post('/api/download-captain', { captainId })
             .then(response => {
@@ -112,7 +116,7 @@ export default {
             }
             return false
         },
-        entryList(state){
+        entryList(state){ // return entry list
             this.entries = this.$store.state.scheduleEntries;
             const isCompleted = state === 'Completed';
 
@@ -137,12 +141,12 @@ export default {
                 this.containerBoatIdInfo = id;
             }
         },
-        toggle(event) {
+        toggle(event) { // close selected form
             if (!event.target.closest('form')) {
                 this.resetNull();
             }
         },
-        async edit(entryId) {
+        async edit(entryId) { // post edited information to backend
             const newState = this.state;
             const currentTime = new Date().toISOString();
             try {

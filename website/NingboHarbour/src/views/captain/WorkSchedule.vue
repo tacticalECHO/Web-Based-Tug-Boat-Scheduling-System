@@ -1,3 +1,4 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <div id="WorkSchedule">
         <SideBar />
@@ -5,6 +6,7 @@
             <h2 class="title">Work Schedules</h2>
             <br><br><br>
             <div class="header-style" >
+                <!-- filter section -->
                 <div class ="filter-group">
                     <span class="filter">
                         <label for="containerBoatFilter">Container Boat: </label>
@@ -38,10 +40,12 @@
                     </span>
                 </div>
             </div>
+            <!-- display Waiting  -->
             <div v-if="waiting()">
                 <span class="spinner-border spinner-border-sm" role="status"></span>
                 &nbsp;Waiting...
             </div>
+            <!-- display work schedule -->
             <div v-if="!waiting()" class="table-container">
                 <table class="table">
                     <thead>
@@ -66,6 +70,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Imcompleted entries -->
                         <tr v-for="(entry,index) in entryList('Incomplete')" :key="index">
                             <td class="number"> {{index+1}} </td>
                             <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
@@ -77,6 +82,7 @@
                                 <span class="status-container" :style="getStatusStyle(entry.Status)">{{entry.Status}} </span>
                             </td>
                         </tr>
+                        <!-- completed entries -->
                         <tr class="disabled-row" v-for="(entry,index) in entryList('Completed')" :key="index">
                             <td class="number"> {{index+1}} </td>
                             <td class="container-boat"> {{entry.TaskId.ContainerBoatID.ContainerBoatID}} </td>
@@ -97,7 +103,6 @@
 
 <script>
 import SideBar from '@/components/SideBar.vue';
-import axios from 'axios';
 
 export default {
     name: 'WorkSchedule',
@@ -120,25 +125,25 @@ export default {
         }
     },
     methods: {
-        sorting(){
+        sorting(){ // fetch task and entry according to sorted / default
             this.sort = !this.sort;
             this.$store.dispatch('fetchScheduleEntries', this.sort);
             this.$store.dispatch('fetchTasks', this.sort);
         },
-        waiting(){
+        waiting(){ // return job entry availability
             if(this.$store.state.scheduleEntries.length === 0){
                 return true
             }
             return false
         },
-        checkAll(input) {
+        checkAll(input) { //set All to ''
             if (input === "All") {
                 return '';
             } else {
                 return input;
             }
         },
-        entryList(state) {
+        entryList(state) { // fetch entries from database according to filter
             this.entries = this.$store.state.scheduleEntries;
             this.containerBoatInput = this.checkAll(this.containerBoatInput);
             this.tugBoatInput = this.checkAll(this.tugBoatInput);

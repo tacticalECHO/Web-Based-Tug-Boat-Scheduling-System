@@ -1,12 +1,14 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
+    <!-- Scheduler Dashboard Page -->
     <div id="TaskManager">
-        
         <div class="progress-bar" :class="{ 'progress-bar-active': showProgressBar }"></div>
         <SideBar />
         <div class="pages" @click="toggle">
             <router-view />
             <h2 class="title">Your Dashboard</h2>
             <MessageButton />
+            <!-- Main button features -->
             <div class="job buttons-container">
                 <button class="btn btn-dark" id="schedule" @click="schedule()">Schedule <font-awesome-icon :icon="['fas', 'calendar-day']" /></button>
                 <br><br><br>
@@ -20,6 +22,8 @@
                 <br><br><br>
                 <button class="btn btn-outline-dark" id="publish" @click="publish()">Publish <font-awesome-icon :icon="['fas', 'upload']" /></button>
             </div>
+
+            <!-- Filter Group Feature -->
             <div class="header-style" id="filter-section">
                 <div class ="filter-group">
                     <span class="filter">
@@ -69,23 +73,23 @@
                         </select>
                     </span>
                 </div>
+                <!-- Add and Delete button -->
                 <span class="add-delete">
                     <button type="button" class="delete" id="delete" @click= deleteSelected>
                         <span class="delete__text">Delete &nbsp;</span>
                         <span class="delete__icon"><font-awesome-icon :icon="['fas', 'delete-left']" /></span>
                     </button>
-                    <!-- <button class="btn btn-light" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button> -->
                     &nbsp;
                     <button type="button" class="add" id="add" @click="redirect('NewTask')">
                         <span class="add__text">Add &nbsp;</span>
                         <span class="add__icon"><font-awesome-icon :icon="['fas', 'plus']" /></span>
                     </button>
-                    <!-- <button class="btn btn-dark" id="add" @click="redirect('NewTask')">Add  + </button> -->
                 </span>
             </div>
+            <!-- Display no task available -->
             <div v-if="waiting()">No Task Available</div>
 
-
+            <!-- Work table container -->
             <div v-if="!waiting()" class="table-container">
                 <table class="table">
                     <thead>
@@ -328,19 +332,19 @@ export default {
         }
     },
     methods: {
-        reload(){
+        reload(){ // refetch data from database
             this.$store.dispatch('fetchScheduleEntries', this.sort);
             this.$store.dispatch('fetchTasks', this.sort);
             this.$store.dispatch('fetchContainerBoats');
             this.$store.dispatch('fetchBerths');
             this.$store.dispatch('fetchTugBoats');
         },
-        sorting(){
+        sorting(){ // fetch sorted/ default schedule entry and task
             this.sort = !this.sort;
             this.$store.dispatch('fetchScheduleEntries', this.sort);
             this.$store.dispatch('fetchTasks', this.sort);
         },
-        async reschedule(entryId, tugboatId){
+        async reschedule(entryId, tugboatId){ // reschedule remaining tasks
             this.showProgressBar = true;
             try {
                 const response = await axios.post('/api/auto-reschedule/', {
@@ -348,22 +352,22 @@ export default {
                     tugboatId: tugboatId,
                 });
                 console.log(response.data.success)
-                if(response.data.success){
+                if(response.data.success){ // if reschedule success
                     console.log('success')
-                    setTimeout(() => {
+                    setTimeout(() => { // hide progress bar and reload page
                         this.showProgressBar = false;
                         window.location.reload();
                         alert("Reschedule operation successful!");
                     }, 2000);
-                }else {
+                }else { // if reschedule failed
                     alert('Failed to reschedule');
                 }
-            } catch (error) {
-                console.error("Error during schedule operation: ", error);
-                alert("Schedule operation failed, check logs for details.");
+            } catch (error) { // if api failed
+                console.error("Error during reschedule operation: ", error);
+                alert("Reschedule operation failed, check logs for details.");
             }
         },
-        async deleteSelected() {
+        async deleteSelected() { // delete selected tasks/ schedule entries
             if(this.deletionAlert()){
                 let isScheduleEntry = false;
                 if (this.selectedTasks.length > 0) {
@@ -388,7 +392,7 @@ export default {
                     });
                 }
 
-                if(isScheduleEntry){
+                if(isScheduleEntry){ // prompts for rescheduling if deleted ones is schedule entry
                     console.log("reschedule");
                     if (confirm('Deleted successfully. \nReschedule remaning schedule?')){
                         this.reschedule();
@@ -399,16 +403,17 @@ export default {
 
                 this.reload();
             }
+            // reset selected entries to null
             this.selectedTasks = [];
             this.selectedScheduleEntries = [];
         },
-        waiting(){
+        waiting(){ // return availability of tasks/ schedule entry
             if(this.$store.state.scheduleEntries.length === 0 && this.$store.state.tasks.length === 0){
                 return true
             }
             return false
         },
-        async schedule() {
+        async schedule() { // schedule unscheduled tasks
             this.showProgressBar = true;
             try {
                 const response = await axios.post('/api/auto-schedule', {});
@@ -417,13 +422,13 @@ export default {
                 console.error("Error during schedule operation: ", error);
                 alert("Schedule operation failed, check logs for details.");
             }
-            setTimeout(() => {
+            setTimeout(() => { // hide progress bar and reload page
                 this.showProgressBar = false;
                 alert("Schedule operation successful!");
                 window.location.reload();
             }, 2000);
         },
-        importTaskData(){
+        importTaskData(){ // get task data excel sheet from local computer
             let input = document.getElementById('import-task-data');
             input.onchange = (e) => {
                 const file = e.target.files[0];
@@ -446,7 +451,7 @@ export default {
             };
             input.click();
         },
-        importTugboatData(){
+        importTugboatData(){ // get tugboat data excel sheet from local computer
             let input = document.getElementById('import-tugboat-data');
             input.onchange = (e) => {
                 const file = e.target.files[0];
@@ -469,7 +474,7 @@ export default {
             };
             input.click();
         },
-        download(){
+        download(){ // download task/schedule entry
             axios.post('/api/publish-data')
             .then(response => {
                 console.log(response.data.message);
@@ -479,7 +484,7 @@ export default {
                 alert("Failed to publish data, check logs for details.");
             });
         },
-        async publish(){
+        async publish(){ // add publish time to schedule entry
             const currentTime = new Date().toISOString();
             try {
                 const response = await axios.post('/api/update-publish-time', { 
@@ -494,11 +499,11 @@ export default {
                 alert('Publish Successfully');
             }
         },
-        countryList(){
+        countryList(){ // return all country available in tasks
             const country = [...new Set(this.$store.state.containerBoats.map(boat => boat.Country))];
             return country;
         },
-        entryList(state) {
+        entryList(state) { // return entry list according to filter
             this.entries = this.$store.state.scheduleEntries;
             const isCompleted = state === 'Completed';
 
@@ -515,7 +520,7 @@ export default {
                 return byCountry && byContainerBoatId && byTugBoatId && byBerthId && byWorkType && byStatus && (isCompleted ? byCompleted : !byCompleted);
             });
         },
-        taskList() {
+        taskList() { // return task list according to filter
             this.tasks = this.$store.state.tasks;
 
             return this.tasks.filter((task) => {  
@@ -530,7 +535,7 @@ export default {
                 return byCountry && byContainerBoatId && byTugBoatId && byBerthId && byWorkType && byStatus && unscheduled;
             });
         },
-        changeTugboatList(taskId) {
+        changeTugboatList(taskId) { // return available tugboats
             this.getTugboatList(taskId)
                 .then(data => {
                     this.filteredTugBoats = data;
@@ -540,7 +545,7 @@ export default {
                 });
             return this.filteredTugBoats
         },
-        async getTugboatList(taskId) {
+        async getTugboatList(taskId) { // get available tugboats from database
             try {
                 const response = await axios.get('/api/display_tugboat/', {
                     params: {
@@ -558,7 +563,7 @@ export default {
                 alert('Error Fetching Available Tug Boats');
             }
         },
-        resetNull() {
+        resetNull() { // reset information to null
             this.tugBoatInfo = null;
             this.tugBoatIndex = null;
             this.timeInfo = null;
@@ -590,7 +595,7 @@ export default {
                 this.actionInfo = id;
             }
         },
-        async edit(taskId, entryId, tugBoat) {
+        async edit(taskId, entryId, tugBoat) { // post data to edit data in database
             try { 
                 const response = await axios.post('/api/update-entry-task/', {
                     entryId: entryId,
@@ -624,7 +629,7 @@ export default {
                 alert('Edit Task Error.');
             }
         },
-        async autoRescheduleTugboats(tugboatList, total, entryId, taskId){
+        async autoRescheduleTugboats(tugboatList, total, entryId, taskId){ // auto reschedule data upon confirmation
             const auto = confirm('Conlict Notice: \n\nTugboat(s): '+ tugboatList + " are not available \n\nAuto Reschedule?")
             if(auto){
                 try{
@@ -649,7 +654,7 @@ export default {
                 alert('Tugboat(s): '+ tugboatList +" is removed from entry.")
             }
         },
-        async manualSchedule(taskId){
+        async manualSchedule(taskId){ // manual adding tug boats to tasks
             try { 
                 const response = await axios.post('/api/manual-schedule/', {
                     taskId: taskId,

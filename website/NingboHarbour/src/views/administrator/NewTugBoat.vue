@@ -1,9 +1,12 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <div class="backdrop">
         <div class="container-position">
             <form class="popup-container">
+                <!-- close button -->
                 <button class="close-btn" @click="redirect('TugBoatList')">X</button>
                 <br/>
+                <!-- form to input tugboat information -->
                 <div class = "form">
                     <div class="form-group">
                         <b><label for="tugboatId">Tug Boat ID</label></b>  
@@ -22,6 +25,7 @@
                     </div>
                 </div>
                 <br>
+                <!-- confirm button to add tugboat  -->
                 <button class="btn btn-dark" id="confirm" @click="add()">Add</button>
                 <br/> 
             </form>
@@ -37,7 +41,7 @@ export default {
         this.$store.dispatch('fetchCaptains');
     },
     methods: {
-        async add(){
+        async add(){ // Post data to add new tugboat
             try { 
                 const response = await axios.post('/api/update-tugboat/', {
                     tugboatId: this.tugboatId,

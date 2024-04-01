@@ -1,3 +1,4 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <div id="AdminDashboard">
         <SideBar />
@@ -6,6 +7,7 @@
             <h2 class="title">Your Dashboard</h2>
             <div class="header-style">
                 <span></span>
+                <!-- add and delete button  -->
                 <span class="add-delete">
                     <button type="button" class="delete" id="delete" @click= deleteSelected>
                         <span class="delete__text">Delete &nbsp;</span>
@@ -17,12 +19,8 @@
                         <span class="add__icon"><font-awesome-icon :icon="['fas', 'plus']" /></span>
                     </button>
                 </span>
-                <!-- <span> -->
-                    <!-- <button class="btn btn-light" id="delete" @click= deleteSelected>Delete  <font-awesome-icon :icon="['fas', 'delete-left']" /></button> -->
-                    <!-- &nbsp; -->
-                    <!-- <button class="btn btn-dark" id="new-staff" @click="redirect('NewStaff')">New Staff  <span>+</span></button> -->
-                <!-- </span> -->
             </div>
+            <!-- section for displaying captain  -->
             <div class="caption">Captain</div>
             <div class="table-container">
                 <table id="captain-info" class="table">
@@ -51,6 +49,7 @@
                     </tbody>
                 </table>
             </div>
+            <!-- section for displaying scheduler  -->
             <div class="caption">Scheduler</div>
             <div class="table-container">
                 <table id="scheduler-info" class="table">
@@ -91,7 +90,7 @@ export default {
         this.$store.dispatch('fetchSchedulers');
     },
     methods: {
-        async deleteSelected() {
+        async deleteSelected() { // post data to delete selected user
             if(this.deletionAlert()){
                 if (this.selectedCaptains.length > 0) {
                     await fetch(`http://127.0.0.1:8000/api/captains-delete/`, {
@@ -126,9 +125,6 @@ export default {
 </script>
 
 <style scoped>
-/* button{
-    border-radius: 20px;
-} */
 
 .header-style{
     padding: 10px;

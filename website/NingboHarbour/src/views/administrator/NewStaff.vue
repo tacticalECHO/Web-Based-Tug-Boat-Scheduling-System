@@ -1,11 +1,14 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <div class="backdrop">
         <div class="container-position">
             <div class="popup-container">
+                <!-- close button  -->
                 <button @click="close" class="close-btn">X</button>
                 <br/>
                 <font-awesome-icon :icon="['fas', 'user-plus']" :size="['2x']"/>
                 <br/>
+                <!-- form to add new staff  -->
                 <div class = "form">
                     <div class="form-group">
                         <b><label for="username">ID</label></b>  
@@ -27,6 +30,7 @@
                     </div>
                 </div>
                 <br>
+                <!-- confirm button to add new staff  -->
                 <button class="btn btn-dark" id="confirm" @click="confirm()">Confirm</button>
                 <br/> 
             </div>
@@ -63,7 +67,7 @@ export default {
         }
         return csrftoken;
     },
-    async confirm() {
+    async confirm() { // post data to create new user for system
         const apiUrl = '/api/create-user/';
         const csrftoken = this.getCSRFToken(); 
         try {

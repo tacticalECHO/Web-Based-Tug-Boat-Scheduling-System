@@ -1,3 +1,4 @@
+<!-- Vue file created by Team 10, ©2024 -->
 <template>
     <div id="Settings">
         <SideBar />
@@ -5,6 +6,7 @@
             <router-view />
             <h3 class="title">Settings</h3>
             <br><br><br><br>
+            <!-- account details -->
                 <div class = "form">
                     <b><label for="username">Username  </label></b>
                     &nbsp;  
@@ -23,6 +25,7 @@
                     <input type="password" id="passwordReEntered"  placeholder="Re-enter new password">
                 </div>
             </div>
+            <!-- buttons to save or cancel work -->
             <div class="cancel-save-buttons">
                 <button class="btn btn-outline-dark" id="cancel" @click="redirect('Exit-ChangePassword')">Cancel</button>
                 <button class="btn btn-dark" id="save" @click="save()">Save</button>
@@ -54,10 +57,10 @@ export default {
         this.$store.commit('setExitPath', 'Settings');
     },
     methods: {
-        cancel(){
+        cancel(){ // show pop-up alert
             this.$router.push({name: 'Exit-ChangePassword'});
         },
-        async save() {
+        async save() { // save the newly edited password
             this.password = document.getElementById('password').value;
             this.reenter = document.getElementById('passwordReEntered').value;
             if(this.password === this.reenter){
