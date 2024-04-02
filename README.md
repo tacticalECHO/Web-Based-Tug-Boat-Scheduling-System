@@ -15,6 +15,7 @@ pandas == 2.2.1
 Requests == 2.31.0
 node.js == 20.11.1
 npm == 10.2.4
+pytz == 2024.1
 Vue == 3.4.21
 ```
 ### System Environment
@@ -120,7 +121,7 @@ Access database through [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/)
 
 **NO `#` BETWEEN 8000 and ADMIN** Otherwise, **CAN NOT** go into back-end admin page.
 
-#### At Front-End
+#### At Front-End (Optional)
 
 - Run server
 
@@ -141,7 +142,8 @@ Successful running example:
 Default run at [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
  and network url is based on device's IPv4.
 
- Access serve as **ADMIN**:
+### Default Accounts
+Access serve as **ADMIN**:
 ```
 Username: ADMIN001
 Password: 12345678
@@ -156,8 +158,49 @@ Username: SC0002
 Password: 12345678
 ```
 
-Access serve as **CAPTAIN**:
+Access serve as **CAPTAIN** (CP0001-CP0040):
 ```
 Username: CP0001
 Password: 12345678
+
+Username: CP0002
+Password: 12345678
+
+...
+
+Username: CP0040
+Password: 12345678
 ```
+
+### Q & A
+- **`vue-cli-service` is not a command** 
+
+If there is error when run `npm run serve`:
+```
+'vue-cli-service' 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+```
+please open folder `website\NingboHarbour` in command prompt and run command:
+```
+npm install
+```
+- **Proxy error**
+
+If there is error when access the server from front-end and prompt show that:
+```
+Proxy error: Could not proxy request /api/login/ from localhost:8080 to http://127.0.0.1:8000.
+See https://nodejs.org/api/errors.html#errors_common_system_errors for more information (ECONNREFUSED).
+```
+Please make sure that **back-end has been started**.
+
+Open folder `web\WBTBSsystem` in command prompt and run command:
+```
+python manage.py runserver
+```
+- **Web page is blank page**
+
+If open the server and the web page is blank page, please first close the back end and open folder `web\WBTBSsystem` in conmmand prompt and run command:
+```
+python manage.py collectstatic
+```
+then restart back-end.
