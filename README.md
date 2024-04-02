@@ -107,11 +107,14 @@ Quit the server with CTRL-BREAK.
 ```
 - Access Database through super-user
 
-create Super-user:
+Admin Super-user:
 ```
-python manage.py createsuperuser
+Username: ADMIN001
+Password: 12345678
+
+Username: Team202310
+Password: Team202310
 ```
-Enter the use name and password to create super user.
 
 Access database through [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/)
 
@@ -137,3 +140,24 @@ Successful running example:
 ```
 Default run at [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
  and network url is based on device's IPv4.
+
+ Access serve as **ADMIN**:
+```
+Username: ADMIN001
+Password: 12345678
+```
+
+Access serve as **SCHEDULER**:
+```
+Username: SC0001
+Password: 12345678
+
+Username: SC0002
+Password: 12345678
+```
+
+Access serve as **CAPTAIN**:
+```
+Username: CP0001
+Password: 12345678
+```

@@ -127,7 +127,7 @@ def AutoSchedule_FIFO(): # Auto Schedule the task--->ScheduleEntry (first come f
             continue
         if task.TaskManual == 1:
             continue
-        if task.State == 'Unscheduled' and (task.startTime.date() == datetime.datetime.now().date() or task.startTime.date()== datetime.datetime.now().date()+datetime.timedelta(days=1))  and task.startTime > datetime.datetime.now():
+        if task.State == 'Unscheduled' and (task.startTime.date() == datetime.datetime.now().date())  and task.startTime > datetime.datetime.now():
             schedule = ScheduleEntry(TaskId=task, Status='Scheduled', StartTime=None, EndTime=None)
             schedule.save()
             n=0

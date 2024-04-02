@@ -1,4 +1,4 @@
-import pytest
+
 import sys
 sys.path.append('web\\WBTBSsystem')
 import django
@@ -103,5 +103,3 @@ def test_createTask():
     Task.objects.all().delete()
     ScheduleEntry.objects.all().delete()
 
-if __name__ == '__main__':
-    pytest.main(["-v", "--tb=line", "test_importData.py"])

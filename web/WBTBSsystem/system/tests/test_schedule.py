@@ -1,7 +1,6 @@
 from datetime import *
 import os
 import time
-import pytest
 import django
 import sys
 sys.path.append('web\\WBTBSsystem')
