@@ -373,6 +373,7 @@ class UpdateTugBoatView(View):
                         }
                     )
                 if not created:
+                    tugboat.CaptainId = None
                     if startTime is not None:
                         tugboat.StartWorkingTime = startTime
                     if endTime is not None:
@@ -715,7 +716,7 @@ from .serializers import (
 from rest_framework import viewsets
 from datetime import datetime
 class CaptainViewSet(viewsets.ModelViewSet):
-    queryset = Captain.objects.all()
+    queryset = Captain.objects.all().order_by('CaptainId')
     serializer_class = CaptainSerializer
     def list(self, request, *args, **kwargs):
         self.update_tugboatStatus()
