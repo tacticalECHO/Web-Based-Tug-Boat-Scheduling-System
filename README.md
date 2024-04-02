@@ -171,7 +171,18 @@ Password: 12345678
 Username: CP0040
 Password: 12345678
 ```
+### Test using the preset dataset
+If want to test the system using the preset dataset `test_container.xlsx` in `web\WBTBSsystem`, the dates in data set need to be changed.
 
+For example, if want to test on 4/10/2024:
+```
+CN0001	1,516	China	4/3/2024  9:00	 INBOUND	 1
+```
+Should be changed to
+```
+CN0001	1,516	China	4/10/2024  9:00  INBOUND  1
+
+```
 ### Q & A
 - **`vue-cli-service` is not a command** 
 
