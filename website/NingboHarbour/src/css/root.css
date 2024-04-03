@@ -135,7 +135,7 @@ p {
 
 /* --table container------------------------------------------------------ */
 .table-container {
-    max-height: 29em;
+    max-height: 26em;
     /* Adjust the height as needed */
     overflow-y: auto;
     border-radius: 10px;
