@@ -41,24 +41,31 @@ Make sure the Python has been installed successfully before install the back-end
 
 - Install the **Django**:
 
+Run the command in command prompt:
 ```
 python -m pip install Django
 ```
 The last version of Django is `v5.0.2`. 
 
 - Install **pandas**:
+
+Run the command in command prompt:
 ```
 pip install pandas
 ```
 Pandas is an open-source, BSD licensed library that provides high-performance, easy-to-use data structures and analysis tools
 
 - Install **requests**:
+
+Run the command in command prompt:
 ```
 pip install requests
 ```
 Requests is a commonly used HTTP request library that facilitates sending HTTP requests to websites and obtaining response results.
 
 - Install **pytz**:
+
+Run the command in command prompt:
 ```
 pip install pytz
 ```
@@ -68,6 +75,8 @@ Pytz is a library for time and date.
 - Install node.js
 
 The vue is depending on node.js. If have ever installed `node.js` and `npm`, please check the version:
+
+Run the command in command prompt:
 ```
 node -v
 npm -v
@@ -75,10 +84,14 @@ npm -v
 If have not ever installed, please go to [node.js official website](https://nodejs.org/en/download/) to download and install.
 
 - Install Vue.js
+
+Run the command in command prompt:
 ```
 npm install vue -g
 ```
 Check the version of `vue.js`:
+
+Run the command in command prompt:
 ```
 npm list vue
 ```
