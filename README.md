@@ -3,6 +3,8 @@
 ## Introduction
 This is a demo of tugboat scheduling system. It is a web-based automatical scheduling system.
 
+**This Demo only can run on LAN.**
+
 ## Requirement
 This sytem is based on python enviornment.
 
@@ -134,6 +136,28 @@ Access database through [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/)
 
 **NO `#` BETWEEN 8000 and ADMIN** Otherwise, **CAN NOT** go into back-end admin page.
 
+- Run on LAN
+
+If want to run this system on a LAN, please open folder `website\NingboHarbour` and run command in command prompt:
+```
+python manage.py runserver 0.0.0.0:8000
+```
+then check the IPv4 of the server device by following command in command prompt:
+```
+ipconfig
+```
+Then find `IPv4 Address`:
+
+For example:
+```
+IPv4 Address . . . . . . . . . . . . : 172.19.39.208
+```
+Then other devices should access the website through the Ipv4:
+
+For example, based on the IPv4 above, other devices should visit:
+```
+172.19.39.208:8000
+```
 #### At Front-End (Optional)
 
 - Run server
