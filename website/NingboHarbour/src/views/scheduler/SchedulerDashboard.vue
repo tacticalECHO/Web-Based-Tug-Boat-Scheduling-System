@@ -772,7 +772,7 @@ export default {
 .progress-bar-active {
     width: 100%;
     visibility: visible;
-    animation: progressBarAnimation 2s linear forwards;
+    animation: progressBarAnimation 3s linear forwards;
 }
 
 @keyframes progressBarAnimation {

@@ -86,6 +86,7 @@
                                 <td @click.stop>
                                     <form v-if="captainInfo === tugboat.TugBoatId" @submit="edit(tugboat.TugBoatId)">
                                         <select @change="edit(tugboat.TugBoatId)" v-model="captainId">
+                                            <option value=""></option>
                                             <option v-for="captain in $store.state.captains" :key="captain.CaptainId">{{ captain.CaptainId }} : {{ captain.name }}</option>
                                         </select>
                                         <input class="submit-button" type="submit" />
@@ -196,13 +197,18 @@ export default {
             this.tugboats = this.$store.state.tugboats;
 
             // Filter tugboats based on input and chosenStatus
-            return this.tugboats.filter((tugboat) => {  
+            return this.tugboats.filter((tugboat) => {
                 const byTugBoatId = tugboat.TugBoatId.toLowerCase().includes(this.input.toLowerCase());
-                const byCaptainName = tugboat.CaptainId ? tugboat.CaptainId.name.toLowerCase().includes(this.input.toLowerCase()): true;
-                const byCaptainId = tugboat.CaptainId ? tugboat.CaptainId.CaptainId.toLowerCase().includes(this.input.toLowerCase()): true;
                 const byStatus = this.chosenStatus ? tugboat.CurrentStatus.toLowerCase() === this.chosenStatus.toLowerCase() : true;
 
-                return (byCaptainName || byCaptainId || byTugBoatId) && byStatus;
+                if (this.input) {
+                    const byCaptainName = tugboat.CaptainId ? tugboat.CaptainId.name.toLowerCase().includes(this.input.toLowerCase()) : false;
+                    const byCaptainId = tugboat.CaptainId ? tugboat.CaptainId.CaptainId.toLowerCase().includes(this.input.toLowerCase()) : false;
+
+                    return (byCaptainName || byCaptainId || byTugBoatId) && byStatus;
+                } else {
+                    return byTugBoatId && byStatus;
+                }
             });
         },
         getCaptainId(id){
