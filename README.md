@@ -3,6 +3,8 @@
 ## Introduction
 This is a demo of tugboat scheduling system. It is a web-based automatical scheduling system.
 
+**This Demo only can run on LAN.**
+
 ## Requirement
 This sytem is based on python enviornment.
 
@@ -41,24 +43,31 @@ Make sure the Python has been installed successfully before install the back-end
 
 - Install the **Django**:
 
+Run the command in command prompt:
 ```
 python -m pip install Django
 ```
 The last version of Django is `v5.0.2`. 
 
 - Install **pandas**:
+
+Run the command in command prompt:
 ```
 pip install pandas
 ```
 Pandas is an open-source, BSD licensed library that provides high-performance, easy-to-use data structures and analysis tools
 
 - Install **requests**:
+
+Run the command in command prompt:
 ```
 pip install requests
 ```
 Requests is a commonly used HTTP request library that facilitates sending HTTP requests to websites and obtaining response results.
 
 - Install **pytz**:
+
+Run the command in command prompt:
 ```
 pip install pytz
 ```
@@ -68,6 +77,8 @@ Pytz is a library for time and date.
 - Install node.js
 
 The vue is depending on node.js. If have ever installed `node.js` and `npm`, please check the version:
+
+Run the command in command prompt:
 ```
 node -v
 npm -v
@@ -75,10 +86,14 @@ npm -v
 If have not ever installed, please go to [node.js official website](https://nodejs.org/en/download/) to download and install.
 
 - Install Vue.js
+
+Run the command in command prompt:
 ```
 npm install vue -g
 ```
 Check the version of `vue.js`:
+
+Run the command in command prompt:
 ```
 npm list vue
 ```
@@ -121,6 +136,28 @@ Access database through [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/)
 
 **NO `#` BETWEEN 8000 and ADMIN** Otherwise, **CAN NOT** go into back-end admin page.
 
+- Run on LAN
+
+If want to run this system on a LAN, please open folder `website\NingboHarbour` and run command in command prompt:
+```
+python manage.py runserver 0.0.0.0:8000
+```
+then check the IPv4 of the server device by following command in command prompt:
+```
+ipconfig
+```
+Then find `IPv4 Address`:
+
+For example:
+```
+IPv4 Address . . . . . . . . . . . . : 172.19.39.208
+```
+Then other devices should access the website through the Ipv4:
+
+For example, based on the IPv4 above, other devices should visit:
+```
+172.19.39.208:8000
+```
 #### At Front-End (Optional)
 
 - Run server
